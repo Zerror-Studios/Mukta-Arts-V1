@@ -374,7 +374,13 @@ export default function SpiralScene() {
       <div className="sticky top-0 w-full h-screen overflow-hidden">
 
         <div className=" NAMEDIV1 absolute top-0 left-0 z-[-1]  w-full h-full flex justify-center items-center">
-          <h5 className="  w-[90vw] max-sm:text-justify sm:w-2/3  capitalize  text-center">Mukta Arts Limited is one of India's leading production houses with business interests across the entertainment spectrum from Exhibition to Education. Founded by Mr Subhash Ghai, one of India's most successful film directors, the company has a library of over 42 films (including 35 blockbusters) and has a brand that is globally recognized with quality and entertainment.</h5>
+          <h5 className="  w-[90vw] max-sm:text-justify sm:w-2/3  capitalize  text-center">Mukta  Arts  is  the  vision  of  Subhash  Ghai  ,  one  of  India's  most  celebrated  filmmakers,
+            who  founded  the  company  in  1978.  What  started  with  landmark  films  like  Karz,  Ram
+            Lakhan,  Khalnayak  and  Pardes  has  grown  into  an  entertainment  group  spanning
+            production,  education,  exhibition  and  animation  .  Through  Whistling  Woods
+            International  ,  one  of  Asia's  leading  film  schools,  Mukta  A2  Cinemas  and  SGM
+            Studios  ,  the  group  continues  to  shape  how  stories  are  made,  taught  and  experienced
+            across India.</h5>
         </div>
 
         <Canvas

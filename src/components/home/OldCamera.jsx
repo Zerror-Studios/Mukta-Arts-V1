@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
+import Link from "next/link";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF, Environment, ContactShadows, OrbitControls } from "@react-three/drei";
 import { useGSAP } from "@gsap/react";
@@ -26,10 +27,11 @@ function FilmReel() {
     });
 
     const content = [
-        { title: "1976", subtitle: "Founded", active: true, image: "/img/home/1.jpg" },
-        { title: "300+", subtitle: "Films Produced", image: "/img/home/2.jpg" },
-        { title: "5+", subtitle: "National & international awards", image: "/img/home/3.jpg" },
-        { title: "45+", subtitle: "Years of Legacy", image: "/img/home/4.jpg" },
+        { title: "45+", subtitle: "Years of Legacy", image: "/img/home/1.jpg" },
+        { title: "50+", subtitle: "Films Produced", image: "/img/home/2.jpg" },
+        { title: "35", subtitle: "Blockbusters", image: "/img/home/3.jpg" },
+        { title: "4000+", subtitle: "Alumni", image: "/img/home/4.jpg" },
+        { title: "57+", subtitle: "Cinema Theatres", image: "/img/home/5.jpg" },
     ];
 
     // Duplicate multiple times for a seamless scroll effect
@@ -55,7 +57,7 @@ function FilmReel() {
                         >
                             {/* Background Image for each frame */}
                             <div
-                                className="absolute inset-0 bg-cover bg-center z-0 opacity-45"
+                                className="absolute inset-0 bg-cover bg-center z-0 opacity-100"
                                 style={{ backgroundImage: `url(${item.image})` }}
                             ></div>
                             {/* Overlay for text readability */}
@@ -72,7 +74,7 @@ function FilmReel() {
 
                 {/* Bottom holes */}
                 <div
-                    className="absolute bottom-2 left-0 w-full h-3 z-10"
+                    className="absolute bottom-2 left-0 w-full h-3 z-10 opacity-40 "
                     style={{
                         backgroundImage: 'repeating-linear-gradient(to right, #ffffff 0, #ffffff 16px, transparent 16px, transparent 32px)'
                     }}
@@ -165,6 +167,8 @@ export default function OldCamera() {
     const text1Ref = useRef(null);
     const text2Ref = useRef(null);
     const text3Ref = useRef(null);
+    const buttonRef = useRef(null);
+    const bgImageRef = useRef(null);
 
     useGSAP(() => {
         const tl = gsap.timeline({
@@ -178,6 +182,20 @@ export default function OldCamera() {
         });
 
         gsap.set([text1Ref.current, text2Ref.current, text3Ref.current], { opacity: 0, y: 30 });
+        if (buttonRef.current) {
+            gsap.set(buttonRef.current, { opacity: 0, y: 20 });
+        }
+        if (bgImageRef.current) {
+            gsap.set(bgImageRef.current, { opacity: 0, scale: 0.95 });
+        }
+
+        // Reveal background image & button after 3D camera rotation finishes
+        if (bgImageRef.current) {
+            tl.to(bgImageRef.current, { opacity: 0.35, scale: 1, duration: 0.4 }, 0.8);
+        }
+        if (buttonRef.current) {
+            tl.to(buttonRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0.8);
+        }
 
         tl.to(text1Ref.current, { opacity: 1, y: 0, duration: 0.2 }, 0.8)
             .to(text1Ref.current, { opacity: 0, y: -20, duration: 0.2 }, 1.5)
@@ -188,10 +206,21 @@ export default function OldCamera() {
     }, { scope: containerRef });
 
     return (
-        <div ref={containerRef} className="old-camera-container w-full h-[400vh] relative">
+        <div ref={containerRef} className="old-camera-container w-full h-[400vh] relative z-30">
 
 
-            <section className="sticky top-0 w-full h-[100vh] bg-white max-sm:overflow-hidden  flex items-center justify-center">
+            <section className="sticky top-0 w-full h-[100vh] bg-white max-sm:overflow-hidden flex items-center justify-center">
+
+                {/* Background Image of Subhash Ghai - reveals after 3D camera rotation */}
+                <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
+                    <div
+                        ref={bgImageRef}
+                        className="absolute inset-0 bg-cover bg-center md:bg-[center_right_10%] opacity-0 filter contrast-110"
+                        style={{ backgroundImage: "url('/img/last/1.jpg')" }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-r from-white via-white/70 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-white/30" />
+                </div>
 
                 {/* Title */}
                 <h2 className="absolute top-[10%] tracking-tighter left-[5%] md:left-[4%] z-40 text-black leading-none pointer-events-none">
@@ -199,40 +228,72 @@ export default function OldCamera() {
                 </h2>
 
                 {/* Text Content */}
-                <div className="absolute top-[40%] md:top-[45%] -translate-y-1/2 left-[5%] md:left-[4%] w-[90%] md:max-w-lg z-[60] text-black pointer-events-none">
+                <div className="absolute top-[40%] md:top-[45%] -translate-y-1/2 left-[5%] md:left-[4%] w-[90%] md:max-w-lg z-[70] text-black pointer-events-none">
 
-                    {/* Text Content 1 */}
-                    <div ref={text1Ref} className="absolute top-0 left-0 w-full">
-                        <h3 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-2">45+ Years Of Cinema</h3>
-                        <p className="text-sm md:text-base opacity-90 leading-relaxed ">
-                            For Over Four Decades, Mukta Arts Has Been Part Of India's Cinematic Journey, Creating Films And Stories That Have Entertained, Inspired, And Stayed With Audiences Across Generations.For Over Four Decades, Mukta Arts Has Been Part Of India's Cinematic Journey, Creating Films And Stories That Have Entertained, Inspired, And Stayed With Audiences Across Generations.
-                        </p>
+                    {/* Paragraph Slides Wrapper */}
+                    <div className="relative min-h-[310px] sm:min-h-[270px] md:min-h-[230px]">
+                        {/* Text Content 1 */}
+                        <div ref={text1Ref} className="absolute top-0 left-0 w-full pointer-events-none">
+                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight uppercase mb-1 md:mb-2">
+                                THE FILMMAKER
+                            </h3>
+                            <h5 className="text-base sm:text-lg md:text-xl font-medium text-[#0474BA] mb-3 md:mb-4 leading-snug">
+                                A Legacy in Indian Cinema
+                            </h5>
+                            <p className="text-sm md:text-base opacity-90 leading-relaxed mb-4 md:mb-5">
+                                From his directorial debut Kalicharan in 1976 to films including Karma, Ram Lakhan, Saudagar, Pardes and Taal, Subhash Ghai has shaped mainstream Hindi cinema through stories, music and characters that have endured across generations. He has written and directed 19 motion pictures, with 14 achieving hit or blockbuster status.
+                            </p>
+                        </div>
+
+                        {/* Text Content 2 */}
+                        <div ref={text2Ref} className="absolute top-0 left-0 w-full pointer-events-none">
+                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight uppercase mb-1 md:mb-2">
+                                THE VISIONARY
+                            </h3>
+                            <h5 className="text-base sm:text-lg md:text-xl font-medium text-[#0474BA] mb-3 md:mb-4 leading-snug">
+                                Building the Business of Cinema
+                            </h5>
+                            <p className="text-sm md:text-base opacity-90 leading-relaxed mb-4 md:mb-5">
+                                Ghai went beyond filmmaking to help shape the infrastructure of the Indian film industry. He founded Mukta Films in 1978, took Mukta Arts public, and pioneered initiatives in film financing, insurance, exhibition and digital projection. Mukta Arts became the first Indian film studio to undertake an IPO and list on the major stock exchanges, and pioneered film insurance with Taal as the first Indian film to be insured.
+                            </p>
+                        </div>
+
+                        {/* Text Content 3 */}
+                        <div ref={text3Ref} className="absolute top-0 left-0 w-full pointer-events-none">
+                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight uppercase mb-1 md:mb-2">
+                                THE EDUCATOR
+                            </h3>
+                            <h5 className="text-base sm:text-lg md:text-xl font-medium text-[#0474BA] mb-3 md:mb-4 leading-snug">
+                                Shaping the Next Generation
+                            </h5>
+                            <p className="text-sm md:text-base opacity-90 leading-relaxed mb-4 md:mb-5">
+                                In 2006, Ghai founded Whistling Woods International, transforming his experience in cinema into a platform for film and media education. His vision was to create a world-class institution that could equip the next generation of filmmakers, technicians and storytellers for a global industry.
+                            </p>
+                        </div>
                     </div>
 
-                    {/* Text Content 2 */}
-                    <div ref={text2Ref} className="absolute top-0 left-0 w-full">
-                        <h3 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-2">Global Recognition</h3>
-                        <p className="text-sm md:text-base opacity-90 leading-relaxed ">
-                            With numerous national and international awards, our commitment to excellence has resonated with audiences and critics alike, setting new benchmarks in the industry.  With numerous national and international awards, our commitment to excellence has resonated with audiences and critics alike, setting new benchmarks in the industry.
-                        </p>
-                    </div>
 
-                    {/* Text Content 3 */}
-                    <div ref={text3Ref} className="absolute top-0 left-0 w-full">
-                        <h3 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-2">Future of Storytelling</h3>
-                        <p className="text-sm md:text-base opacity-90 leading-relaxed ">
-                            Embracing new technologies and fresh narratives, we continue to evolve, bringing innovative and captivating stories to screens worldwide for the next generation. Embracing new technologies and fresh narratives, we continue to evolve, bringing innovative and captivating stories to screens worldwide for the next generation.
-                        </p>
-                    </div>
-
+                </div>
+                {/* Single View More Button placed directly after the text paragraph */}
+                <div
+                    ref={buttonRef}
+                    className="pt-2 pointer-events-auto absolute  bottom-10 left-15 z-[80]"
+                >
+                    <Link
+                        href="/subhash-ghai"
+                        className="inline-flex items-center gap-2 bg-[#0474BA] hover:bg-[#0666a1] text-white px-6 py-2.5 text-xs md:text-sm tracking-wider font-semibold rounded-[3px] transition-all duration-300 shadow-md hover:shadow-lg group cursor-pointer"
+                    >
+                        <span>View More</span>
+                        <span className="transform group-hover:translate-x-1 transition-transform">→</span>
+                    </Link>
                 </div>
 
                 {/* 3D Canvas */}
-                <div className="absolute inset-0 z-50  w-full h-full ">
+                <div className="absolute inset-0 z-10 w-full h-full pointer-events-none">
                     <Canvas
 
                         camera={{ position: [0, 0, 5], fov: 45 }}
-                        className="w-full h-full cursor-grab active:cursor-grabbing"
+                        className="w-full h-full pointer-events-none"
                         dpr={[1, 2]} // Support for high-res screens
                     >
                         <ambientLight intensity={0.4} />

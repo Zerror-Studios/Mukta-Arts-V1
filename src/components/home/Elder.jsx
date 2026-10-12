@@ -9,21 +9,39 @@ gsap.registerPlugin(ScrollTrigger);
 
 const data = [
     {
-        title: "Whistling Woods",
+        title: "Whistling Woods International",
         image: "/img/ma/WhistlingWoods.jpg",
-        shortDesc: "Whistling Woods International (WWI) is India's premier institute for film, communication, and creative and performing arts.",
-        fullDesc: "Whistling Woods International (WWI) is India's premier institute for film, communication, and creative and performing arts. Founded in 2006, it has grown into one of the country's most respected names in media and entertainment education, training students across cinematography, direction, editing, production, screenwriting, animation, acting, music, design, journalism and more. WWI's degree and diploma programs are offered in partnership with the Tata Institute of Social Sciences (TISS), and its curriculum blends theoretical grounding with hands-on, industry-oriented learning, supported by technology partnerships with global names including Apple, Google, Adobe, Sony, Epic Games and Intel. Spread across a 5.5-acre campus, the institute brings together state-of-the-art infrastructure, industry-grade technology and dedicated facilities for all programmes. Since its first graduating batch in 2008, WWI has trained over 4,000 alumni, with 1,300 students currently enrolled. Its standing has been recognised internationally: The Hollywood Reporter has repeatedly rated it among the ten best film schools in the world, Forbes named it a Global Institute of Influence in 2015, and FICCI honoured it as India's Best Institute for Creative and Performing Arts in 2019. WWI remains true to the vision it was founded on, that India's creative industries deserve a world-class institution of their own, one built to train not just technicians, but the storytellers, artists and innovators shaping the future of media and entertainment.",
+        shortDesc: "Whistling Woods International (WWI) is India’s premier institute for Film, Communication, and Creative Arts. ",
+        fullDesc: `● Among the world's ten best film schools, as rated by The Hollywood Reporter, more than once.
+● 7 specialised schools under one roof, spanning filmmaking, acting, animation, design, fashion, media and music.
+● IIM Mumbai x WWI: India's first MBA in Media & Entertainment from an IIM.
+● TISS degrees, with a curriculum shaped by working industry professionals.
+●  Built for what's next, with tech labs alongside  Apple, NVIDIA, Epic Games, 
+Sony and more. 
+●  4,000+ alumni  shaping Indian and global media and entertainment and  1,300 
+current students. `,
+        photo: "/img/ma/WhistlingWoods.jpg",
         website: "https://www.whistlingwoods.net/",
         pos: "top-[15%] left-[15%]",
         color1: "#c02690",
         color2: "#2d346b"
     },
     {
-        title: "Mukta Art Production",
+        title: "Mukta Arts Productions",
         image: "/img/ma/MuktaArtProduction.png",
-        shortDesc: "Subhash Ghai is one of Indian cinema’s most influential figures, a filmmaker and visionary who went beyond making films to build an ecosystem around them.",
-        fullDesc: "PRODUCTION - MAL Filmmography (Features, Regional, Select, Shorts)\n\nSUBHASH GHAI\nFounder & Chairman, Mukta Arts Ltd.\n\nSubhash Ghai is one of Indian cinema’s most influential figures, a filmmaker and visionary who went beyond making films to build an ecosystem around them. Over more than five decades, he has shaped Hindi cinema across every facet of the industry, as a storyteller behind the camera, as a producer and entrepreneur who built one of India’s leading entertainment companies, and as an institution-builder who extended his vision into distribution, exhibition and education. His work has helped create an enterprise that spans the journey of a film from creation to audience, while contributing to the growth and evolution of the wider Indian entertainment industry. Across a career spanning 19 films, 14 of which became hits or blockbusters, Ghai has told stories that explore love, ambition, family, identity, society and the human condition. From Karz, Hero and Ram Lakhan to Saudagar, Khal Nayak, Pardes and Taal, his work has introduced audiences to indelible characters, music and storytelling that continue to resonate across generations. In 1978, he founded Mukta Films, which grew into Mukta Arts Ltd., evolving from a production house into a broader entertainment enterprise spanning production, distribution and exhibition. Taking the company public in 2000 reflected his larger vision of bringing structure, professionalism and institutional rigour to the Indian film business. He has been equally invested in creating opportunities for others. In 2006, he founded Whistling Woods International, driven by the conviction that India's growing creative industries needed a world-class institution dedicated to nurturing talent. The institute has since trained thousands of students across filmmaking, acting, music, animation, media and other creative disciplines, many of whom have gone on to build accomplished careers across the industry. Beyond his films and institutions, Ghai has consistently used cinema as a lens on society and its shifting aspirations, reflecting the cultural landscape of its time while creating space for new voices and new forms of creative expression. Today, he continues to guide Mukta Arts as its Founder and Chairman, with a vision that reaches beyond producing films, toward growing Indian cinema, nurturing creative talent and building institutions that shape its future.",
-        website: "https://muktaarts.com",
+        shortDesc: "The house behind Karz, Hero, Ram Lakhan, Pardes and Taal, producing 50+ stories that have stayed with Indian audiences since 1978.",
+        fullDesc: `
+        ●  50+ films  produced and co-produced since 1978, in  Hindi and regional 
+languages. 
+●  35 blockbusters,  many of which remain among the most  loved films in Indian 
+cinema.
+●  8 regional films  across Marathi, Bengali, Punjabi and Kannada, including Valu, 
+Samhita, Noukadubi and Vijeta. 
+●  National Award winner for Iqbal, named Best Film on Other Social Issues. 
+●  India's first listed Hindi film company  , the first  to go public on the stock 
+exchanges, in 2000.
+        `,
+        website: "",
         pos: "bottom-[5%] left-[85%]",
         color1: "#a52288",
         color2: "#272a63"
@@ -32,7 +50,16 @@ const data = [
         title: "Mukta VN Films",
         image: "/img/ma/MuktaVNFilms.jpg",
         shortDesc: "Mukta VN Films is Mukta Arts’ film programming and distribution services venture, established in 2014 as a joint venture with UFO Moviez.",
-        fullDesc: "Mukta VN Films is Mukta Arts’ film programming and distribution services venture, established in 2014 as a joint venture with UFO Moviez. The company manages film programming across a growing network of cinemas nationwide, working at the intersection of content, exhibition and audience demand. Building on Mukta Arts’ longstanding experience in film programming, Mukta VN Films works with cinema operators to curate and schedule content across screens, balancing film availability, audience preferences and market dynamics. Mukta Arts’ programming legacy dates back to its earlier Mukta Movies Distributors division, which provided programming services to several of India’s leading multiplex and single-screen chains during their early stages of growth, including PVR, INOX, Cinepolis, Big Cinemas, Fame, Fun Cinemas, DT and Carnival Cinemas. Today, Mukta VN Films manages programming for around 195 screens across India, continuing Mukta Arts’ role in connecting films with audiences and helping shape what plays on screens across the country.",
+        fullDesc: `
+        ●  Around 195 screens  have been programmed nationwide,  across a growing 
+network of cinemas. 
+●  A trusted partner to cinema operators  , working where  content, exhibition and 
+audience demand meet. 
+●  A legacy in programming  , rooted in Mukta Arts' earlier Mukta Movies 
+Distributors division. 
+●  Part of India's multiplex story  ,  having  programmed for PVR, INOX, Cinepolis, 
+Big Cinemas, Fame, Fun Cinemas, DT and Carnival Cinemas  in their early 
+years.`,
         website: null,
         pos: "top-[5%] right-[0%]",
         color1: "#7e1c79",
@@ -41,8 +68,28 @@ const data = [
     {
         title: "Mukta A2 Cinemas",
         image: "/img/ma/MuktaA2Cinemas.jpg",
-        shortDesc: "Mukta A2 Cinemas is the exhibition arm of Mukta Arts, founded with a vision to make the big-screen experience accessible to audiences across India.",
-        fullDesc: "Mukta A2 Cinemas is the exhibition arm of Mukta Arts, founded with a vision to make the big-screen experience accessible to audiences across India. Built around the idea of offering quality cinema at affordable prices, the brand has grown into a diverse cinema exhibition network spanning established and emerging markets. Today, Mukta A2 Cinemas operates 73 screens across 26 locations in India, alongside 16 screens through its joint venture with Asian Cinemas. Its international presence includes six screens in Bahrain, with the company also managing an additional 10 screens in the country and expanding its cinema management operations into Saudi Arabia. The cinemas combine modern projection and sound technology with comfortable seating, food and beverage offerings and a focus on delivering an accessible, high-quality movie-going experience. From major cities to emerging Tier II and Tier III markets, Mukta A2 Cinemas continues to take the magic of the big screen to a wider and more diverse audience.",
+        shortDesc: "Mukta A2 Cinemas is the exhibition arm of Mukta Arts, founded with a vision to make the big- screen experience accessible to audiences across India.",
+        fullDesc: `
+        ●  57 screens across 19 cities  in India, and growing. 
+●  Iconic properties  including New Excelsior in South Mumbai, Sun City in Vile 
+Parle, Ratnanjali Square in Ahmedabad, Orbit Plaza in Surat and Konark 70MM 
+in Hyderabad. 
+●  Big-screen experience, pocket-friendly prices  , making  the multiplex 
+accessible beyond metro audiences. 
+●  International presence  through a 6-screen multiplex in the Kingdom of Bahrain.
+        `,
+        website: "https://muktaa2cinemas.in/",
+        pos: "bottom-[5%] left-[15%]",
+        color1: "#5d186c",
+        color2: "#191a4b"
+    },
+    {
+        title: "SGM STUDIOS",
+        image: "https://muktaarts.com/Media/uploads/2026/SGM-ANIMATION-STUDIOS-MUKTA-ARTS-LTD-MOU.gif",
+        shortDesc: "For SGM Studios the page format won’t work. It’ll have to be an introduction text (below) with a couple of photos I will share that can be placed as a carousel or showreel under.",
+        fullDesc: `
+       SGM Studios is Mukta Arts' animation and visual storytelling arm, built to carry the company's cinematic legacy into the world of animation and new-age entertainment. The studio develops original, culturally rooted IP, bringing together creative talent and emerging technology to craft visually distinctive worlds and character-driven narratives for audiences across India and beyond. Its work spans animation, digital formats and franchise development, with the ambition of building properties that can travel across film, series and other forms of entertainment, pairing decades of experience in cinema with the creative range of animation. 
+        `,
         website: "https://muktaa2cinemas.in/",
         pos: "bottom-[5%] left-[15%]",
         color1: "#5d186c",
@@ -292,11 +339,11 @@ const Elder = () => {
                 {/* Final Text */}
                 <div
                     ref={finalRef}
-                    className="absolute z-30 w-full max-w-5xl px-4 md:px-12 opacity-0 invisible pointer-events-none"
+                    className="absolute z-30 w-full max-w-5xl px-4 md:px-12 opacity-0 invisible pointer-events-none flex flex-col items-center justify-center text-center"
                 >
-                    <h4 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold leading-tight text-white/90 flex flex-wrap gap-x-1.5 md:gap-x-3 gap-y-1 md:gap-y-2">
-                        {"For over four decades, Mukta Arts has shaped Indian cinema through unforgettable stories, visionary filmmaking, and a lasting passion for the art of storytelling."
-                            .split(" ")
+                    <h4 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold leading-tight text-white/90 flex flex-wrap justify-center text-center gap-x-1.5 md:gap-x-3 gap-y-1 md:gap-y-2">
+                        {"For nearly five decades, Mukta Arts has been telling stories that became a part of India’s cultural memory. From iconic films and unforgettable music to cinema, education and new forms of storytelling, Mukta continues to build on a legacy shaped by a belief in the power of the moving image."
+                            .split(/\s+/)
                             .map((word, i) => (
                                 <span
                                     key={i}
@@ -322,16 +369,53 @@ const Elder = () => {
                     <div className="flex-1 overflow-y-auto p-5 pt-20 md:p-16 lg:p-20 flex flex-col">
                         {activeItem && (
                             <>
-                                {/* <div className="w-full aspect-video rounded-sm overflow-hidden mb-10 flex-shrink-0 shadow-2xl relative">
-                                    <div className="absolute inset-0 bg-black/20 pointer-events-none"></div>
-                                    <img src={activeItem.image} alt={activeItem.title} className="w-full h-full object-cover" />
-                                </div> */}
+                                <h2 className={`${activeItem.title?.trim() === "Whistling Woods International" ? "hidden" : ""} text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-4 md:mb-6 tracking-wide`}>{activeItem.title}</h2>
 
-                                <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-4 md:mb-6 tracking-wide">{activeItem.title}</h2>
+                                {activeItem.photo && (
+                                    <div className="w-full aspect-video rounded-xl overflow-hidden mb-6 md:mb-8 flex-shrink-0 shadow-2xl relative border border-white/10 group">
+                                        <img
+                                            src={activeItem.photo}
+                                            alt={activeItem.title}
+                                            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
+                                    </div>
+                                )}
 
-                                <p className="text-white/80 text-xs sm:text-sm md:text-base lg:text-lg font-light leading-relaxed whitespace-pre-wrap">
-                                    {activeItem.fullDesc}
-                                </p>
+                                <div className="text-white/80 text-xs sm:text-sm md:text-base lg:text-lg font-light leading-relaxed space-y-4">
+                                    {activeItem.fullDesc.split('\n\n').map((block, bIdx) => {
+                                        const lines = block.split('\n');
+                                        const isBulletList = lines.some(line => /^\s*[●•\-\*]/.test(line));
+
+                                        if (isBulletList) {
+                                            return (
+                                                <ul key={bIdx} className="space-y-3 pl-1">
+                                                    {lines.map((line, lIdx) => {
+                                                        const trimmed = line.trim();
+                                                        if (!trimmed) return null;
+                                                        const isBullet = /^[●•\-\*]/.test(trimmed);
+                                                        if (isBullet) {
+                                                            const bulletContent = trimmed.replace(/^[●•\-\*]\s*/, '');
+                                                            return (
+                                                                <li key={lIdx} className="flex items-start gap-3">
+                                                                    <span className="text-[#e2a866] text-xs md:text-sm mt-1 flex-shrink-0 select-none">●</span>
+                                                                    <span className="flex-1">{bulletContent}</span>
+                                                                </li>
+                                                            );
+                                                        }
+                                                        return <p key={lIdx}>{trimmed}</p>;
+                                                    })}
+                                                </ul>
+                                            );
+                                        }
+
+                                        return (
+                                            <p key={bIdx} className="whitespace-pre-line">
+                                                {block}
+                                            </p>
+                                        );
+                                    })}
+                                </div>
 
                                 {activeItem.website && (
                                     <div className="mt-8 md:mt-12 mb-4">

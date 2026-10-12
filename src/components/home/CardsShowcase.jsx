@@ -7,57 +7,80 @@ import gsap from "gsap";
 
 let arr = [
   {
+    year: "2025",
     clr: "#0470B1",
     img: "/img/home/trophy_nb1.jpg",
-    title: "Global Recognition",
-    desc: "Recognized worldwide for pushing boundaries and creating impactful digital experiences that inspire and engage users on a global scale."
+    title: "Digital Studio M&E Award - Media & Entertainment Education Award for Cinema",
+    desc: "Whistling Woods International in 2025"
   },
   {
+    year: "2025",
     clr: "#00A7E1",
     img: "/img/home/trophy_nb2.jpg",
-    title: "Design Excellence",
-    desc: "Awarded for exceptional user interface design, balancing aesthetic appeal with highly intuitive user journeys."
+    title: "Big Cine Awards - Fastest Growing Cinema Chain of the Year",
+    desc: "Mukta A2 Cinemas in 2025"
   },
   {
+    year: "2024",
     clr: "#0470B1",
     img: "/img/home/trophy_nb3.jpg",
-    title: "Innovation Award",
-    desc: "Celebrating groundbreaking approaches to solving complex problems through technology, creativity, and forward-thinking."
+    title: "Navbharat Education Excellence Award - Filmmaking Institute of the Year",
+    desc: "Whistling Woods International in 2024"
   },
   {
+    year: "2019",
     clr: "#00A7E1",
     img: "/img/home/trophy_nb4.jpg",
-    title: "Best In Class",
-    desc: "Honored as the industry standard for excellence, setting the benchmark for quality, performance, and user satisfaction."
+    title: "FICCI Higher Education Excellence Award - Excellence in Creative & Performing Arts",
+    desc: "Whistling Woods International in 2019"
   },
   {
+    year: "2019",
     clr: "#0470B1",
     img: "/img/home/trophy_nb1.jpg",
-    title: "Creative Mastery",
-    desc: "Demonstrating exceptional creativity and vision in crafting compelling narratives that resonate with audiences everywhere."
+    title: "Big Cine Awards - Best Single-Screen Theatre of the Year",
+    desc: "New Excelsior Mukta A2 Cinemas in 2019"
   },
   {
+    year: "2017",
     clr: "#00A7E1",
     img: "/img/home/trophy_nb2.jpg",
-    title: "Tech Innovator",
-    desc: "Recognized for leveraging cutting-edge technology to deliver seamless and engaging interactive experiences."
+    title: "Screen Award - Lifetime Achievement",
+    desc: "Subhash Ghai in 2017"
   },
   {
+    year: "2015",
     clr: "#0470B1",
     img: "/img/home/trophy_nb3.jpg",
-    title: "Audience Choice",
-    desc: "Voted as the absolute favorite by audiences worldwide, signifying a deep connection with our core demographics."
+    title: "IIFA Award - Outstanding Contribution to Indian Cinema",
+    desc: "Subhash Ghai in 2015"
   },
   {
+    year: "2006",
     clr: "#00A7E1",
     img: "/img/home/trophy_nb4.jpg",
-    title: "Legacy Award",
-    desc: "Honoring decades of consistent excellence and a lasting positive impact on the digital and entertainment landscape."
+    title: "National Film Award - Best Film on Other Social Issues",
+    desc: "Iqbal produced by Subhash Ghai / Mukta Arts in 2006"
+  },
+  {
+    year: "1998",
+    clr: "#0470B1",
+    img: "/img/home/trophy_nb1.jpg",
+    title: "Filmfare Award - Best Screenplay",
+    desc: "Subhash Ghai for Pardes in 1998"
+  },
+  {
+    year: "1992",
+    clr: "#00A7E1",
+    img: "/img/home/trophy_nb2.jpg",
+    title: "Filmfare Award - Best Director",
+    desc: "Subhash Ghai for Saudagar in 1992"
   }
 ];
 
 export default function CardsShowcase() {
-  const [cardOrder, setCardOrder] = useState(arr.map((_, i) => i));
+  // Initialize with the most recent card (arr[0]) at the front of the visual stack
+  const [cardOrder, setCardOrder] = useState(arr.map((_, i) => arr.length - 1 - i));
   const cursorRef = useRef(null);
   const [isHovering, setIsHovering] = useState(false);
 
@@ -110,6 +133,8 @@ export default function CardsShowcase() {
     });
   };
 
+  const centerOffset = (arr.length - 1) / 2;
+
   return (
     <div className="w-full h-[100vh] relative z-[10] mt-[10vh] md:mt-[30vh] overflow-hidden">
       {/* Title */}
@@ -138,9 +163,8 @@ export default function CardsShowcase() {
                 className="group absolute w-[75vw] md:w-[40vw] max-w-[90%] h-[90%] md:h-[80%] transition-all duration-500 ease-out cursor-pointer"
                 style={{
                   zIndex: visualIndex,
-                  // We center the 8 cards by using (arr.length - 1) / 2 which is 3.5
-                  // Kept a similar proportion for X offset and Z spacing to retain the exact same animation feel!
-                  transform: `translateX(${(visualIndex - 3.5) * 11}%) translateY(-80px) translateZ(${visualIndex * 35}px) rotateY(15deg)`,
+                  // Center the 10 cards using centerOffset (4.5) with proportionate spacing for 3D depth and fan
+                  transform: `translateX(${(visualIndex - centerOffset) * 9}%) translateY(-80px) translateZ(${visualIndex * 28}px) rotateY(15deg)`,
                   transformOrigin: "center center",
                 }}
               >
@@ -167,11 +191,18 @@ export default function CardsShowcase() {
 
                     {/* Text Area */}
                     <div className="w-full md:w-1/2 h-1/2 md:h-full flex flex-col justify-center md:justify-start p-6 md:p-12 md:pl-10 text-white text-center md:text-left">
-                      <div className="mt-1 mb-2 md:mb-5">
-                        <h5 className="text-2xl md:text-4xl">{item.title}</h5>
+                      {item.year && (
+                        <div className="mb-2 md:mb-3">
+                          <span className="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs md:text-sm font-semibold tracking-wider">
+                            {item.year}
+                          </span>
+                        </div>
+                      )}
+                      <div className="mt-1 mb-2 md:mb-4">
+                        <p className="text-xl md:text-2xl lg:text-3xl font-semibold leading-tight">{item.title}</p>
                       </div>
                       <div className="mb-4">
-                        <p className="capitalize text-sm md:text-base">
+                        <p className="text-sm md:text-base text-white/90">
                           {item.desc}
                         </p>
                       </div>

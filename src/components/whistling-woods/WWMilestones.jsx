@@ -1,177 +1,75 @@
-// "use client";
-// import React, { useState } from 'react';
 
-// const UNIQUE_DATA = [
-//     { year: '2006', text: 'Foundation of Whistling Woods International.' },
-//     { year: '2010', text: 'Expanded campus facilities and introduced new courses.' },
-//     { year: '2011', text: 'Ranked among the top 10 film schools globally.' },
-//     { year: '2013', text: 'Introduced degree programs in animation and media.' },
-//     { year: '2014', text: "Partnered with the Tata Institute of Social Sciences (TISS) to offer UG & PG degree.\n\nLaunched India's first UG applied arts degrees in Filmmaking, Acting & Music programmes." },
-//     { year: '2015', text: 'Collaborated with international universities for student exchange.' },
-//     { year: '2016', text: 'Launched School of Design and School of Fashion.' },
-//     { year: '2018', text: 'Celebrated over 2000 alumni working in the industry.' },
-//     { year: '2020', text: 'Adapted to hybrid learning models successfully.' },
-//     { year: '2023', text: 'Continuing the legacy of excellence in creative arts.' },
-// ];
-
-// // Duplicate data to create a large continuous/wrapping wheel effect
-// const MOCK_DATA = [...UNIQUE_DATA, ...UNIQUE_DATA, ...UNIQUE_DATA, ...UNIQUE_DATA];
-
-// const WWMilestones = () => {
-//     // Default to the middle of the duplicated data to allow rotating backwards seamlessly initially
-//     const [rotationState, setRotationState] = useState({
-//         activeIndex: 14, // 2014 from the second block
-//         rotation: -14 * (360 / MOCK_DATA.length)
-//     });
-
-//     // For text animation trigger
-//     const [fadeKey, setFadeKey] = useState(0);
-
-//     const angleStep = 360 / MOCK_DATA.length;
-//     // Safely calculate the index for the text description
-//     const safeDataIndex = ((rotationState.activeIndex % UNIQUE_DATA.length) + UNIQUE_DATA.length) % UNIQUE_DATA.length;
-
-//     const handleDotClick = (i) => {
-//         if (i === rotationState.activeIndex) return;
-
-//         let diff = i - rotationState.activeIndex;
-//         const N = MOCK_DATA.length;
-
-//         // Find shortest path to allow smooth wrap-around
-//         if (diff > N / 2) diff -= N;
-//         if (diff < -N / 2) diff += N;
-
-//         setRotationState(prev => ({
-//             activeIndex: i,
-//             rotation: prev.rotation - (diff * angleStep)
-//         }));
-
-//         // Trigger text animation
-//         setFadeKey(prev => prev + 1);
-//     };
-
-//     return (
-//         <section className="bg-[#0b6b9c] text-white overflow-hidden py-24 relative flex flex-col items-center z-50">
-//             {/* Header section matching the blue reference design */}
-//             <div className="text-center z-10 relative px-4 max-w-5xl mt-10">
-//                 <h4 className="text-3xl md:text-5xl lg:text-[44px] font-bold mb-6 leading-tight">
-//                     WWI Milestones — From Vision To<br className="hidden md:block" />
-//                     A Global Creative Community
-//                 </h4>
-//                 <p className="text-sm md:text-base mx-auto text-white/90 max-w-2xl leading-relaxed">
-//                     From a bold vision to a thriving community shaping the future of<br className="hidden md:block" />
-//                     media, communication, and creative arts.
-//                 </p>
-//             </div>
-
-//             {/* Timeline Container */}
-//             <div className="relative w-full h-[500px] md:h-[600px]  flex justify-center">
-
-//                 {/* Vertical Dotted Line for active item */}
-//                 <div className="absolute top-[30vh] left-1/2 w-px h-[60px] md:h-[80px] border-l border-dashed border-white/40 z-20" />
-
-//                 {/* Active Text Description (with key for CSS re-animation) */}
-//                 <div className="absolute top-[40vh] left-1/2 -translate-x-1/2 w-full max-w-2xl px-6 text-center z-20 pointer-events-none">
-//                     <p
-//                         key={fadeKey}
-//                         className="text-white text-sm md:text-base font-medium whitespace-pre-line leading-relaxed opacity-0 animate-[fade-in-up_0.8s_ease-out_forwards]"
-//                     >
-//                         {UNIQUE_DATA[safeDataIndex]?.text || ''}
-//                     </p>
-//                 </div>
-
-//                 {/* Centering Wrapper for Wheel */}
-//                 <div className="absolute top-[80px] left-1/2 z-0 mt-[10vh] -translate-x-1/2">
-
-//                     {/* The Large Rotating Wheel with CSS Transitions */}
-//                     <div
-//                         className="relative rounded-full border border-dashed border-black/30 shrink-0"
-//                         style={{
-//                             width: '3000px',
-//                             height: '3000px',
-//                             transform: `rotate(${rotationState.rotation}deg)`,
-//                             transition: 'transform 1.2s cubic-bezier(0.25, 1, 0.5, 1)'
-//                         }}
-//                     >
-//                         {MOCK_DATA.map((item, i) => {
-//                             const rotation = i * angleStep;
-//                             const isActive = rotationState.activeIndex === i;
-
-//                             return (
-//                                 <div
-//                                     key={i}
-//                                     className="absolute origin-bottom z-10 cursor-pointer group"
-//                                     style={{
-//                                         top: 0,
-//                                         left: '50%',
-//                                         marginLeft: '-20px', // Centers the 40px width element
-//                                         width: '40px', // Wider clickable area
-//                                         height: '1500px', // Radius
-//                                         transform: `rotate(${rotation}deg)`
-//                                     }}
-//                                     onClick={() => handleDotClick(i)}
-//                                 >
-//                                     {/* Dot */}
-//                                     <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-//                                         <div
-//                                             className={`rounded-full transition-all duration-300
-//                                                 ${isActive
-//                                                     ? 'bg-[#ff5a00] w-5 h-5 shadow-[0_0_15px_rgba(255,90,0,0.5)]'
-//                                                     : 'bg-white w-3 h-3 group-hover:scale-150'
-//                                                 }
-//                                             `}
-//                                         />
-//                                     </div>
-
-//                                     {/* Year Text placed radially outside the arc */}
-//                                     <div className="absolute top-[-30px] md:top-[-45px] left-1/2 -translate-x-1/2 -translate-y-full text-center">
-//                                         <span
-//                                             className={`text-2xl md:text-4xl font-bold tracking-wide transition-all duration-300
-//                                                 ${isActive
-//                                                     ? 'text-white-900!'
-//                                                     : 'text-white/40! group-hover:text-white!'
-//                                                 }
-//                                             `}
-//                                         >
-//                                             {item.year}
-//                                         </span>
-//                                     </div>
-//                                 </div>
-//                             );
-//                         })}
-//                     </div>
-//                 </div>
-//             </div>
-
-//             {/* Injected Keyframes for smooth text animation */}
-//             <style dangerouslySetInnerHTML={{
-//                 __html: `
-//                 @keyframes fade-in-up {
-//                     0% { opacity: 0; transform: translateY(15px); }
-//                     100% { opacity: 1; transform: translateY(0); }
-//                 }
-//             `}} />
-//         </section>
-//     );
-// };
-
-// export default WWMilestones;
 
 
 "use client";
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 const UNIQUE_DATA = [
-    { year: '2006', text: 'Foundation of Whistling Woods International.' },
-    { year: '2010', text: 'Expanded campus facilities and introduced new courses.' },
-    { year: '2011', text: 'Ranked among the top 10 film schools globally.' },
-    { year: '2013', text: 'Introduced degree programs in animation and media.' },
-    { year: '2014', text: "Partnered with the Tata Institute of Social Sciences (TISS) to offer UG & PG degree." },
-    { year: '2015', text: 'Collaborated with international universities for student exchange.' },
-    { year: '2016', text: 'Launched School of Design and School of Fashion.' },
-    { year: '2018', text: 'Celebrated over 2000 alumni working in the industry.' },
-    { year: '2020', text: 'Adapted to hybrid learning models successfully.' },
-    { year: '2023', text: 'Continuing the legacy of excellence in creative arts.' },
+    {
+        year: '2010',
+        image: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=1920',
+        text: '· Recognised as one of the top 10 film schools globally by the Hollywood Reporter.\n\n· Received CILECT membership, a mark of global credibility and excellence in film & media education.',
+    },
+    {
+        year: '2011',
+        image: 'https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?auto=format&fit=crop&q=80&w=1920',
+        text: '· Partnered with Sony to set up the Sony Media Technology Centre.\n\n· Expansion to Media Management Programmes at UG & PG levels',
+    },
+    {
+        year: '2013',
+        image: 'https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&q=80&w=1920',
+        text: '· Expansion to commence Fashion Design education, in association with Neeta Lulla.',
+    },
+    {
+        year: '2014',
+        image: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&q=80&w=1920',
+        text: "· Partnered with the Tata Institute of Social Sciences (TISS) to offer UG & PG degree.\n\n· Launched India’s first UG applied arts degrees in Filmmaking, Acting & Music programmes.",
+    },
+    {
+        year: '2015',
+        image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=1920',
+        text: '· Partnered with FoxConn to set up the FoxConn Media Lab to broaden the scope of education in the creation of digital content for UGC (User Generated Content) platforms.\n\n· Partnered with Google to set up the YouTube Space & YouTube Educator Lab at the WWI Mumbai campus.',
+    },
+    {
+        year: '2016',
+        image: 'https://images.unsplash.com/photo-1585699324551-f6c309eedeca?auto=format&fit=crop&q=80&w=1920',
+        text: '· Partnered with REDucation platform to become India’s first institute to have DSMC2 cameras.',
+    },
+    {
+        year: '2018',
+        image: 'https://images.unsplash.com/photo-1592478411213-6153e4ebc07d?auto=format&fit=crop&q=80&w=1920',
+        text: '· Partnered with Reliance Jio to set up the WWI Jio VR Lab.\n\n· First in India to introduce 8k Cinematography, in association with RED.\n\n· WWI hosts the CILECT World Congress, first time in India.\n\n· Recognised with the excellence in creative & performing arts award at the 6th FICCI Higher Education Excellence Award.',
+    },
+    {
+        year: '2019',
+        image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=1920',
+        text: '· Institutional partner to Apple for ‘Shot on iPhone’ education.',
+    },
+    {
+        year: '2020',
+        image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1920',
+        text: '· Established the WWI Emerging Media Lab for Virtual Production, Motion Capture, Photogrammetry & Volumetric Capture.',
+    },
+    {
+        year: '2022',
+        image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1920',
+        text: '· Partnered with the Epic Games, the creator of unreal engine for 3D creation tools.\n\n· Partnered with the Disguise for integrated video & media server technology used in live events, broadcast & virtual production.',
+    },
+    {
+        year: '2024',
+        image: 'https://images.unsplash.com/photo-1517649763962-0c623266ddc0?auto=format&fit=crop&q=80&w=1920',
+        text: '· Partnered with Intel to livestream the 2024 Paris Olympics in 8k.\n\n· Meghna Ghai Puri, President, WWI has been welcomed into the prestigious EMMY Academy – a global community of creative visionaries shaping the future of television and media.\n\n· Chaitanya Chinchlikar, Vice President & CTO, WWI received the SMPTE EXCELLENCE in education.',
+    },
+    {
+        year: '2025',
+        image: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80&w=1920',
+        text: 'FICCI BAF Awards 2025: Our Students Shine with 3 Prestigious Wins!\n\n· Best Student Animation Film\n\n· Best Student Game\n\n· Best Student VFX Work',
+    },
+    {
+        year: '2026',
+        image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1920',
+        text: 'WWI partners with IIM Mumbai to launch India’s first MBA in Creative Industries, shaping future leaders at the intersection of business and entertainment.',
+    },
 ];
 
 const N = UNIQUE_DATA.length;
@@ -310,9 +208,44 @@ const WWMilestones = () => {
                 }
                 style={SCROLL_DRIVEN ? { height: '100vh', minHeight: 680 } : undefined}
             >
+                {/* Dynamic Milestone Background Crossfade */}
+                <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                    {UNIQUE_DATA.map((item, i) => (
+                        <div
+                            key={item.year}
+                            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${active === i ? 'opacity-100' : 'opacity-0'
+                                }`}
+                        >
+                            <img
+                                src={item.image}
+                                alt={`${item.year} Milestone Background`}
+                                loading={i <= 1 ? 'eager' : 'lazy'}
+                                className={`w-full h-full object-cover object-center transition-transform duration-1000 ease-out ${active === i ? 'scale-100' : 'scale-105'
+                                    }`}
+                            />
+                        </div>
+                    ))}
+
+                    {/* Cinematic Gradient & Vignette Overlay */}
+                    <div
+                        className="absolute inset-0"
+                        style={{
+                            background:
+                                'radial-gradient(ellipse at center, rgba(30, 80, 140, 0.72) 0%, rgba(18, 48, 86, 0.88) 60%, rgba(10, 26, 48, 0.96) 100%)',
+                        }}
+                    />
+
+                    {/* Brand Blue Tint Blend */}
+                    <div className="absolute inset-0 bg-[#1e5288]/40 mix-blend-multiply" />
+
+                    {/* Soft Edge Blends */}
+                    <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#143d68]/80 to-transparent" />
+                    <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#0a203a]/90 to-transparent" />
+                </div>
+
                 {/* Grain texture */}
                 <div
-                    className="absolute inset-0 pointer-events-none"
+                    className="absolute inset-0 pointer-events-none z-[1]"
                     style={{ backgroundImage: NOISE, opacity: 0.12, mixBlendMode: 'overlay' }}
                 />
 
@@ -347,14 +280,15 @@ const WWMilestones = () => {
 
                     {/* Description */}
                     <div
-                        className="absolute  left-1/2 -translate-x-1/2 w-full px-6 text-center z-20 pointer-events-none"
-                        style={{ top: ARC_TOP + 150, maxWidth: 440 }}
+                        className="absolute left-1/2 -translate-x-1/2 w-full px-6 text-center z-20 pointer-events-none"
+                        style={{ top: ARC_TOP + 140, maxWidth: 620 }}
                     >
                         <div key={active} className="wwm-fade">
                             {paragraphs.map((p, idx) => (
                                 <p
                                     key={idx}
-                                    className={`text-[15px] leading-[1.45] ${idx > 0 ? 'mt-4' : ''}`}
+                                    className={`text-[14px] md:text-[15px] leading-relaxed md:leading-[1.5] ${p.startsWith('FICCI') ? 'font-semibold text-white' : 'text-white/95'
+                                        } ${idx > 0 ? (p.startsWith('·') && paragraphs[idx - 1]?.startsWith('·') && p.length < 40 ? 'mt-2' : 'mt-3') : ''}`}
                                 >
                                     {p}
                                 </p>

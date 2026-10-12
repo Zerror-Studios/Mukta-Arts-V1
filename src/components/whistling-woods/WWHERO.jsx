@@ -65,7 +65,7 @@ const WWHERO = () => {
                             fill
                             className="object-contain"
                         /> */}
-                        <h2 className='text-white uppercase'>Whistling Woods</h2>
+                        <h2 className='text-white uppercase'>WHISTLING WOODS INTERNATIONAL </h2>
                     </div>
                 </div>
 
@@ -80,7 +80,9 @@ const WWHERO = () => {
                         {/* Left Side: Description and Button */}
                         <div className="flex flex-col gap-8 max-w-[420px]">
                             <p className="wwi-text-anim text-white text-[15px]  md:text-[17px] leading-[1.6]">
-                                Founded by filmmaker Subhash Ghai,<br /> WWI offers world-class education in Film,<br /> Communication, Creative and Performing Arts.
+                                Whistling Woods International (WWI) and the Tata Institute of Social Sciences (TISS) <br />
+                                team up to offer degree and diploma programmes in Filmmaking,  <br /> Animation & Game Design, Acting, Media & Communication, Fashion, Music and Visual communication
+                                Design.
                             </p>
                             <div className="wwi-text-anim">
                                 <a href="#" className="inline-block bg-white text-black px-8 py-3.5 text-[11px] font-bold tracking-[0.15em] transition-colors hover:bg-gray-200">
@@ -91,18 +93,10 @@ const WWHERO = () => {
 
                         {/* Right Side: Details Grid */}
                         <div className="flex flex-col gap-3.5 text-white lg:min-w-[400px]">
-                            <div className="wwi-text-anim grid grid-cols-[80px_1fr] md:grid-cols-[100px_1fr] gap-4">
-                                <p className="text-[#A0A0A0] text-[13px] md:text-[14.5px]">Founder:</p>
-                                <p className="text-white text-[13px] md:text-[14.5px]">Subhash Ghai (2006)</p>
-                            </div>
-                            <div className="wwi-text-anim grid grid-cols-[80px_1fr] md:grid-cols-[100px_1fr] gap-4">
-                                <p className="text-[#A0A0A0] text-[13px] md:text-[14.5px]">Location:</p>
-                                <p className="text-white text-[13px] md:text-[14.5px]">Filmcity, Mumbai</p>
-                            </div>
-                            <div className="wwi-text-anim grid grid-cols-[80px_1fr] md:grid-cols-[100px_1fr] gap-4">
-                                <p className="text-[#A0A0A0] text-[13px] md:text-[14.5px]">Focus:</p>
-                                <p className="text-white text-[13px] md:text-[14.5px]">Film, Communication & Creative Arts</p>
-                            </div>
+                            <p className="wwi-text-anim text-white text-[15px]  md:text-[17px] leading-[1.6] mt-auto">Spread across a 5.5-acre campus, WWI is equipped with industry-grade facilities and  <br />
+                                cutting-edge technology that enable students to develop both the academic and  <br />
+                                practical aspects of their craft. Our vision is to build a globally benchmarked institution  <br />
+                                that sets new standards for excellence in creative education. </p>
                         </div>
 
                     </div>
