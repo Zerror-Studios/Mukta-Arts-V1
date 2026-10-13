@@ -43,7 +43,7 @@ const HeroSecMa2 = () => {
                 {/* Note: Update the src to your actual background image */}
                 <img
                     src="https://images.unsplash.com/photo-1485095329183-d0797cdc5676?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    alt="Whistling Woods Background"
+                    alt="Mukta A2 Cinemas Background"
 
                     className="object-cover w-full h-full object-center"
 
@@ -65,7 +65,7 @@ const HeroSecMa2 = () => {
                             fill
                             className="object-contain"
                         /> */}
-                        <h2 className='text-white uppercase'>Mukta-A2 Cinemas</h2>
+                        <h2 className='text-white uppercase'>Mukta A2 Cinemas</h2>
                     </div>
                 </div>
 
@@ -78,31 +78,27 @@ const HeroSecMa2 = () => {
                     <div className="flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-8">
 
                         {/* Left Side: Description and Button */}
-                        <div className="flex flex-col gap-8 max-w-[420px]">
-                            <p className="wwi-text-anim text-white text-[15px]  md:text-[17px] leading-[1.6]">
-                                Founded by filmmaker Subhash Ghai,<br /> WWI offers world-class education in Film,<br /> Communication, Creative and Performing Arts.
+                        <div className="flex flex-col gap-8 max-w-[440px]">
+                            <p className="wwi-text-anim text-white text-[15px] md:text-[17px] leading-[1.6]">
+                                Mukta A2 Cinemas is the exhibition arm of Mukta Arts, founded with a vision to make the big-screen experience accessible to audiences across India.
                             </p>
                             <div className="wwi-text-anim">
-                                <a href="#" className="inline-block bg-white text-black px-8 py-3.5 text-[11px] font-bold tracking-[0.15em] transition-colors hover:bg-gray-200">
+                                <a
+                                    href="https://muktaa2cinemas.in/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-block bg-white text-black px-8 py-3.5 text-[11px] font-bold tracking-[0.15em] transition-colors hover:bg-gray-200"
+                                >
                                     VISIT OUR WEBSITE
                                 </a>
                             </div>
                         </div>
 
-                        {/* Right Side: Details Grid */}
-                        <div className="flex flex-col gap-3.5 text-white lg:min-w-[400px]">
-                            <div className="wwi-text-anim grid grid-cols-[80px_1fr] md:grid-cols-[100px_1fr] gap-4">
-                                <p className="text-[#A0A0A0] text-[13px] md:text-[14.5px]">Founder:</p>
-                                <p className="text-white text-[13px] md:text-[14.5px]">Subhash Ghai (2006)</p>
-                            </div>
-                            <div className="wwi-text-anim grid grid-cols-[80px_1fr] md:grid-cols-[100px_1fr] gap-4">
-                                <p className="text-[#A0A0A0] text-[13px] md:text-[14.5px]">Location:</p>
-                                <p className="text-white text-[13px] md:text-[14.5px]">Filmcity, Mumbai</p>
-                            </div>
-                            <div className="wwi-text-anim grid grid-cols-[80px_1fr] md:grid-cols-[100px_1fr] gap-4">
-                                <p className="text-[#A0A0A0] text-[13px] md:text-[14.5px]">Focus:</p>
-                                <p className="text-white text-[13px] md:text-[14.5px]">Film, Communication & Creative Arts</p>
-                            </div>
+                        {/* Right Side: Description */}
+                        <div className="flex flex-col gap-3.5 text-white max-w-[440px] lg:min-w-[400px]">
+                            <p className="wwi-text-anim text-white text-[15px] md:text-[17px] leading-[1.6]">
+                                Built around the idea of offering quality cinema at affordable prices, the brand has grown into a diverse cinema exhibition network spanning established and emerging markets.
+                            </p>
                         </div>
 
                     </div>

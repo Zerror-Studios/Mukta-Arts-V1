@@ -74,9 +74,9 @@ const InvestorRelations = () => {
     <section className="w-full bg-[#FAFAFA] py-16 md:py-24 px-4 md:px-8">
       <div className=" mx-auto">
         {/* Top Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-16 md:mb-24">
+        {/* <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-16 md:mb-24">
 
-          {/* Left Content (Title & Button) */}
+
           <div className="lg:col-span-4 flex flex-col justify-between items-start lg:pb-2">
             <div>
               <p className="text-[#555] text-sm md:text-[15px] mb-6 md:mb-10 font-medium">
@@ -94,10 +94,9 @@ const InvestorRelations = () => {
             </button>
           </div>
 
-          {/* Center Content (Image) */}
+
           <div className="lg:col-span-5 w-full">
             <div className="relative w-full aspect-[4/5] sm:aspect-square md:aspect-[4/5] lg:aspect-[1/1.1] overflow-hidden">
-              {/* Note: the image is a placeholder, as the actual building image isn't available */}
               <Image
                 src="/img/ma/MuktaA2Cinemas.jpg"
                 alt="Mukta Arts Building"
@@ -109,7 +108,6 @@ const InvestorRelations = () => {
             </div>
           </div>
 
-          {/* Right Content (Details) */}
           <div className="lg:col-span-3 flex flex-col justify-end lg:pb-8 pt-8 lg:pt-0">
             <div className="border-b border-[#e5e5e5] pb-4 mb-4">
               <p className="text-[1.1rem] md:text-xl font-bold text-black tracking-tight">
@@ -121,7 +119,7 @@ const InvestorRelations = () => {
               Balance Sheet
             </p>
           </div>
-        </div>
+        </div> */}
 
         {/* Accordion Section */}
         <div className="w-full">

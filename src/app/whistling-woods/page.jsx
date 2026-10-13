@@ -12,7 +12,7 @@ const page = () => {
             <WWHERO />
             <WWStats />
             <WWMilestones />
-            {/* <WWSchools /> */}
+            <WWSchools />
             <WWAcademicPrograms />
             <PartnersSection />
             <WWlast />

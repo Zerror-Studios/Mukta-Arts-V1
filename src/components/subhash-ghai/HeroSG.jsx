@@ -10,9 +10,9 @@ const HeroSG = () => {
                 <h1 className="text-6xl md:text-[6rem] lg:text-[8.5rem] leading-[0.9] tracking-tighter font-['SwitzerB'] font-bold text-black mb-4">
                     Subhash Ghai
                 </h1>
-                <p className="text-gray-700 text-lg md:text-xl font-['SwitzerR']">
+                {/* <p className="text-gray-700 text-lg md:text-xl font-['SwitzerR']">
                     Founder & Filmmaker
-                </p>
+                </p> */}
             </div>
 
             {/* 3 Column Grid */}
@@ -21,16 +21,16 @@ const HeroSG = () => {
                 {/* Left Column - Stats */}
                 <div className="flex flex-col justify-end order-2 lg:order-1">
                     <div className="border-b border-gray-300 pb-5 mb-8">
-                        <h3 className="text-[1.75rem] leading-tight font-bold font-['SwitzerSB'] text-black mb-2">45+ Years</h3>
-                        <p className="text-gray-600 text-base font-['SwitzerR']">A legacy built over decades.</p>
+                        <h3 className="text-[1.75rem] leading-tight font-bold font-['SwitzerSB'] text-black mb-2">50 Years </h3>
+                        <p className="text-gray-600 text-base font-['SwitzerR'] capitalize"> as a Filmmaker</p>
                     </div>
                     <div className="border-b border-gray-300 pb-5 mb-8">
-                        <h3 className="text-[1.75rem] leading-tight font-bold font-['SwitzerSB'] text-black mb-2">18 Films</h3>
-                        <p className="text-gray-600 text-base font-['SwitzerR']">Iconic stories that shaped cinema.</p>
+                        <h3 className="text-[1.75rem] leading-tight font-bold font-['SwitzerSB'] text-black mb-2">19 Films</h3>
+                        <p className="text-gray-600 text-base font-['SwitzerR'] capitalize">Written and Directed</p>
                     </div>
                     <div className="pb-5">
-                        <h3 className="text-[1.75rem] leading-tight font-bold font-['SwitzerSB'] text-black mb-2">12+ Awards</h3>
-                        <p className="text-gray-600 text-base font-['SwitzerR']">Recognised for cinematic excellence.</p>
+                        <h3 className="text-[1.75rem] leading-tight font-bold font-['SwitzerSB'] text-black mb-2">45+ </h3>
+                        <p className="text-gray-600 text-base font-['SwitzerR'] capitalize">  Films Produced</p>
                     </div>
                 </div>
 
@@ -46,7 +46,10 @@ const HeroSG = () => {
                 {/* Right Column - Text & Socials */}
                 <div className="flex flex-col justify-between order-3 lg:order-3 pt-4">
                     <p className="text-[#4A4A4A] text-[1.1rem] leading-relaxed font-['SwitzerR'] pr-4">
-                        A five-decade career marked by iconic films, powerful storytelling, memorable music, and enduring cultural influence, Subhash Ghai stands among India's most celebrated filmmakers. With 42 films and 35 blockbusters, his visionary approach has shaped mainstream Indian cinema and created stories that continue to inspire audiences across generations.
+                        A five-decade journey across cinema, education and entrepreneurship. From creating
+                        some of Indian cinema’s most enduring films to building institutions that shape the next
+                        generation of creative talent, Subhash Ghai’s vision has always extended beyond the
+                        screen.
                     </p>
 
                     {/* Social Icons */}

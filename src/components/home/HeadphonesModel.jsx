@@ -1,6 +1,6 @@
 "use client"
 import React, { useRef, useEffect } from 'react';
-import { useGLTF, Environment } from '@react-three/drei';
+import { useGLTF, Environment, Center } from '@react-three/drei';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import gsap from 'gsap';
@@ -15,25 +15,6 @@ export function Model(props) {
   const groupRef = useRef();
   const spinRef = useRef();
   const { size, camera } = useThree();
-
-  useEffect(() => {
-    scene.traverse((child) => {
-      if (child.isMesh && child.material && child.material.color) {
-        // Check if the original color is dark/black
-        if (child.material.color.r < 0.3 && child.material.color.g < 0.3 && child.material.color.b < 0.3) {
-          // Change to slightly darker #0474BA
-          child.material.color = new THREE.Color("#0474BA").multiplyScalar(0.8);
-          child.material.needsUpdate = true;
-        }
-        // Check if the original color is white/light
-        else if (child.material.color.r > 0.7 && child.material.color.g > 0.7 && child.material.color.b > 0.7) {
-          // Change to pure orange
-          child.material.color = new THREE.Color("#FF7F00");
-          child.material.needsUpdate = true;
-        }
-      }
-    });
-  }, [scene]);
 
   const stateRef = useRef({ footerProgress: 0 });
   const isDragging = useRef(false);
@@ -158,7 +139,7 @@ export function Model(props) {
             }
           }
         });
-        footerTl.to(groupRef.current.scale, { x: 11, y: 11, z: 11, ease: "power2.inOut" }, 0);
+        footerTl.to(groupRef.current.scale, { x: 20, y: 20, z: 20, ease: "power2.inOut" }, 0);
       });
 
       mm.add("(min-width: 768px) and (max-width: 1023px)", () => {
@@ -200,7 +181,9 @@ export function Model(props) {
   return (
     <group ref={groupRef} {...props}>
       <group ref={spinRef}>
-        <primitive object={scene} />
+        <Center>
+          <primitive object={scene} />
+        </Center>
       </group>
     </group>
   );
@@ -209,7 +192,7 @@ export function Model(props) {
 useGLTF.preload('/model/headphones.glb');
 
 export default function HeadphonesCanvas() {
-  const [modelScale, setModelScale] = React.useState(11);
+  const [modelScale, setModelScale] = React.useState(30);
 
   useEffect(() => {
     const updateScale = () => {
@@ -218,7 +201,7 @@ export default function HeadphonesCanvas() {
       } else if (window.innerWidth < 1024) {
         setModelScale(8); // scale down for tablet
       } else {
-        setModelScale(11); // default desktop scale
+        setModelScale(30); // default desktop scale
       }
     };
 
@@ -235,7 +218,7 @@ export default function HeadphonesCanvas() {
           <directionalLight position={[10, 10, 5]} intensity={0} />
           <directionalLight position={[-10, -10, -5]} intensity={0} />
           <Environment preset="city" />
-          <Model position={[0, 0.2, 0]} scale={modelScale} />
+          <Model position={[0, 0, 0]} scale={modelScale} />
         </Canvas>
       </div>
     </div>

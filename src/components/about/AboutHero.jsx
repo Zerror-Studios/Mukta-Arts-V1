@@ -10,11 +10,11 @@ if (typeof window !== "undefined") {
 }
 
 const carouselItems = [
-    { src: "/img/last/1.jpg", width: "w-[280px] md:w-[380px]", height: "h-[220px] md:h-[280px]" },
-    { src: "/img/last/3.jpg", width: "w-[360px] md:w-[480px]", height: "h-[180px] md:h-[220px]" },
-    { src: "/img/last/5.png", width: "w-[240px] md:w-[320px]", height: "h-[380px] md:h-[480px]" },
-    { src: "/img/last/6.jpg", width: "w-[320px] md:w-[420px]", height: "h-[220px] md:h-[280px]" },
-    { src: "/img/last/7.jpg", width: "w-[380px] md:w-[500px]", height: "h-[200px] md:h-[240px]" },
+    { src: "/img/last/1.jpg" },
+    { src: "/img/last/3.jpg" },
+    { src: "/img/last/5.png" },
+    { src: "/img/last/6.jpg" },
+    { src: "/img/last/7.jpg" },
 ];
 
 const AboutHero = () => {
@@ -72,15 +72,15 @@ const AboutHero = () => {
 
     return (
         <section className="relative w-full pt-32 pb-16 overflow-hidden bg-[#FAFAFA]">
-            <div className=" px-4 md:px-8 mb-24 ">
-                <div className="flex flex-col lg:flex-row justify-between items-start gap-8 lg:gap-16 ">
-                    <h1 className="text-5xl md:text-7xl lg:text-[5.5rem] font-bold tracking-tighter text-black max-w-3xl leading-[1.05]">
-                        Cinema, Education & Exhibition At Scale.
+            <div className="px-4 md:px-8 mb-16 md:mb-24">
+                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 lg:gap-16">
+                    <h1 className="text-5xl md:text-7xl lg:text-[5.5rem] font-bold tracking-tighter text-black max-w-4xl leading-[1.05]">
+                        Telling stories across screens, theatres and classrooms.
                     </h1>
+                    <p className="text-[#555] text-lg md:text-xl max-w-[22rem] leading-relaxed font-medium">
+                        Established in 1978 by Mr. Subhash Ghai.
+                    </p>
                 </div>
-                <p className="text-[#555]  text-lg md:text-xl ml-auto max-w-[28rem] leading-relaxed font-medium">
-                    Pioneering India's cinematic corporatization, premier media pedagogy at Whistling Woods International, and multiplex storytelling across generations.
-                </p>
             </div>
 
             <div
@@ -89,13 +89,13 @@ const AboutHero = () => {
             >
                 <div
                     ref={trackRef}
-                    className="flex items-center  w-max px-4 md:px-8"
+                    className="flex items-center w-max px-4 md:px-8"
                 >
                     {/* Double the array for seamless infinite looping */}
                     {[...carouselItems, ...carouselItems].map((item, index) => (
                         <div
                             key={index}
-                            className={`relative flex-shrink-0 ${item.width} ${item.height}`}
+                            className="relative flex-shrink-0 w-[300px] sm:w-[380px] md:w-[440px] h-[220px] sm:h-[260px] md:h-[300px] mr-4 md:mr-6 overflow-hidden"
                         >
                             <Image
                                 src={item.src}

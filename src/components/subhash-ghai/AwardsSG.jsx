@@ -1,77 +1,56 @@
-import React from 'react';
-
-const awards = [
-  {
-    title: "National Film Award",
-    year: "1986",
-    desc: "Awarded the National Film Award for Best Feature Film on National Integration for Karma (1986), recognising the film's powerful message of unity, patriotism, and national harmony. The honour further strengthened Subhash Ghai's reputation for creating commercially successful cinema with meaningful social themes.",
-    img: "/img/sg/7.png"
-  },
-  {
-    title: "Filmfare Lifetime Achievement Award",
-    year: "2022",
-    desc: "Honoured in 2022 for his outstanding contribution to Indian cinema, recognising a distinguished career marked by influential films, creative excellence, and a lasting impact on the Indian entertainment industry.",
-    img: "/img/sg/8.png"
-  },
-  {
-    title: "IIFA Outstanding Contribution To Indian Cinema",
-    year: "2015",
-    desc: "Awarded the IIFA Outstanding Contribution to Indian Cinema in 2015, recognising Subhash Ghai's remarkable filmmaking journey, creative influence, and lasting contribution to the growth of Hindi cinema.",
-    img: "/img/sg/9.png"
-  }
-];
+import React from "react";
 
 export default function AwardsSG() {
   return (
-    <section className="w-full bg-[#f8f9fa] px-6 py-16 md:px-12 md:py-30 lg:px-10  font-['SwitzerR'] text-black">
-      {/* Header */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-12 items-start">
-        <div className="md:col-span-3">
-          <p className="text-gray-500 text-[13px] md:text-sm">Awards and Recognition</p>
-        </div>
-        <div className="md:col-span-5 pl-30">
-          <h4 className="text-4xl md:text-5xl lg:text-[3.5rem] font-medium leading-[1.1] font-['SwitzerM'] tracking-tight">
-            Decades Of<br />Acclaim
-          </h4>
-        </div>
-        <div className="md:col-span-4 lg:col-span-3 lg:col-start-10">
-          <p className="text-gray-500 text-[13px] md:text-sm leading-relaxed pt-2">
-            Celebrating decades of creativity, influence, and cinematic excellence.
-          </p>
-        </div>
+    <section className="relative w-full bg-[#f8f9fa] text-black py-24 md:py-36 lg:py-44 px-6 md:px-12 lg:px-20 overflow-hidden font-['SwitzerR']">
+      {/* Background Graphic Watermark */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.035] select-none">
+        <img
+          src="/img/sg/HeadLogo.png"
+          alt=""
+          className="w-[500px] h-[500px] md:w-[680px] md:h-[680px] object-contain grayscale"
+        />
       </div>
 
-      {/* Awards List */}
-      <div className="flex flex-col w-full border-t border-gray-200">
-        {awards.map((award, index) => (
-          <div key={index} className="grid grid-cols-1 md:grid-cols-12 gap-8 py-10 md:py-16 border-b border-gray-200">
+      <div className="relative z-10 max-w-5xl mx-auto flex flex-col items-center text-center">
+        {/* Subtle Eyebrow */}
+        {/* <div className="flex items-center gap-3 mb-8 md:mb-10">
+          <span className="w-8 h-[1px] bg-black/25"></span>
+          <span className="text-xs md:text-sm uppercase tracking-[0.25em] text-gray-500 font-['SwitzerM']">
+            A Guiding Philosophy
+          </span>
+          <span className="w-8 h-[1px] bg-black/25"></span>
+        </div> */}
 
-            {/* Left Col - Title and Year */}
-            <div className="md:col-span-4 flex flex-col justify-between">
-              <h3 className="text-[2rem] lg:text-[2.5rem] font-medium leading-[1.1] font-['SwitzerM'] tracking-tight mb-8 md:mb-0 pr-4">
-                {award.title}
-              </h3>
-              <p className="text-gray-500 text-sm font-['SwitzerR']">{award.year}</p>
-            </div>
+        {/* Decorative Quote Mark */}
+        <div className="w-10 h-10 md:w-12 md:h-12 mb-6 md:mb-8 rounded-full border border-black/10 flex items-center justify-center text-black/40">
+          <svg className="w-4 h-4 md:w-5 md:h-5 fill-current" viewBox="0 0 24 24">
+            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+          </svg>
+        </div>
 
-            {/* Middle Col - Desc */}
-            <div className="md:col-span-4">
-              <p className="text-[#555] text-[13px] md:text-sm leading-[1.6] md:pr-10 lg:pr-16 pt-1">
-                {award.desc}
-              </p>
-            </div>
+        {/* The Quote */}
+        <blockquote className="text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] font-medium leading-[1.3] md:leading-[1.22] font-['SwitzerM'] tracking-tight text-black max-w-4xl">
+          “Destiny is an exercise in hard work and honesty towards what you want to do.”
+        </blockquote>
 
-            {/* Right Col - Image */}
-            <div className="md:col-span-4 overflow-hidden">
-              <img
-                src={award.img}
-                alt={award.title}
-                className="w-full h-[300px] lg:h-[350px] object-cover transition-transform duration-700 ease-out hover:scale-110"
-              />
-            </div>
+        {/* Accent Divider */}
+        <div className="w-12 h-[2px] bg-black/20 my-8 md:my-10"></div>
 
+        {/* Author Attribution */}
+        <div className="flex flex-col items-center">
+          {/* Cursive Signature */}
+          <div className="text-black text-3xl md:text-4xl mb-2 opacity-85 select-none">
+            <span style={{ fontFamily: "Brush Script MT, cursive" }}>Subhash Ghai</span>
           </div>
-        ))}
+
+          <cite className="not-italic text-sm md:text-base font-semibold tracking-wider uppercase text-black font-['SwitzerSB']">
+            Subhash Ghai
+          </cite>
+          <span className="text-xs md:text-sm tracking-widest uppercase text-gray-500 font-['SwitzerR'] mt-1">
+            Founder & Filmmaker, Mukta Arts
+          </span>
+        </div>
       </div>
     </section>
   );

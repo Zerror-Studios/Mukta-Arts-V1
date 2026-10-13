@@ -12,20 +12,52 @@ if (typeof window !== "undefined") {
 }
 
 const team = [
-  { name: "Subhash Ghai", titles: ["Executive Chairman - Mukta Arts Ltd"], image: "/img/last/2.avif" },
-  { name: "Rahul Puri", titles: ["Managing Director - Mukta Arts Ltd", "Director - Academics - Whistling Woods International", "Director - Mukta A2 Cinemas Private Ltd"], image: "/img/last/3.jpg" },
-  { name: "Parvez Farooqui", titles: ["Director - Mukta Arts Ltd"], image: "/img/last/4.avif" },
-  { name: "Kapil Bagla", titles: ["Independent Director - Mukta Arts Ltd"], image: "/img/last/5.png" },
-  { name: "Rajendra Doshi", titles: ["Independent Director - Mukta Arts Ltd"], image: "/img/last/6.jpg" },
-  { name: "Mrs. Madhumati Ramchandra Lele", titles: ["Independent Director - Mukta Arts Ltd"], image: "/img/last/7.jpg" },
-  { name: "Rentala Chandrashekhar", titles: ["Independent Director - Mukta Arts Ltd"], image: "/img/last/1.jpg" },
-  { name: "Meghna Ghai Puri", titles: ["President - Whistling Woods International"], image: "/img/last/3.jpg" },
-  { name: "Ravi Gupta", titles: ["Dean - Whistling Woods International"], image: "/img/last/5.png" },
-  { name: "Raju Farooqui", titles: ["Producer"], image: "/img/last/6.jpg" },
-  { name: "Satwik Lele", titles: ["Chief Operating Officer"], image: "/img/last/7.jpg" },
-  { name: "Sanjay Ghai", titles: ["COO - Mukta A2 Cinemas"], image: "/img/sg/1.jpg" },
-  { name: "Jabir Contractor", titles: ["Vice President - Production"], image: "/img/sg/2.jpg" },
-  { name: "Ms. Pratiksha Panchal", titles: ["Company Secretary"], image: "/img/sg/3.png" },
+  {
+    name: "Subhash Ghai",
+    titles: [
+      "Executive Chairman: Mukta Arts Ltd",
+      "Founder/Chairman: Whistling Woods International",
+      "Director - Mukta A2 Cinemas Private Ltd",
+    ],
+    image: "/img/last/2.avif",
+  },
+  {
+    name: "Rahul Puri",
+    titles: [
+      "Managing Director - Mukta Arts Ltd",
+      "Director - Academics - Whistling Woods International",
+      "Director - Mukta A2 Cinemas Private Ltd",
+    ],
+    image: "/img/last/3.jpg",
+  },
+  {
+    name: "Parvez Farooqui",
+    titles: [
+      "Director - Mukta Arts Ltd",
+      "Executive Director - Mukta A2 Cinemas Private Ltd",
+    ],
+    image: "/img/last/4.avif",
+  },
+  {
+    name: "Kapil Bagla",
+    titles: ["Independent Director - Mukta Arts Ltd"],
+    image: "/img/last/5.png",
+  },
+  {
+    name: "Rajendra Doshi",
+    titles: ["Independent Director - Mukta Arts Ltd"],
+    image: "/img/last/6.jpg",
+  },
+  {
+    name: "Madhumati Ramchandra Lele",
+    titles: ["Independent Director - Mukta Arts Ltd"],
+    image: "/img/last/7.jpg",
+  },
+  {
+    name: "Rentala Chandrashekhar",
+    titles: ["Independent Director - Mukta Arts Ltd"],
+    image: "/img/last/1.jpg",
+  },
 ];
 
 const TeamMembers = () => {
@@ -33,6 +65,7 @@ const TeamMembers = () => {
   const sectionRef = useRef(null);
   const indicatorRef = useRef(null);
   const lineFillRef = useRef(null);
+  const lineTrackRef = useRef(null);
   const namesInnerRef = useRef(null);
 
   useGSAP(() => {
@@ -48,8 +81,8 @@ const TeamMembers = () => {
           let newIndex = Math.round(progress * (team.length - 1));
 
           const itemHeight = 48; // Corresponds to h-12
-          const maxLineHeight = (team.length - 1) * itemHeight;
-          const currentLineHeight = progress * maxLineHeight;
+          const trackHeight = lineTrackRef.current ? lineTrackRef.current.offsetHeight : (team.length - 1) * itemHeight;
+          const currentLineHeight = progress * trackHeight;
 
           // Draw the line and indicator smoothly and continuously based on raw scroll progress
           gsap.set(indicatorRef.current, { y: currentLineHeight });
@@ -95,7 +128,7 @@ const TeamMembers = () => {
 
         {/* Left Column: Heading */}
         <div className="lg:w-3/12 flex flex-col justify-start lg:pt-10 shrink-0">
-          <p className="text-white/80 text-xs lg:text-sm tracking-wide uppercase mb-1 lg:mb-3">Team Members</p>
+          <p className="text-white/80 text-xs lg:text-sm tracking-wide uppercase mb-1 lg:mb-3">Board Of Directors</p>
           <h5 className="text-3xl lg:text-5xl font-semibold text-white leading-tight tracking-tight">
             People Behind<br className="hidden lg:block" /> The Vision
           </h5>
@@ -119,7 +152,7 @@ const TeamMembers = () => {
           </div>
 
           {/* Right Border Line & Indicator */}
-          <div className="absolute right-0 top-0 bottom-0 lg:bottom-10 w-[1px] bg-white/20">
+          <div ref={lineTrackRef} className="absolute right-0 top-0 bottom-0 w-[1px] bg-white/20">
             {/* Bold solid line that draws down */}
             <div
               ref={lineFillRef}

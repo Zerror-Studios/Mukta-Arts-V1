@@ -210,7 +210,7 @@ const Header = () => {
                 { name: "Whistling Woods", url: "/whistling-woods" },
                 { name: "Mukta A2 Cinemas", url: "/mukta-a2-cinemas" },
                 { name: "SGM Studios", url: "/sgm-studios" },
-                { name: "Mukta VN Films", url: "/mukta-vn-films" }
+                // { name: "Mukta VN Films", url: "/mukta-vn-films" }
               ]
             },
             { name: "Submit Script", url: "/submit-script" }

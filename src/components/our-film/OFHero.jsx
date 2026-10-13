@@ -43,7 +43,7 @@ const OFHero = () => {
                 {/* Note: Update the src to your actual background image */}
                 <img
                     src="https://images.unsplash.com/photo-1638961837480-5aee8a8f90cd?q=80&w=2064&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    alt="Whistling Woods Background"
+                    alt="Mukta Arts Background"
 
                     className="object-cover w-full h-full object-center"
 
@@ -77,32 +77,11 @@ const OFHero = () => {
                     {/* Content Columns */}
                     <div className="flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-8">
 
-                        {/* Left Side: Description and Button */}
-                        <div className="flex flex-col gap-8 max-w-[420px]">
-                            <p className="wwi-text-anim text-white text-[15px]  md:text-[17px] leading-[1.6]">
-                                Founded by filmmaker Subhash Ghai,<br /> WWI offers world-class education in Film,<br /> Communication, Creative and Performing Arts.
+                        {/* Left Side: Description */}
+                        <div className="flex flex-col gap-8 max-w-[600px]">
+                            <p className="wwi-text-anim text-white text-[15px] md:text-[17px] leading-[1.6]">
+                                For nearly five decades, Mukta Arts has brought powerful stories to the screen, creating some of Hindi cinema’s most enduring films.
                             </p>
-                            <div className="wwi-text-anim">
-                                <a href="#" className="inline-block bg-white text-black px-8 py-3.5 text-[11px] font-bold tracking-[0.15em] transition-colors hover:bg-gray-200">
-                                    VISIT OUR WEBSITE
-                                </a>
-                            </div>
-                        </div>
-
-                        {/* Right Side: Details Grid */}
-                        <div className="flex flex-col gap-3.5 text-white lg:min-w-[400px]">
-                            <div className="wwi-text-anim grid grid-cols-[80px_1fr] md:grid-cols-[100px_1fr] gap-4">
-                                <p className="text-[#A0A0A0] text-[13px] md:text-[14.5px]">Founder:</p>
-                                <p className="text-white text-[13px] md:text-[14.5px]">Subhash Ghai (2006)</p>
-                            </div>
-                            <div className="wwi-text-anim grid grid-cols-[80px_1fr] md:grid-cols-[100px_1fr] gap-4">
-                                <p className="text-[#A0A0A0] text-[13px] md:text-[14.5px]">Location:</p>
-                                <p className="text-white text-[13px] md:text-[14.5px]">Filmcity, Mumbai</p>
-                            </div>
-                            <div className="wwi-text-anim grid grid-cols-[80px_1fr] md:grid-cols-[100px_1fr] gap-4">
-                                <p className="text-[#A0A0A0] text-[13px] md:text-[14.5px]">Focus:</p>
-                                <p className="text-white text-[13px] md:text-[14.5px]">Film, Communication & Creative Arts</p>
-                            </div>
                         </div>
 
                     </div>

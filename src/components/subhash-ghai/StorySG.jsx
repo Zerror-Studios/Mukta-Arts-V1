@@ -16,10 +16,12 @@ const StorySG = () => {
             {/* Top Text Section */}
             <div className="max-w-5xl mx-auto text-center relative z-10">
                 <p className="text-white/90 text-sm md:text-base tracking-wide mb-6 font-['SwitzerR']">
-                    The story so far
+                    A Journey That Began With Cinema And Grew Into A Legacy
                 </p>
                 <h4 className=" text-white font-['SwitzerM'] capitalize">
-                    Subhash Ghai’s Journey Reflects Decades Of Influential Filmmaking And A Passion For Meaningful Storytelling. As The Founder Of Mukta Arts, He Shaped Indian Cinema Through Iconic Films Such As Karz, Hero, Ram Lakhan, Saudagar, And Taal.
+                    As the founder of Mukta Arts, he created a body of work that helped define mainstream
+                    Hindi cinema, with films such as Karz, Hero, Ram Lakhan, Saudagar, Pardes and Taal
+                    becoming cultural touchstones for generations.
                 </h4>
             </div>
 
@@ -38,7 +40,11 @@ const StorySG = () => {
                 {/* Right Column - Text & Signature */}
                 <div className="lg:col-span-4 flex flex-col justify-end lg:pb-12">
                     <p className="text-white text-sm md:text-[1.05rem] font-medium! leading-relaxed font-['SwitzerR'] mb-12">
-                        His vision extended beyond filmmaking with Whistling Woods International, creating a platform for aspiring filmmakers and creative professionals to learn, innovate, and shape the future of entertainment. Through cinema and education, he continues to inspire new talent while building a lasting legacy in Indian entertainment.
+                        What began as a passion for storytelling grew into a lifelong pursuit of creating,
+                        nurturing and shaping the world of entertainment. From iconic films through Mukta Arts
+                        to the creation of Whistling Woods International, Subhash Ghai’s journey has always
+                        looked beyond the moment - towards the future of Indian cinema and the people who
+                        will shape it.
                     </p>
 
                     <div>

@@ -6,17 +6,20 @@ import BoardOfDirectors from "@/components/about/BoardOfDirectors";
 import TeamMembers from "@/components/about/TeamMembers";
 import InvestorRelations from "@/components/about/InvestorRelations";
 import FilmLegacy from "@/components/about/FilmLegacy";
+import FilmsSection from "@/components/home/FilmsSection";
+import CareerMilestones from "@/components/subhash-ghai/CareerMilestones";
 
 const AboutPage = () => {
   return (
     <>
       <AboutHero />
       <MissionVision />
-      <FilmLegacy />
-      <AboutEcosystem />
-      <BoardOfDirectors />
+      {/* <FilmLegacy /> */}
+      <CareerMilestones />
+      {/* <AboutEcosystem /> */}
+      {/* <BoardOfDirectors /> */}
       <TeamMembers />
-      <InvestorRelations />
+      {/* <InvestorRelations /> */}
     </>
   );
 };
