@@ -9,48 +9,33 @@ if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger);
 }
 
-const textContent = "Founded in 2006 by Subhash Ghai within Mumbai’s iconic Filmcity Complex, Whistling Woods International is a premier institute for filmmaking, media, communication and creative arts. Combining world-class education with hands-on industry experience, WWI has emerged as a global leader in media and entertainment education.";
+const textContent = "From creating some of Hindi cinema’s most iconic films to shaping stories that transcend generations, Mukta Arts has been part of the cultural fabric of Indian cinema for decades. Its body of work is defined by unforgettable characters, landmark storytelling and music that continues to resonate with audiences. A pioneer in the business of Indian cinema, Mukta Arts has continually pushed creative boundaries, building on its cinematic heritage while embracing new possibilities in entertainment.";
 
 const statsData = [
     {
-        target: 4000,
+        target: 50,
         prefix: "",
         suffix: "+",
-        text: "Film and Media Industry Alumni",
+        title: "Films Produced",
+        text: "A diverse filmography spanning genres, generations and stories that have left a lasting mark on Indian cinema.",
     },
     {
-        target: 1000,
+        target: 35,
         prefix: "",
         suffix: "+",
-        text: "Students on campus",
+        title: "Blockbusters",
+        text: "Defining cinematic successes that captured audiences and became an enduring part of popular culture.",
     },
     {
-        target: 30,
+        target: 48,
         prefix: "",
-        suffix: "+",
-        text: "Technology Partners",
-    },
-    {
-        target: 350,
-        prefix: "",
-        suffix: "+",
-        text: "Industry Partners as full time or guest faculty",
-    },
-    {
-        target: 1,
-        prefix: "USD ",
-        suffix: "M+",
-        text: "Scholarships and fee waivers provided in the past 18 years.",
-    },
-    {
-        target: 16,
-        prefix: "",
-        suffix: "+",
-        text: "International University Affiliations across the globe.",
+        suffix: "",
+        title: "Years of Filmmaking",
+        text: "Pioneering the industry through bold storytelling, landmark films and a vision that has continually pushed the boundaries of Indian cinema.",
     },
 ];
 
-const WWStats = () => {
+const CustomNum = () => {
     const containerRef = useRef(null);
     const textRef = useRef(null);
 
@@ -142,9 +127,16 @@ const WWStats = () => {
                                 <span className="stat-num" data-target={stat.target}>0</span>
                                 {stat.suffix}
                             </h4>
-                            <p className="text-[#555] text-[14px] md:text-[15px] leading-relaxed pr-4">
-                                {stat.text}
-                            </p>
+                            <div className="pr-4">
+                                {stat.title && (
+                                    <p className="text-black text-[16px] md:text-[18px] font-medium mb-2">
+                                        {stat.title}
+                                    </p>
+                                )}
+                                <p className="text-[#555] text-[14px] md:text-[15px] leading-relaxed">
+                                    {stat.text}
+                                </p>
+                            </div>
                         </div>
                     ))}
                 </div>
@@ -153,4 +145,4 @@ const WWStats = () => {
     );
 };
 
-export default WWStats;
+export default CustomNum;

@@ -135,7 +135,7 @@ export default function WWSchools() {
                 Academic Disciplines
               </span> */}
             </div>
-            <h2 className="text-3xl md:text-5xl lg:text-6xl font-semibold tracking-tight text-neutral-900 leading-[1.12]">
+            <h2 className="text-3xl md:text-5xl lg:text-6xl max-sm:text-[2.5rem]! max-sm:leading-[1.1]! font-semibold tracking-tight text-neutral-900 leading-[1.12]">
               Academic Schools
               <br />
               <span className="text-neutral-500 font-normal">&amp; Programmes</span>
@@ -186,30 +186,30 @@ export default function WWSchools() {
               return (
                 <div
                   key={school.id}
-                  className={`group relative bg-white rounded-2xl p-7 lg:p-8 border border-neutral-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.07)] hover:border-black/40 transition-all duration-300 flex flex-col justify-between overflow-hidden ${school.isSpecialUnit ? "md:col-span-2 lg:col-span-1" : ""
+                  className={`group relative bg-white rounded-2xl p-5 sm:p-7 lg:p-8 border border-neutral-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_40px_rgba(4,116,186,0.12)] hover:border-[#0474BA] transition-all duration-300 flex flex-col justify-between overflow-hidden ${school.isSpecialUnit ? "md:col-span-2 lg:col-span-1" : ""
                     }`}
                 >
                   {/* Subtle hover accent line at top */}
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-black opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-[#0474BA] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                   {/* Top content */}
                   <div>
                     {/* Index Number & Icon */}
                     <div className="flex items-center justify-between mb-5">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs font-semibold tracking-widest text-neutral-400 group-hover:text-black transition-colors">
+                        <span className="font-mono text-xs font-semibold tracking-widest text-neutral-400 group-hover:text-[#0474BA] transition-colors">
                           {school.id}
                         </span>
                         <span className="w-4 h-px bg-neutral-200" />
                       </div>
 
-                      <div className="w-10 h-10 rounded-xl bg-neutral-100 text-neutral-800 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all duration-300 shadow-xs">
+                      <div className="w-10 h-10 rounded-xl bg-neutral-100 text-neutral-800 flex items-center justify-center group-hover:bg-[#0474BA] group-hover:text-white transition-all duration-300 shadow-xs">
                         <Icon className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
                       </div>
                     </div>
 
                     {/* School Name */}
-                    <h3 className="text-xl md:text-2xl font-bold tracking-tight text-neutral-900 group-hover:text-black mb-5 leading-snug min-h-[56px] flex items-center">
+                    <h3 className="text-xl md:text-2xl font-bold tracking-tight text-neutral-900 group-hover:text-[#0474BA] mb-5 leading-snug min-h-[56px] flex items-center">
                       {school.name}
                     </h3>
 
@@ -228,7 +228,7 @@ export default function WWSchools() {
                               <span className="text-neutral-800 font-bold text-sm leading-none mt-1">
                                 ●
                               </span>
-                              <p className="text-sm text-neutral-700 leading-relaxed font-normal">
+                              <p className="text-sm text-neutral-700 leading-relaxed font-normal max-sm:text-[15px]! max-sm:leading-relaxed!">
                                 {item.description}
                               </p>
                             </div>
@@ -265,7 +265,7 @@ export default function WWSchools() {
                       {school.programCount}
                     </span>
 
-                    <span className="w-7 h-7 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-500 group-hover:bg-black group-hover:text-white transition-all duration-300">
+                    <span className="w-7 h-7 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-500 group-hover:bg-[#0474BA] group-hover:text-white transition-all duration-300">
                       <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                     </span>
                   </div>
@@ -286,19 +286,19 @@ export default function WWSchools() {
               return (
                 <div
                   key={school.id}
-                  className="p-6 md:p-8 hover:bg-neutral-50/80 transition-colors flex flex-col lg:flex-row lg:items-center justify-between gap-6 group"
+                  className="p-5 md:p-8 hover:bg-neutral-50/80 transition-colors flex flex-col lg:flex-row lg:items-center justify-between gap-4 md:gap-6 group"
                 >
                   {/* Left: Number, Icon, School Name */}
-                  <div className="flex items-center gap-4 lg:w-1/3">
-                    <span className="font-mono text-xs font-semibold tracking-widest text-neutral-400 group-hover:text-black transition-colors w-7 shrink-0">
+                  <div className="flex items-center gap-3 md:gap-4 lg:w-1/3">
+                    <span className="font-mono text-xs font-semibold tracking-widest text-neutral-400 group-hover:text-[#0474BA] transition-colors w-6 md:w-7 shrink-0">
                       {school.id}
                     </span>
 
-                    <div className="w-10 h-10 rounded-xl bg-neutral-100 text-neutral-800 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all duration-300 shrink-0">
+                    <div className="w-10 h-10 rounded-xl bg-neutral-100 text-neutral-800 flex items-center justify-center group-hover:bg-[#0474BA] group-hover:text-white transition-all duration-300 shrink-0">
                       <Icon className="w-5 h-5" />
                     </div>
 
-                    <h3 className="text-lg md:text-xl font-bold tracking-tight text-neutral-900 group-hover:text-black">
+                    <h3 className="text-lg md:text-xl font-bold tracking-tight text-neutral-900 group-hover:text-[#0474BA]">
                       {school.name}
                     </h3>
                   </div>
@@ -315,7 +315,7 @@ export default function WWSchools() {
                             <span className="text-neutral-800 font-bold text-sm leading-none mt-1">
                               ●
                             </span>
-                            <p className="leading-relaxed">{item.description}</p>
+                            <p className="leading-relaxed max-sm:text-[15px]! max-sm:leading-relaxed!">{item.description}</p>
                           </div>
                         );
                       }
@@ -323,7 +323,7 @@ export default function WWSchools() {
                       return (
                         <div
                           key={idx}
-                          className="inline-flex items-center gap-3 px-3.5 py-2 rounded-xl bg-neutral-50 border border-neutral-200/80 hover:bg-white hover:border-neutral-300 transition-all shadow-xs"
+                          className="inline-flex max-w-full items-center gap-2 md:gap-3 px-3 md:px-3.5 py-2 rounded-xl bg-neutral-50 border border-neutral-200/80 hover:bg-white hover:border-neutral-300 transition-all shadow-xs"
                         >
                           <span className="text-neutral-800 font-bold text-xs leading-none">
                             ●
@@ -331,7 +331,7 @@ export default function WWSchools() {
                           <span className="font-semibold text-xs md:text-sm text-neutral-900">
                             {item.name}
                           </span>
-                          <span className="inline-flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-white text-neutral-700 border border-neutral-200 shadow-2xs">
+                          <span className="inline-flex shrink-0 whitespace-nowrap items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-white text-neutral-700 border border-neutral-200 shadow-2xs">
                             <Clock className="w-2.5 h-2.5 text-neutral-500" />
                             {item.duration}
                           </span>

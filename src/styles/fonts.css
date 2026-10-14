@@ -205,8 +205,8 @@ p {
 
 @media (max-width: 650px) {
   h2 {
-    font-size: 4rem;
-    line-height: 4.2rem;
+    font-size: 3rem;
+    line-height: 3.2rem;
     font-family: 'SwitzerSB';
   }
 

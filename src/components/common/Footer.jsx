@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 
 export default function Footer() {
   const pathname = usePathname();
@@ -11,12 +12,12 @@ export default function Footer() {
 
       {/* Top Navigation / Stats Bar */}
       <div className="w-full flex flex-wrap justify-between items-center px-4 md:px-8 py-4 text-[10px] md:text-xs font-semibold tracking-wider uppercase opacity-90">
-        <span className="flex items-center gap-2"><span className="text-sm">★</span> 4000+ Graduates</span>
-        <span className="flex items-center gap-2"><span className="text-sm">★</span> 1300+ Students</span>
-        <span className="flex items-center gap-2"><span className="text-sm">★</span> Since 1978</span>
-        <span className="flex items-center gap-2"><span className="text-sm">★</span> Padma Shri</span>
-        <span className="flex items-center gap-2"><span className="text-sm">★</span> Filmfare Legacy</span>
-        <span className="flex items-center gap-2"><span className="text-sm">★</span> Whistling Woods</span>
+        <span className="flex items-center gap-2"><span className="text-sm">★</span> MUKTA PRODUCTIONS </span>
+        <span className="flex items-center gap-2"><span className="text-sm">★</span> WHISTLING WOODS INTERNATIONAL</span>
+        <span className="flex items-center gap-2"><span className="text-sm">★</span> MUKTA A2 CINEMAS </span>
+        <span className="flex items-center gap-2"><span className="text-sm">★</span> MUKTA VN FILMS </span>
+        <span className="flex items-center gap-2"><span className="text-sm">★</span> SGM STUDIOS </span>
+        <span className="flex items-center gap-2"><span className="text-sm">★</span> SUBHASH GHAI </span>
       </div>
 
       {/* Main Content */}
@@ -39,52 +40,55 @@ export default function Footer() {
         {/* Right Column - Text & Call to Action */}
         <div className="w-full lg:w-1/3 flex flex-col items-start max-w-xl relative z-20">
           <h4 className="text-4xl md:text-5xl lg:text-[54px] font-medium leading-tight mb-6">
-            Have something<br />
-            worth Sharing?<br />
-            Let the world know<br />
-            your story.
+            Have a story<br />
+            worth telling?<br />
+            We want to<br />
+            hear it.
           </h4>
 
           <h3 className=" tracking-tighter  capitalize mb-6">
-            Have a story that deserves to be seen? Share your script
-            with Mukta Arts and give your idea the opportunity to
-            grow into a powerful cinematic experience, brought to
-            life with the craft, creativity, and vision of a team that has
-            been telling stories for generations.
+            Have a script or story you believe in? Share it with
+            Mukta Arts. We’re always looking for compelling stories
+            and fresh voices with the potential to become powerful
+            cinematic experiences.
           </h3>
 
-          <button className="bg-white text-[#22385b] px-6 py-2.5 text-sm font-semibold  shadow-md hover:bg-gray-100 transition-colors mb-16">
+          <Link href={'/submit-script'} >
+          
+          <button className="bg-white cursor-pointer text-[#22385b] px-6 py-2.5 text-sm font-semibold  shadow-md hover:bg-gray-100 transition-colors mb-16">
             Submit Script
           </button>
+          </Link>
 
           {/* Social Icons */}
           <div className="flex items-center gap-6">
+            {/* Instagram */}
+            <a href="#" aria-label="Instagram" className="text-white hover:text-gray-300 transition-colors">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+            </a>
+            {/* LinkedIn */}
+            <a href="#" aria-label="LinkedIn" className="text-white hover:text-gray-300 transition-colors">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                <rect x="2" y="9" width="4" height="12"></rect>
+                <circle cx="4" cy="4" r="2"></circle>
+              </svg>
+            </a>
             {/* YouTube */}
-            <a href="#" className="text-white hover:text-gray-300 transition-colors">
+            <a href="#" aria-label="YouTube" className="text-white hover:text-gray-300 transition-colors">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path>
                 <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
               </svg>
             </a>
-            {/* X (Twitter) */}
-            <a href="#" className="text-white hover:text-gray-300 transition-colors">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 4l11.733 16h4.267l-11.733 -16z" />
-                <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772" />
-              </svg>
-            </a>
             {/* Facebook */}
-            <a href="#" className="text-white hover:text-gray-300 transition-colors">
+            <a href="#" aria-label="Facebook" className="text-white hover:text-gray-300 transition-colors">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-              </svg>
-            </a>
-            {/* LinkedIn */}
-            <a href="#" className="text-white hover:text-gray-300 transition-colors">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                <rect x="2" y="9" width="4" height="12"></rect>
-                <circle cx="4" cy="4" r="2"></circle>
               </svg>
             </a>
           </div>
@@ -93,7 +97,7 @@ export default function Footer() {
 
       {/* Huge Background Bottom Text */}
       <div className=" -bottom-8 md:-bottom-16 left-4 md:left-12 z-0 overflow-visible pointer-events-none px-10">
-        <h1 className="text-[120px] md:text-[180px] lg:text-[240px] font-bold leading-none  whitespace-nowrap text-white flex items-start">
+        <h1 className="text-[15vw] md:text-[180px] lg:text-[240px] font-bold leading-none  whitespace-nowrap text-white flex items-start">
           Mukta Arts
           <h4 className="text-3xl md:text-5xl lg:text-6xl font-normal mb-auto ">
             LTD

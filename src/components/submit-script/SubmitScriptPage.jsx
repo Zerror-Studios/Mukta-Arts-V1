@@ -103,13 +103,17 @@ const inputBase =
 
 const borderFor = (error) => (error ? 'border-red-600' : 'border-[#202020]');
 
-const SectionHeading = ({ number, title, note }) => (
-    <div className="form-element flex flex-col gap-2 pt-8 sm:pt-10 border-t border-[#202020]">
-        <div className="flex items-baseline gap-4">
-            <span className="text-[#555] text-sm sm:text-base tabular-nums">{number}</span>
-            <h3 className="text-2xl sm:text-3xl font-medium tracking-tight text-black">{title}</h3>
+// Two-column section row: sticky number/title/note on the left, fields on the right.
+const FormSection = ({ number, title, note, children }) => (
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 pt-8 sm:pt-10 border-t border-[#202020]">
+        <div className="lg:col-span-4">
+            <div className="form-element lg:sticky lg:top-28 flex flex-col gap-3">
+                <h2 className="text-[#black] text-sm sm:text-base tabular-nums">{number}</h2>
+                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight text-black leading-tight">{title}</h3>
+                {note && <p className="text-[#555] text-sm sm:text-[15px] leading-relaxed max-w-sm">{note}</p>}
+            </div>
         </div>
-        {note && <p className="text-[#555] text-sm sm:text-[15px] leading-relaxed max-w-xl">{note}</p>}
+        <div className="lg:col-span-8 flex flex-col gap-5 sm:gap-6">{children}</div>
     </div>
 );
 
@@ -469,37 +473,47 @@ const SubmitScriptPage = () => {
                     </p>
                 </div>
 
-                {/* Content Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 sm:gap-12 lg:gap-16 items-stretch">
-                    {/* Form */}
-                    {submitted ? (
-                        <div className="lg:col-span-2 flex flex-col items-start gap-5 border border-[#202020] bg-white p-8 sm:p-12">
-                            <CheckCircle2 className="h-10 w-10 text-black" strokeWidth={1.25} />
-                            <h3 className="text-3xl sm:text-4xl font-medium tracking-tight text-black">
-                                Script submitted
-                            </h3>
-                            <p className="text-[#555] text-base leading-relaxed max-w-lg">
-                                Thank you, {values.firstName}. Our creative team has received your submission for
-                                {' '}<span className="text-black font-medium">{values.title}</span>. We will contact you at {values.email} if your project moves forward.
-                            </p>
-                            <button
-                                type="button"
-                                onClick={resetForm}
-                                className="mt-2 px-6 py-3 border border-[#202020] bg-transparent text-[12px] font-medium tracking-[0.1em] text-black hover:bg-gray-50 transition-colors"
-                            >
-                                SUBMIT ANOTHER SCRIPT
-                            </button>
-                        </div>
-                    ) : (
-                        <form
-                            ref={formRef}
-                            onSubmit={handleSubmit}
-                            noValidate
-                            className="lg:col-span-2 flex flex-col gap-5 sm:gap-6 w-full "
-                        >
-                            {/* ------------------ 1. PERSONAL DETAILS ------------------ */}
-                            <SectionHeading number="01" title="Personal details" />
+                {/* Banner Image */}
+                <div className="image-anim relative w-full h-[220px] sm:h-[320px] md:h-[420px] lg:h-[480px] overflow-hidden mb-12 sm:mb-16 md:mb-20">
+                    <img
+                        src="https://images.unsplash.com/photo-1515634928627-2a4e0dae3ddf?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        alt="Script writing placeholder"
+                        className="object-cover w-full h-full object-center"
+                    />
+                </div>
 
+                {/* Form */}
+                {submitted ? (
+                    <div className="flex flex-col items-start gap-5 border border-[#202020] bg-white p-8 sm:p-12">
+                        <CheckCircle2 className="h-10 w-10 text-black" strokeWidth={1.25} />
+                        <h3 className="text-3xl sm:text-4xl font-medium tracking-tight text-black">
+                            Script submitted
+                        </h3>
+                        <p className="text-[#555] text-base leading-relaxed max-w-lg">
+                            Thank you, {values.firstName}. Our creative team has received your submission for
+                            {' '}<span className="text-black font-medium">{values.title}</span>. We will contact you at {values.email} if your project moves forward.
+                        </p>
+                        <button
+                            type="button"
+                            onClick={resetForm}
+                            className="mt-2 px-6 py-3 border border-[#202020] bg-transparent text-[12px] font-medium tracking-[0.1em] text-black hover:bg-gray-50 transition-colors"
+                        >
+                            SUBMIT ANOTHER SCRIPT
+                        </button>
+                    </div>
+                ) : (
+                    <form
+                        ref={formRef}
+                        onSubmit={handleSubmit}
+                        noValidate
+                        className="flex flex-col gap-12 sm:gap-16 w-full"
+                    >
+                        {/* ------------------ 1. PERSONAL DETAILS ------------------ */}
+                        <FormSection
+                            number="01"
+                            title="Personal details"
+                            note="Tell us who you are and how we can reach you."
+                        >
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
                                 <Field label="First name" required error={errors.firstName}>
                                     <IconInput
@@ -526,9 +540,7 @@ const SubmitScriptPage = () => {
                                         error={errors.lastName}
                                     />
                                 </Field>
-                            </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
                                 <Field label="Email address" required error={errors.email}>
                                     <IconInput
                                         icon={Mail}
@@ -555,300 +567,297 @@ const SubmitScriptPage = () => {
                                     />
                                 </Field>
                             </div>
+                        </FormSection>
 
-                            {/* ------------------ 2. PROJECT DETAILS ------------------ */}
-                            <div className="mt-4 sm:mt-6 flex flex-col gap-5 sm:gap-6">
-                                <SectionHeading number="02" title="Project details" />
-
-                                <Field
-                                    label="Screenplay title"
-                                    required
-                                    hint="Title of the proposed project."
+                        {/* ------------------ 2. PROJECT DETAILS ------------------ */}
+                        <FormSection
+                            number="02"
+                            title="Project details"
+                            note="The essentials of your story: title, format, genre, length and premise."
+                        >
+                            <Field
+                                label="Screenplay title"
+                                required
+                                hint="Title of the proposed project."
+                                error={errors.title}
+                            >
+                                <IconInput
+                                    icon={Film}
+                                    type="text"
+                                    name="title"
+                                    placeholder="Enter title"
+                                    value={values.title}
+                                    onChange={handleChange}
                                     error={errors.title}
-                                >
-                                    <IconInput
-                                        icon={Film}
-                                        type="text"
-                                        name="title"
-                                        placeholder="Enter title"
-                                        value={values.title}
-                                        onChange={handleChange}
-                                        error={errors.title}
-                                    />
+                                />
+                            </Field>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+                                {/* Format */}
+                                <Field label="Format" required error={errors.format}>
+                                    <div
+                                        role="radiogroup"
+                                        aria-label="Format"
+                                        className={`grid grid-cols-2 border ${borderFor(errors.format)}`}
+                                    >
+                                        {FORMATS.map((f, i) => {
+                                            const active = values.format === f;
+                                            return (
+                                                <button
+                                                    key={f}
+                                                    type="button"
+                                                    role="radio"
+                                                    aria-checked={active}
+                                                    aria-invalid={errors.format && i === 0 ? 'true' : undefined}
+                                                    onClick={() => handleFormat(f)}
+                                                    className={`py-3.5 text-[14px] sm:text-[15px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-inset ${i === 0 ? 'border-r border-[#202020]' : ''
+                                                        } ${active ? 'bg-black text-white' : 'bg-transparent text-black hover:bg-gray-100'}`}
+                                                >
+                                                    {f}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
                                 </Field>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-                                    {/* Format */}
-                                    <Field label="Format" required error={errors.format}>
-                                        <div
-                                            role="radiogroup"
-                                            aria-label="Format"
-                                            className={`grid grid-cols-2 border ${borderFor(errors.format)}`}
-                                        >
-                                            {FORMATS.map((f, i) => {
-                                                const active = values.format === f;
-                                                return (
-                                                    <button
-                                                        key={f}
-                                                        type="button"
-                                                        role="radio"
-                                                        aria-checked={active}
-                                                        aria-invalid={errors.format && i === 0 ? 'true' : undefined}
-                                                        onClick={() => handleFormat(f)}
-                                                        className={`py-3.5 text-[14px] sm:text-[15px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-inset ${i === 0 ? 'border-r border-[#202020]' : ''
-                                                            } ${active ? 'bg-black text-white' : 'bg-transparent text-black hover:bg-gray-100'}`}
-                                                    >
-                                                        {f}
-                                                    </button>
-                                                );
-                                            })}
-                                        </div>
-                                    </Field>
-
-                                    {/* Genre */}
-                                    <Field label="Genre" required error={errors.genre}>
-                                        <IconSelect
-                                            icon={Tag}
-                                            name="genre"
-                                            value={values.genre}
-                                            onChange={handleChange}
-                                            error={errors.genre}
-                                        >
-                                            <option value="" disabled>
-                                                Select genre
+                                {/* Genre */}
+                                <Field label="Genre" required error={errors.genre}>
+                                    <IconSelect
+                                        icon={Tag}
+                                        name="genre"
+                                        value={values.genre}
+                                        onChange={handleChange}
+                                        error={errors.genre}
+                                    >
+                                        <option value="" disabled>
+                                            Select genre
+                                        </option>
+                                        {GENRES.map((g) => (
+                                            <option key={g} value={g} className="text-black">
+                                                {g}
                                             </option>
-                                            {GENRES.map((g) => (
-                                                <option key={g} value={g} className="text-black">
-                                                    {g}
-                                                </option>
-                                            ))}
-                                        </IconSelect>
-                                    </Field>
-                                </div>
+                                        ))}
+                                    </IconSelect>
+                                </Field>
+                            </div>
 
-                                {values.genre === 'Other' && (
-                                    <Field label="Specify genre" required error={errors.genreOther}>
+                            {values.genre === 'Other' && (
+                                <Field label="Specify genre" required error={errors.genreOther}>
+                                    <IconInput
+                                        icon={Tag}
+                                        type="text"
+                                        name="genreOther"
+                                        placeholder="Enter genre"
+                                        value={values.genreOther}
+                                        onChange={handleChange}
+                                        error={errors.genreOther}
+                                    />
+                                </Field>
+                            )}
+
+                            {/* Duration */}
+                            {!values.format && (
+                                <Field
+                                    label="Duration"
+                                    required
+                                    hint="Select a format above to enter the duration."
+                                >
+                                    <div className="border border-dashed border-gray-300 py-3.5 px-4 text-[14px] text-gray-400">
+                                        Feature films: runtime in minutes. Web series: number of episodes and minutes per episode.
+                                    </div>
+                                </Field>
+                            )}
+
+                            {values.format === 'Feature Film' && (
+                                <Field
+                                    label="Duration (minutes)"
+                                    required
+                                    hint="Approximate runtime of the feature film."
+                                    error={errors.runtime}
+                                >
+                                    <IconInput
+                                        icon={Clock}
+                                        type="number"
+                                        min="1"
+                                        inputMode="numeric"
+                                        name="runtime"
+                                        placeholder="e.g. 120"
+                                        value={values.runtime}
+                                        onChange={handleChange}
+                                        error={errors.runtime}
+                                    />
+                                </Field>
+                            )}
+
+                            {values.format === 'Web Series' && (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+                                    <Field label="Number of episodes" required error={errors.episodes}>
                                         <IconInput
-                                            icon={Tag}
-                                            type="text"
-                                            name="genreOther"
-                                            placeholder="Enter genre"
-                                            value={values.genreOther}
+                                            icon={Hash}
+                                            type="number"
+                                            min="1"
+                                            inputMode="numeric"
+                                            name="episodes"
+                                            placeholder="e.g. 8"
+                                            value={values.episodes}
                                             onChange={handleChange}
-                                            error={errors.genreOther}
+                                            error={errors.episodes}
                                         />
                                     </Field>
-                                )}
-
-                                {/* Duration */}
-                                {!values.format && (
                                     <Field
-                                        label="Duration"
+                                        label="Duration per episode (minutes)"
                                         required
-                                        hint="Select a format above to enter the duration."
-                                    >
-                                        <div className="border border-dashed border-gray-300 py-3.5 px-4 text-[14px] text-gray-400">
-                                            Feature films: runtime in minutes. Web series: number of episodes and minutes per episode.
-                                        </div>
-                                    </Field>
-                                )}
-
-                                {values.format === 'Feature Film' && (
-                                    <Field
-                                        label="Duration (minutes)"
-                                        required
-                                        hint="Approximate runtime of the feature film."
-                                        error={errors.runtime}
+                                        hint="Approximate duration of each episode."
+                                        error={errors.episodeDuration}
                                     >
                                         <IconInput
                                             icon={Clock}
                                             type="number"
                                             min="1"
                                             inputMode="numeric"
-                                            name="runtime"
-                                            placeholder="e.g. 120"
-                                            value={values.runtime}
+                                            name="episodeDuration"
+                                            placeholder="e.g. 45"
+                                            value={values.episodeDuration}
                                             onChange={handleChange}
-                                            error={errors.runtime}
+                                            error={errors.episodeDuration}
                                         />
                                     </Field>
-                                )}
-
-                                {values.format === 'Web Series' && (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-                                        <Field label="Number of episodes" required error={errors.episodes}>
-                                            <IconInput
-                                                icon={Hash}
-                                                type="number"
-                                                min="1"
-                                                inputMode="numeric"
-                                                name="episodes"
-                                                placeholder="e.g. 8"
-                                                value={values.episodes}
-                                                onChange={handleChange}
-                                                error={errors.episodes}
-                                            />
-                                        </Field>
-                                        <Field
-                                            label="Duration per episode (minutes)"
-                                            required
-                                            hint="Approximate duration of each episode."
-                                            error={errors.episodeDuration}
-                                        >
-                                            <IconInput
-                                                icon={Clock}
-                                                type="number"
-                                                min="1"
-                                                inputMode="numeric"
-                                                name="episodeDuration"
-                                                placeholder="e.g. 45"
-                                                value={values.episodeDuration}
-                                                onChange={handleChange}
-                                                error={errors.episodeDuration}
-                                            />
-                                        </Field>
-                                    </div>
-                                )}
-
-                                {/* Logline */}
-                                <Field
-                                    label="Logline"
-                                    required
-                                    hint="A concise, compelling summary of the story in 1–3 sentences."
-                                    error={errors.logline}
-                                >
-                                    <IconTextarea
-                                        icon={Quote}
-                                        rows="3"
-                                        name="logline"
-                                        maxLength={LOGLINE_MAX}
-                                        placeholder="Your story in 1–3 sentences..."
-                                        value={values.logline}
-                                        onChange={handleChange}
-                                        error={errors.logline}
-                                    />
-                                    <p className="text-[12px] text-gray-400 text-right -mt-1">
-                                        {values.logline.length}/{LOGLINE_MAX}
-                                    </p>
-                                </Field>
-
-                                {/* Synopsis */}
-                                <Field
-                                    label="Synopsis"
-                                    required
-                                    hint="Outline the central premise, key characters, main conflict and narrative direction."
-                                    error={errors.synopsis}
-                                >
-                                    <IconTextarea
-                                        icon={PenLine}
-                                        rows="8"
-                                        name="synopsis"
-                                        maxLength={SYNOPSIS_MAX}
-                                        placeholder="Text here..."
-                                        value={values.synopsis}
-                                        onChange={handleChange}
-                                        error={errors.synopsis}
-                                    />
-                                    <p className="text-[12px] text-gray-400 text-right -mt-1">
-                                        {values.synopsis.length}/{SYNOPSIS_MAX}
-                                    </p>
-                                </Field>
-                            </div>
-
-                            {/* ------------------ 3. REQUIRED DOCUMENTS ------------------ */}
-                            <div className="mt-4 sm:mt-6 flex flex-col gap-5 sm:gap-6">
-                                <SectionHeading
-                                    number="03"
-                                    title="Required documents"
-                                    note="All documents listed below are mandatory. Incomplete submissions will not be considered."
-                                />
-
-                                <Field
-                                    label="A. Pitch deck"
-                                    required
-                                    hint="Introduce the project, its central premise, key characters, narrative direction and creative vision."
-                                    error={errors.pitchDeck}
-                                >
-                                    <FileDropzone
-                                        file={pitchDeck}
-                                        accept=".pdf,application/pdf"
-                                        formatLabel={PITCH_DECK_RULES.label}
-                                        error={errors.pitchDeck}
-                                        onSelect={(f) => handleFile('pitchDeck', f, PITCH_DECK_RULES)}
-                                        onRemove={() => removeFile('pitchDeck')}
-                                    />
-                                </Field>
-
-                                <Field label="B. SWA registration number" required error={errors.swaNumber}>
-                                    <IconInput
-                                        icon={BadgeCheck}
-                                        type="text"
-                                        name="swaNumber"
-                                        placeholder="Enter registration number"
-                                        value={values.swaNumber}
-                                        onChange={handleChange}
-                                        error={errors.swaNumber}
-                                    />
-                                </Field>
-
-                                <Field
-                                    label="C. SWA registration certificate"
-                                    required
-                                    hint="Only SWA-registered submissions will be reviewed."
-                                    error={errors.swaCertificate}
-                                >
-                                    <FileDropzone
-                                        file={certificate}
-                                        accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
-                                        formatLabel={CERTIFICATE_RULES.label}
-                                        error={errors.swaCertificate}
-                                        onSelect={(f) => handleFile('swaCertificate', f, CERTIFICATE_RULES)}
-                                        onRemove={() => removeFile('swaCertificate')}
-                                    />
-                                </Field>
-                            </div>
-
-                            {/* ------------------ 4. LEGAL DISCLAIMER (optional) ------------------ */}
-                            {hasLegal && (
-                                <div className="mt-4 sm:mt-6 flex flex-col gap-5 sm:gap-6">
-                                    <SectionHeading number="04" title="Legal disclaimer" />
-                                    <div className="form-element border border-[#202020] bg-white p-5 sm:p-6 max-h-72 overflow-y-auto flex flex-col gap-3">
-                                        {LEGAL_DISCLAIMER.map((para, i) => (
-                                            <p key={i} className="text-[13px] sm:text-[14px] text-[#555] leading-relaxed">
-                                                {para}
-                                            </p>
-                                        ))}
-                                    </div>
                                 </div>
                             )}
 
-                            {/* ------------------ DECLARATION AND CONFIRMATION ------------------ */}
-                            <div className="mt-4 sm:mt-6 flex flex-col gap-5 sm:gap-6">
-                                <SectionHeading
-                                    number={declarationNumber}
-                                    title="Declaration and confirmation"
-                                    note="Before submitting, confirm the following. All declarations are mandatory."
+                            {/* Logline */}
+                            <Field
+                                label="Logline"
+                                required
+                                hint="A concise, compelling summary of the story in 1–3 sentences."
+                                error={errors.logline}
+                            >
+                                <IconTextarea
+                                    icon={Quote}
+                                    rows="3"
+                                    name="logline"
+                                    maxLength={LOGLINE_MAX}
+                                    placeholder="Your story in 1–3 sentences..."
+                                    value={values.logline}
+                                    onChange={handleChange}
+                                    error={errors.logline}
                                 />
+                                <p className="text-[12px] text-gray-400 text-right -mt-1">
+                                    {values.logline.length}/{LOGLINE_MAX}
+                                </p>
+                            </Field>
 
-                                <div className="form-element flex flex-col gap-4">
-                                    {DECLARATIONS.map(({ key, text }, i) => (
-                                        <label key={key} className="flex items-start gap-3.5 cursor-pointer group">
-                                            <input
-                                                type="checkbox"
-                                                checked={declarations[key]}
-                                                onChange={() => handleDeclaration(key)}
-                                                aria-invalid={errors.declarations && !declarations[key] && i === 0 ? 'true' : undefined}
-                                                className="mt-0.5 h-5 w-5 shrink-0 accent-black cursor-pointer"
-                                            />
-                                            <span className="text-[14px] sm:text-[15px] text-[#555] leading-relaxed group-hover:text-black transition-colors">
-                                                {text}
-                                            </span>
-                                        </label>
+                            {/* Synopsis */}
+                            <Field
+                                label="Synopsis"
+                                required
+                                hint="Outline the central premise, key characters, main conflict and narrative direction."
+                                error={errors.synopsis}
+                            >
+                                <IconTextarea
+                                    icon={PenLine}
+                                    rows="8"
+                                    name="synopsis"
+                                    maxLength={SYNOPSIS_MAX}
+                                    placeholder="Text here..."
+                                    value={values.synopsis}
+                                    onChange={handleChange}
+                                    error={errors.synopsis}
+                                />
+                                <p className="text-[12px] text-gray-400 text-right -mt-1">
+                                    {values.synopsis.length}/{SYNOPSIS_MAX}
+                                </p>
+                            </Field>
+                        </FormSection>
+
+                        {/* ------------------ 3. REQUIRED DOCUMENTS ------------------ */}
+                        <FormSection
+                            number="03"
+                            title="Required documents"
+                            note="All documents listed below are mandatory. Incomplete submissions will not be considered."
+                        >
+                            <Field
+                                label="A. Pitch deck"
+                                required
+                                hint="Introduce the project, its central premise, key characters, narrative direction and creative vision."
+                                error={errors.pitchDeck}
+                            >
+                                <FileDropzone
+                                    file={pitchDeck}
+                                    accept=".pdf,application/pdf"
+                                    formatLabel={PITCH_DECK_RULES.label}
+                                    error={errors.pitchDeck}
+                                    onSelect={(f) => handleFile('pitchDeck', f, PITCH_DECK_RULES)}
+                                    onRemove={() => removeFile('pitchDeck')}
+                                />
+                            </Field>
+
+                            <Field label="B. SWA registration number" required error={errors.swaNumber}>
+                                <IconInput
+                                    icon={BadgeCheck}
+                                    type="text"
+                                    name="swaNumber"
+                                    placeholder="Enter registration number"
+                                    value={values.swaNumber}
+                                    onChange={handleChange}
+                                    error={errors.swaNumber}
+                                />
+                            </Field>
+
+                            <Field
+                                label="C. SWA registration certificate"
+                                required
+                                hint="Only SWA-registered submissions will be reviewed."
+                                error={errors.swaCertificate}
+                            >
+                                <FileDropzone
+                                    file={certificate}
+                                    accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+                                    formatLabel={CERTIFICATE_RULES.label}
+                                    error={errors.swaCertificate}
+                                    onSelect={(f) => handleFile('swaCertificate', f, CERTIFICATE_RULES)}
+                                    onRemove={() => removeFile('swaCertificate')}
+                                />
+                            </Field>
+                        </FormSection>
+
+                        {/* ------------------ 4. LEGAL DISCLAIMER (optional) ------------------ */}
+                        {hasLegal && (
+                            <FormSection number="04" title="Legal disclaimer">
+                                <div className="form-element border border-[#202020] bg-white p-5 sm:p-6 max-h-72 overflow-y-auto flex flex-col gap-3">
+                                    {LEGAL_DISCLAIMER.map((para, i) => (
+                                        <p key={i} className="text-[13px] sm:text-[14px] text-[#555] leading-relaxed">
+                                            {para}
+                                        </p>
                                     ))}
-                                    {errors.declarations && (
-                                        <p className="text-[13px] text-red-600">{errors.declarations}</p>
-                                    )}
                                 </div>
+                            </FormSection>
+                        )}
+
+                        {/* ------------------ DECLARATION AND CONFIRMATION ------------------ */}
+                        <FormSection
+                            number={declarationNumber}
+                            title="Declaration and confirmation"
+                            note="Before submitting, confirm the following. All declarations are mandatory."
+                        >
+                            <div className="form-element flex flex-col gap-4">
+                                {DECLARATIONS.map(({ key, text }, i) => (
+                                    <label key={key} className="flex items-start gap-3.5 cursor-pointer group">
+                                        <input
+                                            type="checkbox"
+                                            checked={declarations[key]}
+                                            onChange={() => handleDeclaration(key)}
+                                            aria-invalid={errors.declarations && !declarations[key] && i === 0 ? 'true' : undefined}
+                                            className="mt-0.5 h-5 w-5 shrink-0 accent-black cursor-pointer"
+                                        />
+                                        <span className="text-[14px] sm:text-[15px] text-[#555] leading-relaxed group-hover:text-black transition-colors">
+                                            {text}
+                                        </span>
+                                    </label>
+                                ))}
+                                {errors.declarations && (
+                                    <p className="text-[13px] text-red-600">{errors.declarations}</p>
+                                )}
                             </div>
 
                             {/* Submit Button */}
@@ -860,24 +869,13 @@ const SubmitScriptPage = () => {
                             <button
                                 type="submit"
                                 disabled={submitting}
-                                className="form-element sm:mt-2 w-full py-3.5 sm:py-4 bg-black text-white text-[12px] sm:text-[13px] font-medium tracking-[0.1em] hover:bg-gray-900 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                                className="form-element mt-2 sm:mt-4 w-full py-3.5 sm:py-4 bg-black text-white text-[12px] sm:text-[13px] font-medium tracking-[0.1em] hover:bg-gray-900 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                             >
                                 {submitting ? 'SUBMITTING...' : 'SUBMIT SCRIPT'}
                             </button>
-                        </form>
-                    )}
-
-                    {/* Image */}
-                    <div className="lg:col-span-1">
-                        <div className="image-anim relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[calc(100vh-8rem)] lg:sticky lg:top-28 overflow-hidden">
-                            <img
-                                src="https://images.unsplash.com/photo-1515634928627-2a4e0dae3ddf?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                alt="Script writing placeholder"
-                                className="object-cover w-full h-full  object-center"
-                            />
-                        </div>
-                    </div>
-                </div>
+                        </FormSection>
+                    </form>
+                )}
             </div>
         </section>
     );

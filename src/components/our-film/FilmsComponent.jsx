@@ -3,79 +3,82 @@
 import React, { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { useRouter } from "next/navigation";
+import { filmBriefs } from "./filmBriefs";
 
-export const filmsData = [
-  {
-    category: "ALL",
-    items: [
-      { id: "all-1", title: "YAADEIN", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C1.png" },
-      { id: "all-2", title: "AITRAAZ", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C2.png" },
-      { id: "all-3", title: "KAANCHI", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C3.png" },
-      { id: "all-4", title: "KARMA", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C1.png" },
-      { id: "all-5", title: "RAM LAKHAN", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C2.png" },
-      { id: "all-6", title: "SAUDAGAR", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C3.png" },
-      { id: "all-7", title: "KHALNAYAK", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C1.png" },
-      { id: "all-8", title: "PARDES", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C2.png" },
-      { id: "all-9", title: "TAAL", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C3.png" },
-    ]
-  },
-  {
-    category: "ENTERTAINMENT FILMS",
-    items: [
-      { id: "ent-1", title: "HERO", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C1.png" },
-      { id: "ent-2", title: "KARZ", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C2.png" },
-      { id: "ent-3", title: "VIDHATA", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C3.png" },
-      { id: "ent-4", title: "JOGGER'S PARK", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C1.png" },
-      { id: "ent-5", title: "IQBAL", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C2.png" },
-      { id: "ent-6", title: "36 CHINA TOWN", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C3.png" },
-      { id: "ent-7", title: "APNA SAPNA MONEY MONEY", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C1.png" },
-      { id: "ent-8", title: "GOOD BOY BAD BOY", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C2.png" },
-      { id: "ent-9", title: "BLACK & WHITE", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C3.png" },
-    ]
-  },
-  {
-    category: "SEARCHLIGHT FILMS",
-    items: [
-      { id: "search-1", title: "YAADEIN", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C1.png" },
-      { id: "search-2", title: "AITRAAZ", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C2.png" },
-      { id: "search-3", title: "KAANCHI", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C3.png" },
-      { id: "search-4", title: "KARMA", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C1.png" },
-      { id: "search-5", title: "RAM LAKHAN", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C2.png" },
-      { id: "search-6", title: "SAUDAGAR", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C3.png" },
-      { id: "search-7", title: "KHALNAYAK", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C1.png" },
-      { id: "search-8", title: "PARDES", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C2.png" },
-      { id: "search-9", title: "TAAL", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C3.png" },
-    ]
-  },
-  {
-    category: "SHORT FILMS",
-    items: [
-      { id: "short-1", title: "HERO", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C1.png" },
-      { id: "short-2", title: "KARZ", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C2.png" },
-      { id: "short-3", title: "VIDHATA", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C3.png" },
-      { id: "short-4", title: "JOGGER'S PARK", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C1.png" },
-      { id: "short-5", title: "IQBAL", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C2.png" },
-      { id: "short-6", title: "36 CHINA TOWN", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C3.png" },
-      { id: "short-7", title: "APNA SAPNA MONEY MONEY", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C1.png" },
-      { id: "short-8", title: "GOOD BOY BAD BOY", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C2.png" },
-      { id: "short-9", title: "BLACK & WHITE", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C3.png" },
-    ]
-  },
-  {
-    category: "REGIONALS FILMS",
-    items: [
-      { id: "reg-1", title: "YAADEIN", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C1.png" },
-      { id: "reg-2", title: "AITRAAZ", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C2.png" },
-      { id: "reg-3", title: "KAANCHI", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C3.png" },
-      { id: "reg-4", title: "KARMA", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C1.png" },
-      { id: "reg-5", title: "RAM LAKHAN", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C2.png" },
-      { id: "reg-6", title: "SAUDAGAR", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C3.png" },
-      { id: "reg-7", title: "KHALNAYAK", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C1.png" },
-      { id: "reg-8", title: "PARDES", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C2.png" },
-      { id: "reg-9", title: "TAAL", description: "A captivating story of love, revenge, and destiny.", image: "/img/home/C3.png" },
-    ]
-  }
+// Categories follow muktaarts.com: E = Entertainment, S = Searchlight, R = Regional, SH = Short
+const films = [
+  { slug: "kalicharan", title: "Kalicharan", year: 1976, cats: ["E"] },
+  { slug: "vishwanath", title: "Vishwanath", year: 1978, cats: ["E"] },
+  { slug: "gautam-govinda", title: "Gautam Govinda", year: 1979, cats: ["E"] },
+  { slug: "karz", title: "Karz", year: 1980, cats: ["E"] },
+  { slug: "krodhi", title: "Krodhi", year: 1981, cats: ["E"] },
+  { slug: "vidhaata", title: "Vidhaata", year: 1982, cats: ["E"] },
+  { slug: "hero", title: "Hero", year: 1983, cats: ["E"] },
+  { slug: "meri-jung", title: "Meri Jung", year: 1985, cats: ["E"] },
+  { slug: "karma", title: "Karma", year: 1986, cats: ["E"] },
+  { slug: "uttar-dakshin", title: "Uttar Dakshin", year: 1987, cats: ["E"] },
+  { slug: "ram-lakhan", title: "Ram Lakhan", year: 1989, cats: ["E"] },
+  { slug: "saudagar", title: "Saudagar", year: 1991, cats: ["E"] },
+  { slug: "pyar-ki-ganga-bahe", title: "Pyar Ki Ganga Bahe", year: 1993, cats: ["SH"] },
+  { slug: "prem-deewane", title: "Prem Deewane", year: 1992, cats: ["E"] },
+  { slug: "khalnayak", title: "Khalnayak", year: 1993, cats: ["E"] },
+  { slug: "trimurti", title: "Trimurti", year: 1995, cats: ["E"] },
+  { slug: "jaan", title: "Jaan", year: 1996, cats: ["E"] },
+  { slug: "pardes", title: "Pardes", year: 1997, cats: ["E"] },
+  { slug: "shyam-ghanshyam", title: "Shyam Ghanshyam", year: 1998, cats: ["E"] },
+  { slug: "taal", title: "Taal", year: 1999, cats: ["E"] },
+  { slug: "rahul", title: "Rahul", year: 2001, cats: ["E", "S"] },
+  { slug: "yaadein", title: "Yaadein", year: 2001, cats: ["E"] },
+  { slug: "badhaai-ho-badhaai", title: "Badhaai Ho Badhaai", year: 2002, cats: ["E"] },
+  { slug: "ek-aur-ek-gyarah", title: "Ek Aur Ek Gyarah", year: 2003, cats: ["E"] },
+  { slug: "joggers-park", title: "Jogger’s Park", year: 2003, cats: ["E", "S"] },
+  { slug: "aitraaz", title: "Aitraaz", year: 2004, cats: ["E"] },
+  { slug: "kisna", title: "Kisna", year: 2005, cats: ["E"] },
+  { slug: "iqbal", title: "Iqbal", year: 2005, cats: ["E", "S"] },
+  { slug: "shaadi-se-pehle", title: "Shaadi Se Pehle", year: 2006, cats: ["E"] },
+  { slug: "36-china-town", title: "36 China Town", year: 2006, cats: ["E"] },
+  { slug: "apna-sapna-money-money", title: "Apna Sapna Money Money", year: 2006, cats: ["E"] },
+  { slug: "good-boy-bad-boy", title: "Good Boy Bad Boy", year: 2007, cats: ["E"] },
+  { slug: "bombay-to-bangkok", title: "Bombay to Bangkok", year: 2008, cats: ["S"] },
+  { slug: "valu", title: "Valu", year: 2008, cats: ["R"] },
+  { slug: "black-and-white", title: "Black and White", year: 2008, cats: ["E", "S"] },
+  { slug: "sanai-choughade", title: "Sanai Choughade", year: 2008, cats: ["R"] },
+  { slug: "yuvvraaj", title: "Yuvvraaj", year: 2008, cats: ["E"] },
+  { slug: "paying-guests", title: "Paying Guests", year: 2009, cats: ["E"] },
+  { slug: "right-yaaa-wrong", title: "Right Yaaa Wrong", year: 2010, cats: ["E"] },
+  { slug: "hello-darling", title: "Hello Darling", year: 2010, cats: ["E"] },
+  { slug: "nouka-dubi", title: "Nouka Dubi / Kashmakash", year: 2011, cats: ["R"] },
+  { slug: "love-express", title: "Love Express", year: 2011, cats: ["E"] },
+  { slug: "cycle-kick", title: "Cycle Kick", year: 2011, cats: ["E"] },
+  { slug: "samhita", title: "Samhita", year: 2013, cats: ["R"] },
+  { slug: "nimbehuli", title: "Nimbehuli", year: 2014, cats: ["R"] },
+  { slug: "kaanchi", title: "Kaanchi", year: 2014, cats: ["E"] },
+  { slug: "double-di-trouble", title: "Double Di Trouble", year: 2014, cats: ["R"] },
+  { slug: "36-farmhouse", title: "36 Farmhouse", year: 2022, cats: ["E"] },
+  { slug: "vijeta", title: "Vijeta", year: 2020, cats: ["R"] },
+  { slug: "jaanki", title: "Jaanki", year: 2023, cats: ["E"] },
+  { slug: "gandhi-a-perspective", title: "Gandhi: A Perspective", year: 2020, cats: ["SH"] },
+  { slug: "tu-me-ani-amaira", title: "Tu Me Ani Amaira", year: 2025, cats: ["R"] },
+].map((film) => ({
+  ...film,
+  id: film.slug,
+  description: `Released in ${film.year}`,
+  brief: filmBriefs[film.slug] || "",
+  image: `/img/films/${film.slug}.jpg`,
+}));
+
+const categories = [
+  { category: "ALL", key: null },
+  { category: "ENTERTAINMENT FILMS", key: "E" },
+  { category: "SEARCHLIGHT FILMS", key: "S" },
+  { category: "SHORT FILMS", key: "SH" },
+  { category: "REGIONALS FILMS", key: "R" },
 ];
+
+export const filmsData = categories.map(({ category, key }) => ({
+  category,
+  items: key ? films.filter((film) => film.cats.includes(key)) : films,
+}));
 
 export default function FilmsComponent() {
   const router = useRouter();
@@ -93,7 +96,8 @@ export default function FilmsComponent() {
 
     localStorage.setItem("selectedFilmImage", film.image);
     localStorage.setItem("selectedFilmTitle", film.title);
-    localStorage.setItem("selectedFilmDesc", film.description);
+    localStorage.setItem("selectedFilmDesc", film.brief);
+    localStorage.setItem("selectedFilmYear", film.year);
 
     const card = e.currentTarget;
     const imgContainer = card.querySelector(".relative.w-full.aspect-\\[4\\/5\\]");
@@ -185,7 +189,7 @@ export default function FilmsComponent() {
       opacity: 0,
       y: 20,
       scale: 0.95,
-      stagger: 0.03, // Slightly faster stagger for exit
+      stagger: { amount: Math.min(0.03 * cards.length, 0.4) }, // Cap total stagger so long lists don't stall
       duration: 0.4,
       ease: "power2.inOut",
       onComplete: () => {
@@ -209,7 +213,7 @@ export default function FilmsComponent() {
         opacity: 1,
         y: 0,
         scale: 1,
-        stagger: 0.05,
+        stagger: { amount: Math.min(0.05 * cards.length, 0.8) }, // Cap total stagger so long lists don't stall
         duration: 0.6,
         ease: "power3.out",
         onComplete: () => {
@@ -273,6 +277,7 @@ export default function FilmsComponent() {
                 <img
                   src={film.image}
                   alt={film.title}
+                  loading="lazy"
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110 will-change-transform"
                 />
               </div>

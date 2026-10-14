@@ -7,8 +7,8 @@ const page = () => {
     return (
         <main>
             <WorkHero />
-            <WorkCarousel />
-            <WorkVideo />
+            {/* <WorkCarousel /> */}
+            {/* <WorkVideo /> */}
             {/* <BehindTheScenes /> */}
         </main>
     )

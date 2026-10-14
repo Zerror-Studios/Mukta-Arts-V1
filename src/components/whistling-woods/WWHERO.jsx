@@ -37,7 +37,7 @@ const WWHERO = () => {
     }, { scope: containerRef });
 
     return (
-        <section ref={containerRef} className="relative w-full h-screen min-h-[700px] flex flex-col bg-black overflow-hidden">
+        <section ref={containerRef} className="relative w-full min-h-svh lg:h-screen lg:min-h-[700px] flex flex-col bg-black overflow-hidden">
             {/* Background Image */}
             <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
                 {/* Note: Update the src to your actual background image */}
@@ -53,7 +53,7 @@ const WWHERO = () => {
             </div>
 
             {/* Content Container */}
-            <div className="relative z-10 w-full h-full  mx-auto px-4 md:px-8 lg:px-16 flex flex-col justify-between py-12 md:py-20 lg:py-24">
+            <div className="relative z-10 w-full flex-1 lg:h-full mx-auto px-4 md:px-8 lg:px-16 flex flex-col justify-between gap-12 py-12 md:py-20 lg:py-24">
 
                 {/* Top Spacer & Center Logo */}
                 <div className="flex-1 flex items-center justify-center">
@@ -65,7 +65,7 @@ const WWHERO = () => {
                             fill
                             className="object-contain"
                         /> */}
-                        <h2 className='text-white uppercase'>WHISTLING WOODS INTERNATIONAL </h2>
+                        <h2 className='text-white uppercase text-center text-[clamp(2rem,9vw,5rem)]! leading-[1.05]!'>WHISTLING WOODS INTERNATIONAL </h2>
                     </div>
                 </div>
 
@@ -78,10 +78,10 @@ const WWHERO = () => {
                     <div className="flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-8">
 
                         {/* Left Side: Description and Button */}
-                        <div className="flex flex-col gap-8 max-w-[420px]">
-                            <p className="wwi-text-anim text-white text-[15px]  md:text-[17px] leading-[1.6]">
-                                Whistling Woods International (WWI) and the Tata Institute of Social Sciences (TISS) <br />
-                                team up to offer degree and diploma programmes in Filmmaking,  <br /> Animation & Game Design, Acting, Media & Communication, Fashion, Music and Visual communication
+                        <div className="flex flex-col gap-8 w-full lg:max-w-[420px]">
+                            <p className="wwi-text-anim text-white max-md:text-[15px]! max-md:leading-[1.6]!">
+                                Whistling Woods International (WWI) and the Tata Institute of Social Sciences (TISS) <br className="hidden lg:block" />
+                                team up to offer degree and diploma programmes in Filmmaking,  <br className="hidden lg:block" /> Animation & Game Design, Acting, Media & Communication, Fashion, Music and Visual communication
                                 Design.
                             </p>
                             <div className="wwi-text-anim">
@@ -93,9 +93,9 @@ const WWHERO = () => {
 
                         {/* Right Side: Details Grid */}
                         <div className="flex flex-col gap-3.5 text-white lg:min-w-[400px]">
-                            <p className="wwi-text-anim text-white text-[15px]  md:text-[17px] leading-[1.6] mt-auto">Spread across a 5.5-acre campus, WWI is equipped with industry-grade facilities and  <br />
-                                cutting-edge technology that enable students to develop both the academic and  <br />
-                                practical aspects of their craft. Our vision is to build a globally benchmarked institution  <br />
+                            <p className="wwi-text-anim text-white max-md:text-[15px]! max-md:leading-[1.6]! mt-auto">Spread across a 5.5-acre campus, WWI is equipped with industry-grade facilities and  <br className="hidden lg:block" />
+                                cutting-edge technology that enable students to develop both the academic and  <br className="hidden lg:block" />
+                                practical aspects of their craft. Our vision is to build a globally benchmarked institution  <br className="hidden lg:block" />
                                 that sets new standards for excellence in creative education. </p>
                         </div>
 

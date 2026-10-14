@@ -171,7 +171,7 @@ export function Model(props) {
             }
           }
         });
-        footerTl.to(groupRef.current.scale, { x: 6, y: 6, z: 6, ease: "power2.inOut" }, 0);
+        footerTl.to(groupRef.current.scale, { x: 15, y: 15, z: 15, ease: "power2.inOut" }, 0);
       });
     });
 
@@ -197,7 +197,7 @@ export default function HeadphonesCanvas() {
   useEffect(() => {
     const updateScale = () => {
       if (window.innerWidth < 768) {
-        setModelScale(6); // scale down for mobile
+        setModelScale(15); // scale down for mobile
       } else if (window.innerWidth < 1024) {
         setModelScale(8); // scale down for tablet
       } else {

@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 const data = [
     {
         title: "Whistling Woods International",
-        image: "/img/ma/WhistlingWoods.jpg",
+        image: "/img/final/home/home2/2O5A3438.webp",
         shortDesc: "Whistling Woods International (WWI) is India’s premier institute for Film, Communication, and Creative Arts. ",
         fullDesc: `● Among the world's ten best film schools, as rated by The Hollywood Reporter, more than once.
 ● 7 specialised schools under one roof, spanning filmmaking, acting, animation, design, fashion, media and music.
@@ -28,7 +28,7 @@ current students. `,
     },
     {
         title: "Mukta Arts Productions",
-        image: "/img/ma/MuktaArtProduction.png",
+        image: "/img/final/home/home2/2O5A4368.webp",
         shortDesc: "The house behind Karz, Hero, Ram Lakhan, Pardes and Taal, producing 50+ stories that have stayed with Indian audiences since 1978.",
         fullDesc: `
         ●  50+ films  produced and co-produced since 1978, in  Hindi and regional 
@@ -67,7 +67,7 @@ years.`,
     },
     {
         title: "Mukta A2 Cinemas",
-        image: "/img/ma/MuktaA2Cinemas.jpg",
+        image: "/img/final/home/home2/TOPIWALA.webp",
         shortDesc: "Mukta A2 Cinemas is the exhibition arm of Mukta Arts, founded with a vision to make the big- screen experience accessible to audiences across India.",
         fullDesc: `
         ●  57 screens across 19 cities  in India, and growing. 

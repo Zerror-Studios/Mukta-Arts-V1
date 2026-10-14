@@ -1,12 +1,14 @@
 import FilmsComponent from "@/components/our-film/FilmsComponent";
 import OFHero from "@/components/our-film/OFHero";
-import WWStats from "@/components/whistling-woods/WWStats";
+import CustomNum from "@/components/whistling-woods/CustomNum";
+import WWStats from "@/components/whistling-woods/WWStatsOLD";
 
 const page = () => {
     return (
         <>
             <OFHero />
-            <WWStats />
+            {/* <WWStats /> */}
+            <CustomNum />
             <FilmsComponent />
         </>
     );

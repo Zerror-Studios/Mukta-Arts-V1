@@ -6,15 +6,21 @@ const WorkHero = () => {
     const [imageSrc, setImageSrc] = useState("https://m.media-amazon.com/images/M/MV5BNTI3M2Y1YzYtYzNkZC00OTc0LTk0MGQtYWM1ZWU1Yzk4N2VmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg");
     const [title, setTitle] = useState("Yaadein");
     const [description, setDescription] = useState("Yaadein (Transl. Memories) Is A 2001 Indian Hindi-Language Musical Drama Film Written, Directed, Edited And Produced By Subhash Ghai.[2] The Film Stars Hrithik Roshan, Kareena Kapoor, Jackie Shroff And Amrish Puri.");
+    const [year, setYear] = useState("2001");
 
     useEffect(() => {
         const savedImage = localStorage.getItem("selectedFilmImage");
         const savedTitle = localStorage.getItem("selectedFilmTitle");
         const savedDesc = localStorage.getItem("selectedFilmDesc");
+        const savedYear = localStorage.getItem("selectedFilmYear");
 
         if (savedImage) setImageSrc(savedImage);
-        if (savedTitle) setTitle(savedTitle);
-        if (savedDesc) setDescription(savedDesc);
+        if (savedTitle) {
+            setTitle(savedTitle);
+            // A film without a brief yet should show nothing, not the default copy
+            setDescription(savedDesc || "");
+            setYear(savedYear || "");
+        }
 
         const clone = document.getElementById("transition-clone");
 
@@ -81,20 +87,20 @@ const WorkHero = () => {
                     >
                         {title}
                     </h2>
-                    <h5 className="text-3xl md:text-5xl font-bold ml-6 lg:ml-8 mb-4 text-black ">
-                        (1942)
-                    </h5>
+                    {year && (
+                        <h5 className="text-3xl md:text-5xl font-bold ml-6 lg:ml-8 mb-4 text-black ">
+                            ({year})
+                        </h5>
+                    )}
                 </div>
 
                 {/* Paragraphs */}
                 <div className="max-w-[90%] work-hero-text opacity-0">
-                    <p className="mb-4">
-                        {description}
-                    </p>
-                    <p>
-                        The {title} (Transl. Memories) Is A 2001 Indian Hindi-Language Musical Drama Film
-                        Written, Directed, Edited And
-                    </p>
+                    {description.split(/\n\s*\n/).filter(Boolean).map((para, i) => (
+                        <p key={i} className="mb-4">
+                            {para}
+                        </p>
+                    ))}
                 </div>
             </div>
 

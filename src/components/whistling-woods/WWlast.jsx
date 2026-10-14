@@ -10,12 +10,14 @@ if (typeof window !== "undefined") {
 }
 
 const carouselItems = [
-    { src: "/img/last/1.jpg", width: "w-[280px] md:w-[380px]", height: "h-[220px] md:h-[280px]" },
-    { src: "/img/last/3.jpg", width: "w-[360px] md:w-[480px]", height: "h-[180px] md:h-[220px]" },
-    { src: "/img/last/5.png", width: "w-[240px] md:w-[320px]", height: "h-[380px] md:h-[480px]" },
-    { src: "/img/last/6.jpg", width: "w-[320px] md:w-[420px]", height: "h-[220px] md:h-[280px]" },
-    { src: "/img/last/7.jpg", width: "w-[380px] md:w-[500px]", height: "h-[200px] md:h-[240px]" },
+    { src: "/img/last/1.jpg" },
+    { src: "/img/last/3.jpg" },
+    { src: "/img/last/5.png" },
+    { src: "/img/last/6.jpg" },
+    { src: "/img/last/7.jpg" },
 ];
+
+const itemSize = "w-[260px] h-[195px] sm:w-[320px] sm:h-[240px] md:w-[420px] md:h-[300px]";
 
 const WWlast = () => {
     const containerRef = useRef(null);
@@ -71,14 +73,14 @@ const WWlast = () => {
     }, []);
 
     return (
-        <section className="relative w-full pt-32 pb-16 overflow-hidden bg-[#FAFAFA]">
-            <div className=" px-4 md:px-8 mb-24 ">
-                <div className="flex flex-col lg:flex-row justify-between items-start gap-8 lg:gap-16 ">
+        <section className="relative w-full pt-20 md:pt-32 pb-12 md:pb-16 overflow-hidden bg-[#FAFAFA]">
+            <div className=" px-4 md:px-8 mb-12 md:mb-24 ">
+                <div className="flex flex-col lg:flex-row justify-between items-start gap-5 md:gap-8 lg:gap-16 ">
                     <h4 className="text-5xl capitalize md:text-7xl lg:text-[5.5rem] font-bold tracking-tighter text-black max-w-3xl leading-[1.05]">
                         whistling woods <br /> gallery
                     </h4>
-                    <p className="text-[#555]  text-lg md:text-xl ml-auto max-w-[28rem] leading-relaxed font-medium">
-                        Pioneering India's cinematic corporatization, premier media pedagogy at Whistling Woods International, and multiplex storytelling across generations.
+                    <p className="text-[#555]  text-lg md:text-xl lg:ml-auto max-w-[28rem] leading-relaxed font-medium max-md:text-base! max-md:leading-relaxed!">
+                        Pioneering India&apos;s cinematic corporatization, premier media pedagogy at Whistling Woods International, and multiplex storytelling across generations.
                     </p>
                 </div>
             </div>
@@ -95,7 +97,7 @@ const WWlast = () => {
                     {[...carouselItems, ...carouselItems].map((item, index) => (
                         <div
                             key={index}
-                            className={`relative flex-shrink-0 ${item.width} ${item.height}`}
+                            className={`relative flex-shrink-0 ${itemSize}`}
                         >
                             <Image
                                 src={item.src}

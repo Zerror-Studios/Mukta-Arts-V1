@@ -32,16 +32,15 @@ const SEGMENTS_X = 116; // horizontal subdivisions per card mesh
 
 // Placeholder images (9 cards)
 const images = [
-  "/img/home/1.jpg",
-  "/img/home/2.jpg",
-  "/img/home/3.jpg",
-  "/img/home/4.jpg",
-  "/img/home/5.jpg",
-  "/img/home/6.jpg",
-  "/img/home/7.jpg",
-  "/img/home/8.jpg",
-  "/img/home/9.jpg",
-
+  "/img/final/home/all/04_KARZ_(1980).jpg",
+  "/img/final/home/all/06_HERO_(1982).jpg",
+  "/img/final/home/all/08_KARMA_(1986).jpg",
+  "/img/final/home/all/10_RAM_LAKHAN_(1987).jpg",
+  "/img/final/home/all/11_SAUDAGAR_(1991).jpg",
+  "/img/final/home/all/12_PREM_DEEWANE_(1992).jpg",
+  "/img/final/home/all/13_KHALNAYAK_(1993).jpg",
+  "/img/final/home/all/15_TRIMURTI_(1995).jpg",
+  "/img/final/home/all/16_JAAN_(1996).jpg",
 ];
 
 // =============================================

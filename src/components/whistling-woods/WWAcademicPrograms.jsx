@@ -742,18 +742,22 @@ function ImagePlane({ urls, targetRef, intensityRef }) {
     });
   }, [textures]);
 
-  useEffect(() => () => material.dispose(), [material]);
+  // Uniforms are mutated every frame, so they're reached through the state ref
+  // rather than the memoised material (keeps react-hooks/immutability happy).
+  useEffect(() => {
+    state.current.uniforms = material.uniforms;
+    return () => material.dispose();
+  }, [material]);
 
   /* spawn one ripple into the ring buffer */
-  const spawn = useCallback(
-    (x, y, amp) => {
-      const s = state.current;
-      const slot = material.uniforms.uRipples.value[s.ringIndex];
-      slot.set(x, y, material.uniforms.uTime.value, amp);
-      s.ringIndex = (s.ringIndex + 1) % RIPPLE_COUNT;
-    },
-    [material]
-  );
+  const spawn = useCallback((x, y, amp) => {
+    const s = state.current;
+    const u = s.uniforms;
+    if (!u) return;
+    const slot = u.uRipples.value[s.ringIndex];
+    slot.set(x, y, u.uTime.value, amp);
+    s.ringIndex = (s.ringIndex + 1) % RIPPLE_COUNT;
+  }, []);
 
   /* ---- precise cursor tracking straight from the canvas DOM rect ---- */
   useEffect(() => {
@@ -794,18 +798,21 @@ function ImagePlane({ urls, targetRef, intensityRef }) {
     el.addEventListener("pointerenter", onEnter);
     el.addEventListener("pointermove", onMove);
     el.addEventListener("pointerleave", onLeave);
+    el.addEventListener("pointercancel", onLeave);
     el.addEventListener("pointerdown", onDown);
     return () => {
       el.removeEventListener("pointerenter", onEnter);
       el.removeEventListener("pointermove", onMove);
       el.removeEventListener("pointerleave", onLeave);
+      el.removeEventListener("pointercancel", onLeave);
       el.removeEventListener("pointerdown", onDown);
     };
   }, [gl, spawn]);
 
   useFrame((_, delta) => {
     const s = state.current;
-    const u = material.uniforms;
+    const u = s.uniforms;
+    if (!u) return;
     const n = textures.length;
 
     u.uTime.value += delta;
@@ -989,11 +996,12 @@ export default function WWAcademicPrograms({
   return (
     <section
       ref={sectionRef}
-      className="relative h-screen w-full overflow-hidden text-black"
+      className="relative flex h-svh w-full flex-col justify-center gap-5 overflow-hidden px-5 text-black sm:gap-6 sm:px-8 md:block md:h-screen md:p-0"
       style={{ backgroundColor: BG }}
     >
       {/* ---------------- Center: WebGL image ---------------- */}
-      <div className="absolute left-1/2 top-1/2 z-10 aspect-[1.28/1] w-[78vw] max-h-[76vh] -translate-x-1/2 -translate-y-1/2 overflow-hidden shadow-2xl md:w-[41vw]">
+      {/* mobile: in-flow card between header + text | md+: absolutely centered */}
+      <div className="relative order-2 z-10 aspect-4/5 max-h-[52svh] w-full shrink-0 overflow-hidden shadow-2xl sm:aspect-[1.28/1] md:absolute md:left-1/2 md:top-1/2 md:max-h-[76vh] md:w-[41vw] md:-translate-x-1/2 md:-translate-y-1/2">
         <Canvas
           dpr={[1, 2]}
           camera={{ position: [0, 0, 5], fov: 35 }}
@@ -1033,18 +1041,40 @@ export default function WWAcademicPrograms({
       )} */}
 
       {/* ---------------- Left: text block ---------------- */}
-      <div className="absolute bottom-20 left-10 h-fit w-[20%]">
-        <h6 className="text-[2.1vw]">University Affiliation</h6>
-        <div className="my-4 h-px w-full bg-black"></div>
-        <p>
+      <div className="relative order-3 z-20 h-fit w-full md:absolute md:bottom-20 md:left-10 md:w-[24%] lg:w-[20%]">
+        <h6 className="text-2xl leading-tight sm:text-3xl md:text-[max(1.25rem,2.1vw)]">
+          University Affiliation
+        </h6>
+        <div className="my-3 h-px w-full bg-black md:my-4"></div>
+        <p className="text-sm leading-relaxed sm:text-base md:text-sm lg:text-base max-md:text-[15px]! max-md:leading-relaxed!">
           Partnered with Tata Institute of Social Sciences (TISS) (a Category 1
-          University) to offer accredited Bachelor's and Master's degrees across
+          University) to offer accredited Bachelor&apos;s and Master&apos;s degrees across
           1 to 4-year programs
         </p>
       </div>
 
       {/* ---------------- Right: description ---------------- */}
-      <div className="pointer-events-none absolute bottom-[6%] left-[6vw] right-[6vw] z-20 md:bottom-auto md:left-auto md:right-[7vw] md:top-1/2 md:w-[17vw] md:-translate-y-1/2">
+      {/* mobile: header row above the image (progress + number) | md+: right of image */}
+      <div className="pointer-events-none relative order-1 z-20 flex w-full items-center justify-between md:absolute md:right-[7vw] md:top-1/2 md:block md:w-[17vw] md:-translate-y-1/2">
+        {/* mobile progress (thumbnail rail is hidden below md) */}
+        <div className="pointer-events-auto flex items-center gap-1 md:hidden">
+          {programsData.map((item, i) => (
+            <button
+              key={`dot-${item.id}`}
+              type="button"
+              onClick={() => goTo(i)}
+              aria-label={`Show ${item.title}`}
+              className="px-0.5 py-3"
+            >
+              <span
+                className={`block h-0.5 transition-all duration-500 ${
+                  i === active ? "w-8 bg-black" : "w-4 bg-black/25"
+                }`}
+              />
+            </button>
+          ))}
+        </div>
+
         <div className="grid">
           {programsData.map((item, i) => (
             <p

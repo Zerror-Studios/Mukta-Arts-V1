@@ -94,7 +94,7 @@ export default function AlumniWorkSection() {
         [...companies, ...companies].map((company, index) => (
             <div
                 key={`${blockKey}-${company.id}-${index}`}
-                className="bg-white border border-gray-200/80 w-[220px] h-[100px] flex items-center justify-center shrink-0 shadow-sm rounded-lg mx-3 hover:shadow-md transition-shadow duration-300"
+                className="bg-white border border-gray-200/80 w-[160px] h-[76px] md:w-[220px] md:h-[100px] flex items-center justify-center shrink-0 shadow-sm rounded-lg mx-2 md:mx-3 hover:shadow-md transition-shadow duration-300"
             >
                 {/* 
                   When you have the actual image files, uncomment the <img> tag below 
@@ -108,7 +108,7 @@ export default function AlumniWorkSection() {
                 /> */}
 
                 {/* Fallback Text Styling (Remove this once images are applied) */}
-                <span className="font-bold text-gray-700 text-center text-sm px-2 tracking-wide uppercase">
+                <span className="font-bold text-gray-700 text-center text-xs md:text-sm px-2 tracking-wide uppercase">
                     {company.name}
                 </span>
             </div>
@@ -117,11 +117,11 @@ export default function AlumniWorkSection() {
     return (
         <section
             ref={sectionRef}
-            className="w-full h-fit bg-[#f8f9fa] py-24 px-0 flex flex-col items-center justify-center font-sans overflow-hidden"
+            className="w-full h-fit bg-[#f8f9fa] py-16 md:py-24 px-0 flex flex-col items-center justify-center font-sans overflow-hidden"
         >
             <div className="w-full">
                 {/* Heading */}
-                <h4 className="heading text-[32px] md:text-[42px] font-semibold text-center text-[#111] mb-16 tracking-tight px-6">
+                <h4 className="heading text-[32px] md:text-[42px] font-semibold text-center text-[#111] mb-10 md:mb-16 tracking-tight px-6">
                     Where Our Alumni Work
                 </h4>
 
@@ -157,7 +157,7 @@ export default function AlumniWorkSection() {
                 }} />
 
                 {/* Row 1 - Moves Left */}
-                <div className="marquee-container w-full relative mb-6">
+                <div className="marquee-container w-full relative mb-4 md:mb-6">
                     <div className="animate-marquee flex w-max">
                         <div className="flex">
                             {renderCards(row1, "r1b1")}
@@ -166,7 +166,7 @@ export default function AlumniWorkSection() {
                 </div>
 
                 {/* Row 2 - Moves Right (Reverse) */}
-                <div className="marquee-container w-full relative mb-6">
+                <div className="marquee-container w-full relative mb-4 md:mb-6">
                     <div className="animate-marquee-reverse flex w-max">
                         <div className="flex">
                             {renderCards(row2, "r2b1")}
@@ -175,7 +175,7 @@ export default function AlumniWorkSection() {
                 </div>
 
                 {/* Row 3 - Moves Left */}
-                <div className="marquee-container w-full relative mb-12">
+                <div className="marquee-container w-full relative mb-8 md:mb-12">
                     <div className="animate-marquee flex w-max" style={{ animationDuration: '45s' }}>
                         <div className="flex">
                             {renderCards(row3, "r3b1")}

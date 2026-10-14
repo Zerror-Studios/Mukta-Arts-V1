@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useRef } from 'react';
-import Image from 'next/image';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
@@ -26,7 +25,7 @@ const HeroSMG = () => {
                 duration: 1,
                 ease: "power3.inOut"
             }, "-=0.8")
-            // Animate the bottom text and button
+            // Animate the bottom text
             .from(".wwi-text-anim", {
                 y: 20,
                 opacity: 0,
@@ -40,13 +39,11 @@ const HeroSMG = () => {
         <section ref={containerRef} className="relative w-full h-screen min-h-[700px] flex flex-col bg-black overflow-hidden">
             {/* Background Image */}
             <div className="absolute inset-0 w-full h-full z-0">
-                {/* Note: Update the src to your actual background image */}
+                {/* Note: Placeholder — replace with an SGM Studios still */}
                 <img
-                    src="https://images.unsplash.com/photo-1563330232-57114bb0823c?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    alt="Whistling Woods Background"
-
+                    src="https://images.unsplash.com/photo-1635322966219-b75ed372eb01?q=80&w=1740&auto=format&fit=crop"
+                    alt="SGM Studios Background"
                     className="object-cover w-full h-full object-center"
-
                 />
                 {/* Dark overlay to ensure text and logo readability */}
                 <div className="absolute inset-0 bg-black/50"></div>
@@ -58,14 +55,7 @@ const HeroSMG = () => {
                 {/* Top Spacer & Center Logo */}
                 <div className="flex-1 flex items-center justify-center">
                     <div className="wwi-logo relative ">
-                        {/* Note: Update the src to your actual Whistling Woods logo */}
-                        {/* <Image
-                            src="/img/wwi-logo.png"
-                            alt="Whistling Woods International Logo"
-                            fill
-                            className="object-contain"
-                        /> */}
-                        <h2 className='text-white uppercase'>sgm studios</h2>
+                        <h2 className='text-white uppercase'>SGM Studios</h2>
                     </div>
                 </div>
 
@@ -77,32 +67,18 @@ const HeroSMG = () => {
                     {/* Content Columns */}
                     <div className="flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-8">
 
-                        {/* Left Side: Description and Button */}
-                        <div className="flex flex-col gap-8 max-w-[420px]">
-                            <p className="wwi-text-anim text-white text-[15px]  md:text-[17px] leading-[1.6]">
-                                Founded by filmmaker Subhash Ghai,<br /> WWI offers world-class education in Film,<br /> Communication, Creative and Performing Arts.
+                        {/* Left Side: Description */}
+                        <div className="flex flex-col gap-8 max-w-[440px]">
+                            <p className="wwi-text-anim text-white text-[15px] md:text-[17px] leading-[1.6]">
+                                SGM Studios is Mukta Arts&apos; animation and visual storytelling arm, built to carry the company&apos;s cinematic legacy into the world of animation and new-age entertainment.
                             </p>
-                            <div className="wwi-text-anim">
-                                <a href="#" className="inline-block bg-white text-black px-8 py-3.5 text-[11px] font-bold tracking-[0.15em] transition-colors hover:bg-gray-200">
-                                    VISIT OUR WEBSITE
-                                </a>
-                            </div>
                         </div>
 
-                        {/* Right Side: Details Grid */}
-                        <div className="flex flex-col gap-3.5 text-white lg:min-w-[400px]">
-                            <div className="wwi-text-anim grid grid-cols-[80px_1fr] md:grid-cols-[100px_1fr] gap-4">
-                                <p className="text-[#A0A0A0] text-[13px] md:text-[14.5px]">Founder:</p>
-                                <p className="text-white text-[13px] md:text-[14.5px]">Subhash Ghai (2006)</p>
-                            </div>
-                            <div className="wwi-text-anim grid grid-cols-[80px_1fr] md:grid-cols-[100px_1fr] gap-4">
-                                <p className="text-[#A0A0A0] text-[13px] md:text-[14.5px]">Location:</p>
-                                <p className="text-white text-[13px] md:text-[14.5px]">Filmcity, Mumbai</p>
-                            </div>
-                            <div className="wwi-text-anim grid grid-cols-[80px_1fr] md:grid-cols-[100px_1fr] gap-4">
-                                <p className="text-[#A0A0A0] text-[13px] md:text-[14.5px]">Focus:</p>
-                                <p className="text-white text-[13px] md:text-[14.5px]">Film, Communication & Creative Arts</p>
-                            </div>
+                        {/* Right Side: Description */}
+                        <div className="flex flex-col gap-3.5 text-white max-w-[440px] lg:min-w-[400px]">
+                            <p className="wwi-text-anim text-white text-[15px] md:text-[17px] leading-[1.6]">
+                                The studio develops original, culturally rooted IP, bringing together creative talent and emerging technology to craft visually distinctive worlds and character-driven narratives for audiences across India and beyond.
+                            </p>
                         </div>
 
                     </div>

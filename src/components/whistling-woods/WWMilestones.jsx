@@ -107,6 +107,11 @@ const WWMilestones = () => {
     // Wheel radius follows the screen width (≈707px at 1260px wide, like the design)
     const R = clamp(vw * 0.56, 380, 780);
 
+    // Phones: pull the arc up and tighten the gaps so the description fits in one screen
+    const isMobile = vw < 768;
+    const arcTop = isMobile ? 125 : ARC_TOP;
+    const descGap = isMobile ? 110 : 140;
+
     const applyRotation = () => {
         if (wheelRef.current) {
             wheelRef.current.style.transform = `rotate(${-currentRef.current * STEP}deg)`;
@@ -206,7 +211,7 @@ const WWMilestones = () => {
                         ? 'sticky top-0 overflow-hidden'
                         : 'relative overflow-hidden pb-10'
                 }
-                style={SCROLL_DRIVEN ? { height: '100vh', minHeight: 680 } : undefined}
+                style={SCROLL_DRIVEN ? { height: '100svh', minHeight: isMobile ? undefined : 680 } : undefined}
             >
                 {/* Dynamic Milestone Background Crossfade */}
                 <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -252,7 +257,7 @@ const WWMilestones = () => {
                 {/* Header */}
                 <div
                     className="relative z-10 text-center px-4 mx-auto max-w-5xl"
-                    style={{ paddingTop: 'clamp(28px, 8vh, 80px)' }}
+                    style={{ paddingTop: isMobile ? 'clamp(20px, 5svh, 48px)' : 'clamp(28px, 8vh, 80px)' }}
                 >
                     {/* <h2
                         className="font-medium  tracking-tight mb-5"
@@ -262,10 +267,10 @@ const WWMilestones = () => {
                         <br className="hidden md:block" /> A Global Creative Community
                     </h2> */}
 
-                    <h4 className='mb-5'>
-                        WWI Milestones — From Vision To <br /> A Global Creative Community
+                    <h4 className='mb-3 md:mb-5 max-md:text-[1.5rem]! max-md:leading-[1.2]!'>
+                        WWI Milestones — From Vision To <br className="hidden md:block" /> A Global Creative Community
                     </h4>
-                    <p className="text-sm mx-auto text-white/90 max-w-md leading-relaxed">
+                    <p className="text-sm mx-auto text-white/90 max-w-md leading-relaxed max-md:text-[13px]! max-md:leading-snug!">
                         From a bold vision to a thriving community shaping the future of
                         media, communication, and creative arts.
                     </p>
@@ -274,21 +279,21 @@ const WWMilestones = () => {
                 {/* Stage */}
                 <div className="relative w-full  " style={{ height: 560 }}>
                     {/* Fixed connector lines around the active year */}
-                    <div className="absolute  left-1/2 w-px bg-white/40 z-20" style={{ top: ARC_TOP - 150, height: 40 }} />
-                    <div className="absolute  left-1/2 w-px bg-white/40 z-20" style={{ top: ARC_TOP - 51, height: 25 }} />
-                    <div className="absolute  left-1/2 w-px bg-white/40 z-20" style={{ top: ARC_TOP + 56, height: 56 }} />
+                    <div className="absolute  left-1/2 w-px bg-white/40 z-20 hidden md:block" style={{ top: arcTop - 150, height: 40 }} />
+                    <div className="absolute  left-1/2 w-px bg-white/40 z-20" style={{ top: arcTop - 51, height: 25 }} />
+                    <div className="absolute  left-1/2 w-px bg-white/40 z-20" style={{ top: arcTop + 56, height: isMobile ? 40 : 56 }} />
 
                     {/* Description */}
                     <div
-                        className="absolute left-1/2 -translate-x-1/2 w-full px-6 text-center z-20 pointer-events-none"
-                        style={{ top: ARC_TOP + 140, maxWidth: 620 }}
+                        className="absolute left-1/2 -translate-x-1/2 w-full px-5 md:px-6 text-center z-20 pointer-events-none"
+                        style={{ top: arcTop + descGap, maxWidth: 620 }}
                     >
                         <div key={active} className="wwm-fade">
                             {paragraphs.map((p, idx) => (
                                 <p
                                     key={idx}
-                                    className={`text-[14px] md:text-[15px] leading-relaxed md:leading-[1.5] ${p.startsWith('FICCI') ? 'font-semibold text-white' : 'text-white/95'
-                                        } ${idx > 0 ? (p.startsWith('·') && paragraphs[idx - 1]?.startsWith('·') && p.length < 40 ? 'mt-2' : 'mt-3') : ''}`}
+                                    className={`text-[14px] md:text-[15px] leading-relaxed md:leading-[1.5] max-md:text-[13px]! max-md:leading-[1.5]! ${p.startsWith('FICCI') ? 'font-semibold text-white' : 'text-white/95'
+                                        } ${idx > 0 ? (p.startsWith('·') && paragraphs[idx - 1]?.startsWith('·') && p.length < 40 ? 'mt-1.5 md:mt-2' : 'mt-2 md:mt-3') : ''}`}
                                 >
                                     {p}
                                 </p>
@@ -302,7 +307,7 @@ const WWMilestones = () => {
                         className="absolute rounded-full border \ border-dashed border-white/30"
                         style={{
                             left: '50%',
-                            top: ARC_TOP,
+                            top: arcTop,
                             width: R * 2,
                             height: R * 2,
                             marginLeft: -R,

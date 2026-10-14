@@ -27,11 +27,11 @@ function FilmReel() {
     });
 
     const content = [
-        { title: "45+", subtitle: "Years of Legacy", image: "/img/home/1.jpg" },
-        { title: "50+", subtitle: "Films Produced", image: "/img/home/2.jpg" },
-        { title: "35", subtitle: "Blockbusters", image: "/img/home/3.jpg" },
-        { title: "4000+", subtitle: "Alumni", image: "/img/home/4.jpg" },
-        { title: "57+", subtitle: "Cinema Theatres", image: "/img/home/5.jpg" },
+        { title: "45+", subtitle: "Years of Legacy", image: "/img/final/home/all/20_YAADEIN_(2001).jpg" },
+        { title: "50+", subtitle: "Films Produced", image: "/img/final/home/all/24_EK_AUR_EK_GYARAH_(2003).jpg" },
+        { title: "35", subtitle: "Blockbusters", image: "/img/final/home/all/29_SHAADI_SE_PEHLE_(2006).jpg" },
+        { title: "4000+", subtitle: "Alumni", image: "/img/final/home/all/UTTAR DAKSHIN (HINDI).jpg" },
+        { title: "57+", subtitle: "Cinema Theatres", image: "/img/final/home/all/50_DOUBLE_DI_TROUBLE_(2014).jpeg" },
     ];
 
     // Duplicate multiple times for a seamless scroll effect
@@ -58,7 +58,7 @@ function FilmReel() {
                             {/* Background Image for each frame */}
                             <div
                                 className="absolute inset-0 bg-cover bg-center z-0 opacity-100"
-                                style={{ backgroundImage: `url(${item.image})` }}
+                                style={{ backgroundImage: `url("${encodeURI(item.image)}")` }}
                             ></div>
                             {/* Overlay for text readability */}
                             <div className="absolute inset-0 bg-black/50 z-0"></div>
@@ -216,7 +216,7 @@ export default function OldCamera() {
                     <div
                         ref={bgImageRef}
                         className="absolute inset-0 bg-cover bg-center md:bg-[center_right_10%] opacity-0 filter contrast-110"
-                        style={{ backgroundImage: "url('/img/last/1.jpg')" }}
+                        style={{ backgroundImage: "url('/img/final/home/home2/WhatsApp2.webp')" }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-r from-white via-white/70 to-transparent" />
                     <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-white/30" />

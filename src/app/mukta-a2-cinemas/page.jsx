@@ -1,5 +1,5 @@
 import HeroSecMa2 from "@/components/m-a2-cinemas/HeroSecMa2";
-import WWStats from "@/components/whistling-woods/WWStats";
+import WWStats from "@/components/whistling-woods/WWStatsOLD";
 import PropertiesSection from "@/components/m-a2-cinemas/PropertiesSection";
 import Stater from "@/components/whistling-woods/Stater";
 
