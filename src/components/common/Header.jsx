@@ -5,6 +5,7 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { holdReveals, releaseReveals } from '@/lib/revealGate';
 
 const Header = () => {
   const containerRef = useRef(null);
@@ -77,6 +78,8 @@ const Header = () => {
     }
 
     isTransitioningRef.current = true;
+    // The next page's entrance waits until this panel sweeps away
+    holdReveals();
 
     // Fade out menu contents (including dropdown sub-items)
     gsap.to('.menu-item-text, .menu-line, .menu-subitem-text', { opacity: 0, duration: 0.4, ease: 'power2.inOut', stagger: 0.02 });
@@ -96,6 +99,8 @@ const Header = () => {
   useEffect(() => {
     // If the pathname changed and we are in the middle of a transition, slide it out
     if (isTransitioningRef.current) {
+      // Start the new page's entrance as the panel is half way out
+      gsap.delayedCall(0.7, releaseReveals);
       gsap.to(menuOverlayRef.current, {
         x: '-100%',
         duration: 1,

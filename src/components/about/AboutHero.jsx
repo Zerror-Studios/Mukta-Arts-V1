@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { Draggable } from "gsap/dist/Draggable";
+import { useRef } from "react";
 import Image from "next/image";
+import { useGSAP } from "@gsap/react";
+import { Draggable } from "gsap/Draggable";
+import { gsap, MOTION_OK, MOTION_REDUCED } from "@/lib/motion";
+import useEntrance from "@/hooks/useEntrance";
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(Draggable);
@@ -18,66 +20,76 @@ const carouselItems = [
 ];
 
 const AboutHero = () => {
+    const heroRef = useRef(null);
     const containerRef = useRef(null);
     const trackRef = useRef(null);
 
-    useEffect(() => {
-        const track = trackRef.current;
-        if (!track) return;
+    // Headline line by line, then the founding line, then the image strip
+    useEntrance(heroRef, { gap: 0.25 });
 
-        // We animate from 0 to -50% because the track contains two identical sets of items.
-        let tl = gsap.timeline({ repeat: -1, defaults: { ease: "none" } });
+    // Auto-scrolling strip that can be dragged; with reduced motion it only moves when dragged
+    useGSAP(
+        () => {
+            const track = trackRef.current;
+            if (!track) return;
 
-        tl.to(track, {
-            xPercent: -50,
-            duration: 35, // Smooth slow scrolling
-        });
+            const mm = gsap.matchMedia();
+            mm.add({ motion: MOTION_OK, reduced: MOTION_REDUCED }, (context) => {
+                const { reduced } = context.conditions;
 
-        let dragStartProgress = 0;
-        let dragStartX = 0;
+                // We animate from 0 to -50% because the track contains two identical sets of items.
+                const tl = gsap.timeline({ repeat: -1, paused: reduced, defaults: { ease: "none" } });
+                tl.to(track, {
+                    xPercent: -50,
+                    duration: 35, // Smooth slow scrolling
+                });
 
-        const dragInstance = Draggable.create(document.createElement("div"), {
-            trigger: containerRef.current,
-            type: "x",
-            onPress: function () {
-                tl.pause();
-                dragStartProgress = tl.progress();
-                dragStartX = this.x;
-            },
-            onDrag: function () {
-                const trackWidth = track.scrollWidth;
-                const movementWidth = trackWidth / 2;
+                let dragStartProgress = 0;
+                let dragStartX = 0;
 
-                const deltaX = this.x - dragStartX;
-                const progressDelta = -(deltaX / movementWidth);
+                const [drag] = Draggable.create(document.createElement("div"), {
+                    trigger: containerRef.current,
+                    type: "x",
+                    onPress() {
+                        tl.pause();
+                        dragStartProgress = tl.progress();
+                        dragStartX = this.x;
+                    },
+                    onDrag() {
+                        const movementWidth = track.scrollWidth / 2;
+                        const progressDelta = -((this.x - dragStartX) / movementWidth);
 
-                let newProgress = dragStartProgress + progressDelta;
+                        // Wrap progress between 0 and 1
+                        let newProgress = (dragStartProgress + progressDelta) % 1;
+                        if (newProgress < 0) newProgress += 1;
 
-                // Wrap progress between 0 and 1
-                newProgress = newProgress % 1;
-                if (newProgress < 0) newProgress += 1;
+                        tl.progress(newProgress);
+                    },
+                    onRelease() {
+                        if (!reduced) tl.play();
+                    },
+                });
 
-                tl.progress(newProgress);
-            },
-            onRelease: function () {
-                tl.play();
-            },
-        });
-
-        return () => {
-            tl.kill();
-            dragInstance[0]?.kill();
-        };
-    }, []);
+                return () => drag?.kill();
+            });
+        },
+        { scope: containerRef }
+    );
 
     return (
-        <section className="relative w-full pt-32 pb-16 overflow-hidden bg-[#FAFAFA]">
+        <section ref={heroRef} className="relative w-full pt-32 pb-16 overflow-hidden bg-[#FAFAFA]">
             <div className="px-4 md:px-8 mb-16 md:mb-24">
                 <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 lg:gap-16">
-                    <h1 className="text-5xl md:text-7xl lg:text-[5.5rem] font-bold tracking-tighter text-black max-w-4xl leading-[1.05]">
+                    <h1
+                        data-entrance="lines"
+                        className="text-5xl md:text-7xl lg:text-[5.5rem] font-bold tracking-tighter text-black max-w-4xl leading-[1.05]"
+                    >
                         Telling stories across screens, theatres and classrooms.
                     </h1>
-                    <p className="text-[#555] text-lg md:text-xl max-w-[22rem] leading-relaxed font-medium">
+                    <p
+                        data-entrance="rise"
+                        className="text-[#555] text-lg md:text-xl max-w-[22rem] leading-relaxed font-medium"
+                    >
                         Established in 1978 by Mr. Subhash Ghai.
                     </p>
                 </div>
@@ -85,6 +97,7 @@ const AboutHero = () => {
 
             <div
                 ref={containerRef}
+                data-entrance="rise"
                 className="w-full cursor-grab active:cursor-grabbing overflow-hidden"
             >
                 <div
@@ -99,12 +112,12 @@ const AboutHero = () => {
                         >
                             <Image
                                 src={item.src}
-                                alt={`Hero image ${index}`}
+                                alt=""
                                 fill
                                 sizes="(max-width: 768px) 80vw, 33vw"
                                 className="object-cover"
-                                quality={90}
                                 priority={index < 4}
+                                draggable={false}
                             />
                         </div>
                     ))}

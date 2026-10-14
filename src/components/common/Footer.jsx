@@ -2,6 +2,7 @@
 import React from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { siteConfig } from '@/config/site';
 
 export default function Footer() {
   const pathname = usePathname();
@@ -20,8 +21,8 @@ export default function Footer() {
         <span className="flex items-center gap-2"><span className="text-sm">★</span> SUBHASH GHAI </span>
       </div>
 
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col lg:flex-row items-center justify-between px-6 md:px-20 lg:px-32 py-12 lg:py-20 ">
+      {/* Main Content (a div: the page already has its <main>, and this sits inside <footer>) */}
+      <div className="flex-1 flex flex-col lg:flex-row items-center justify-between px-6 md:px-20 lg:px-32 py-12 lg:py-20 ">
 
         {/* HEADPHONE or Fallback Image */}
         {isHome ? (
@@ -63,7 +64,7 @@ export default function Footer() {
           {/* Social Icons */}
           <div className="flex items-center gap-6">
             {/* Instagram */}
-            <a href="#" aria-label="Instagram" className="text-white hover:text-gray-300 transition-colors">
+            <a href={siteConfig.socials.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-white hover:text-gray-300 transition-colors">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                 <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
@@ -71,7 +72,7 @@ export default function Footer() {
               </svg>
             </a>
             {/* LinkedIn */}
-            <a href="#" aria-label="LinkedIn" className="text-white hover:text-gray-300 transition-colors">
+            <a href={siteConfig.socials.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-white hover:text-gray-300 transition-colors">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
                 <rect x="2" y="9" width="4" height="12"></rect>
@@ -79,30 +80,32 @@ export default function Footer() {
               </svg>
             </a>
             {/* YouTube */}
-            <a href="#" aria-label="YouTube" className="text-white hover:text-gray-300 transition-colors">
+            <a href={siteConfig.socials.youtube} target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-white hover:text-gray-300 transition-colors">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z"></path>
                 <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
               </svg>
             </a>
             {/* Facebook */}
-            <a href="#" aria-label="Facebook" className="text-white hover:text-gray-300 transition-colors">
+            <a href={siteConfig.socials.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-white hover:text-gray-300 transition-colors">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
               </svg>
             </a>
           </div>
         </div>
-      </main>
+      </div>
 
       {/* Huge Background Bottom Text */}
       <div className=" -bottom-8 md:-bottom-16 left-4 md:left-12 z-0 overflow-visible pointer-events-none px-10">
-        <h1 className="text-[15vw] md:text-[180px] lg:text-[240px] font-bold leading-none  whitespace-nowrap text-white flex items-start">
+        {/* div + span, not h1 + h4: a heading inside a heading is invalid HTML and broke hydration.
+            The span keeps the h4 look from fonts.css (SwitzerSB, 3rem/3.2rem; 2rem/2.2rem at 650px and below). */}
+        <div className="text-[15vw] md:text-[180px] lg:text-[240px] font-bold leading-none  whitespace-nowrap text-white flex items-start">
           Mukta Arts
-          <h4 className="text-3xl md:text-5xl lg:text-6xl font-normal mb-auto ">
+          <span className="font-['SwitzerSB'] text-[2rem] leading-[2.2rem] min-[651px]:text-[3rem] min-[651px]:leading-[3.2rem] font-normal mb-auto">
             LTD
-          </h4>
-        </h1>
+          </span>
+        </div>
       </div>
     </div>
   );

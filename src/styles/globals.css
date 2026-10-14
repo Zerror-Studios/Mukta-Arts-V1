@@ -25,6 +25,81 @@ body::-webkit-scrollbar {
   display: none;
 }
 
+/* ---------- First-visit loader (see components/common/Loader.jsx) ---------- */
+#site-loader {
+  display: none;
+}
+
+html.intro-active #site-loader {
+  display: flex;
+  /* Failsafe: if the intro script never runs, get out of the way */
+  animation: mukta-loader-failsafe 0.6s ease 4s forwards;
+}
+
+html.intro-active,
+html.intro-active body {
+  overflow: hidden;
+}
+
+/* The logo draws in from first paint, without waiting for scripts.
+   Curves match GSAP's power3.out / power3.inOut used on the home page. */
+html.intro-active .loader-logo {
+  animation: mukta-logo-in 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) 0.05s both;
+}
+
+html.intro-active .loader-rule {
+  transform-origin: left center;
+  animation: mukta-rule-in 0.8s cubic-bezier(0.77, 0, 0.175, 1) 0.15s both;
+}
+
+@keyframes mukta-logo-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes mukta-rule-in {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes mukta-loader-failsafe {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* ---------- Page entrances (see hooks/useEntrance.js) ---------- */
+/* Hidden until the entrance takes over, so server-rendered text never flashes in first.
+   If scripts never run, it shows itself after a moment. */
+[data-entrance]:not([data-entrance-ready]) {
+  opacity: 0;
+  animation: mukta-entrance-failsafe 0.01s linear 3s forwards;
+}
+
+@keyframes mukta-entrance-failsafe {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-entrance]:not([data-entrance-ready]) {
+    opacity: 1;
+    animation: none;
+  }
+}
+
 /* button {
   cursor: pointer;
 }

@@ -10,7 +10,7 @@ export function normalizePath(path = "/") {
 }
 
 export function absoluteUrl(path = "/") {
-  const baseUrl = trimTrailingSlash(siteConfig.url || "http://localhost:3000");
+  const baseUrl = trimTrailingSlash(siteConfig.url);
   const normalizedPath = normalizePath(path);
 
   return normalizedPath === "/" ? baseUrl : `${baseUrl}${normalizedPath}`;

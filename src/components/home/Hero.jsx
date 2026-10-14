@@ -10,9 +10,9 @@ const Hero = () => {
       <div className="  w-full  text-center flex justify-start   items-start z-0 select-none pointer-events-none">
         <h1 className=" text-[4rem] md:text-[180px] lg:text-[240px]  font-bold leading-none whitespace-nowrap text-black flex items-start">
           Mukta Arts
-          <h4 className="text-3xl md:text-5xl lg:text-6xl font-normal mb-auto ">
+          <span className="font-['SwitzerSB'] text-[2rem] leading-[2.2rem] min-[651px]:text-[3rem] min-[651px]:leading-[3.2rem] font-normal mb-auto">
             LTD
-          </h4>
+          </span>
         </h1>
 
       </div>

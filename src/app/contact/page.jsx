@@ -10,6 +10,6 @@ const ContactPage = () => {
 
 export default ContactPage;
 
-export async function generateMetadata() {
-  return createPageMetadata("/contact");
+export async function generateMetadata(_props, parent) {
+  return createPageMetadata("/contact", await parent);
 }

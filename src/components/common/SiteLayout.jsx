@@ -3,14 +3,12 @@
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import LenisScroll from "@/components/common/LenisScroll";
+import Loader from "@/components/common/Loader";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
-import gsap from "gsap";
-import ScrollTrigger from "gsap/dist/ScrollTrigger";
+import { ScrollTrigger } from "@/lib/motion";
 import { ViewTransitions } from "next-view-transitions";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export default function SiteLayout({ children }) {
   const pathname = usePathname();
@@ -30,6 +28,8 @@ export default function SiteLayout({ children }) {
   return (
     <ViewTransitions>
       <LenisScroll>
+        <Loader />
+
         <header>
           <Header />
         </header>

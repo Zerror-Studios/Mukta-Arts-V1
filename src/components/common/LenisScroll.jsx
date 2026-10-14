@@ -2,8 +2,7 @@
 import React, { useEffect, useRef } from "react";
 import Lenis from "lenis";
 import { usePathname } from "next/navigation";
-import gsap from "gsap";
-import ScrollTrigger from "gsap/dist/ScrollTrigger";
+import { gsap, ScrollTrigger } from "@/lib/motion";
 
 export default function LenisScroll({ children }) {
   const lenis = useRef(null);
@@ -30,14 +29,18 @@ export default function LenisScroll({ children }) {
     lenis.current = instance;
     window.lenis = instance;
 
+    // The first-visit loader restarts scrolling when it clears
+    if (window.__MUKTA_INTRO__ === true) instance.stop();
+
     // Sync Lenis with GSAP ScrollTrigger
     instance.on('scroll', ScrollTrigger.update);
 
     // Use GSAP's ticker for Lenis's raf for perfect sync with GSAP animations
-    gsap.ticker.add((time) => {
+    const raf = (time) => {
       instance.raf(time * 1000);
-    });
-    
+    };
+    gsap.ticker.add(raf);
+
     gsap.ticker.lagSmoothing(0);
 
     const handleResize = () => {
@@ -46,9 +49,7 @@ export default function LenisScroll({ children }) {
     window.addEventListener("resize", handleResize);
 
     return () => {
-      gsap.ticker.remove((time) => {
-        instance.raf(time * 1000);
-      });
+      gsap.ticker.remove(raf);
       window.removeEventListener("resize", handleResize);
       instance.destroy();
       lenis.current = null;

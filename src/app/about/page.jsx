@@ -26,6 +26,6 @@ const AboutPage = () => {
 
 export default AboutPage;
 
-export async function generateMetadata() {
-  return createPageMetadata("/about");
+export async function generateMetadata(_props, parent) {
+  return createPageMetadata("/about", await parent);
 }

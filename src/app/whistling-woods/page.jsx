@@ -6,6 +6,7 @@ import WWMilestones from "@/components/whistling-woods/WWMilestones";
 import WWAcademicPrograms from "@/components/whistling-woods/WWAcademicPrograms";
 import WWSchools from "@/components/whistling-woods/WWSchools";
 import Stater from "@/components/whistling-woods/Stater";
+import { createPageMetadata } from "@/lib/seo";
 
 const page = () => {
     return (
@@ -23,3 +24,7 @@ const page = () => {
 };
 
 export default page;
+
+export async function generateMetadata(_props, parent) {
+    return createPageMetadata("/whistling-woods", await parent);
+}

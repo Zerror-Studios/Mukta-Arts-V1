@@ -29,6 +29,6 @@ const HomePage = () => {
 
 export default HomePage;
 
-export async function generateMetadata() {
-  return createPageMetadata("/");
+export async function generateMetadata(_props, parent) {
+  return createPageMetadata("/", await parent);
 }

@@ -1,102 +1,73 @@
 'use client'
 
 import React, { useRef } from 'react';
-import Image from 'next/image';
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
+import useEntrance from '@/hooks/useEntrance';
+
+const WEBSITE = 'https://www.whistlingwoods.net/';
 
 const WWHERO = () => {
-    const containerRef = useRef(null);
+    const heroRef = useRef(null);
 
-    useGSAP(() => {
-        const tl = gsap.timeline();
-
-        // Animate the main logo
-        tl.from(".wwi-logo", {
-            y: 40,
-            opacity: 0,
-            duration: 1.2,
-            ease: "power3.out",
-            delay: 0.2
-        })
-            // Animate the divider line
-            .from(".wwi-divider", {
-                scaleX: 0,
-                transformOrigin: "left",
-                duration: 1,
-                ease: "power3.inOut"
-            }, "-=0.8")
-            // Animate the bottom text and button
-            .from(".wwi-text-anim", {
-                y: 20,
-                opacity: 0,
-                duration: 0.8,
-                stagger: 0.1,
-                ease: "power2.out"
-            }, "-=0.4");
-    }, { scope: containerRef });
+    // Title word by word, the rule draws in, then the copy lines and the button rise
+    useEntrance(heroRef);
 
     return (
-        <section ref={containerRef} className="relative w-full min-h-svh lg:h-screen lg:min-h-[700px] flex flex-col bg-black overflow-hidden">
+        <section ref={heroRef} className="relative w-full min-h-svh lg:h-screen lg:min-h-[700px] flex flex-col bg-black overflow-hidden">
             {/* Background Image */}
             <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
-                {/* Note: Update the src to your actual background image */}
                 <img
                     src="https://images.unsplash.com/photo-1714970940471-a2aa9c7e2029?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    alt="Whistling Woods Background"
-
+                    alt=""
+                    fetchPriority="high"
                     className="object-cover w-full h-full object-center"
-
                 />
-                {/* Dark overlay to ensure text and logo readability */}
+                {/* Dark overlay to keep the type readable */}
                 <div className="absolute inset-0 bg-black/50"></div>
             </div>
 
             {/* Content Container */}
             <div className="relative z-10 w-full flex-1 lg:h-full mx-auto px-4 md:px-8 lg:px-16 flex flex-col justify-between gap-12 py-12 md:py-20 lg:py-24">
 
-                {/* Top Spacer & Center Logo */}
+                {/* Title */}
                 <div className="flex-1 flex items-center justify-center">
-                    <div className="wwi-logo relative ">
-                        {/* Note: Update the src to your actual Whistling Woods logo */}
-                        {/* <Image
-                            src="/img/wwi-logo.png"
-                            alt="Whistling Woods International Logo"
-                            fill
-                            className="object-contain"
-                        /> */}
-                        <h2 className='text-white uppercase text-center text-[clamp(2rem,9vw,5rem)]! leading-[1.05]!'>WHISTLING WOODS INTERNATIONAL </h2>
-                    </div>
+                    <h1
+                        data-entrance="words"
+                        className="font-['SwitzerSB'] text-white uppercase text-center text-[clamp(2rem,9vw,5rem)] leading-[1.05]"
+                    >
+                        Whistling Woods International
+                    </h1>
                 </div>
 
                 {/* Bottom Section */}
                 <div className="w-full">
-                    {/* Divider Line */}
-                    <div className="wwi-divider w-full h-[1px] bg-white/30 mb-10 md:mb-12"></div>
+                    <div data-entrance="line" className="w-full h-px bg-white/30 mb-10 md:mb-12"></div>
 
-                    {/* Content Columns */}
-                    <div className="flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-8">
+                    <div className="flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-16">
 
-                        {/* Left Side: Description and Button */}
-                        <div className="flex flex-col gap-8 w-full lg:max-w-[420px]">
-                            <p className="wwi-text-anim text-white max-md:text-[15px]! max-md:leading-[1.6]!">
-                                Whistling Woods International (WWI) and the Tata Institute of Social Sciences (TISS) <br className="hidden lg:block" />
-                                team up to offer degree and diploma programmes in Filmmaking,  <br className="hidden lg:block" /> Animation & Game Design, Acting, Media & Communication, Fashion, Music and Visual communication
-                                Design.
+                        {/* Left: description and button */}
+                        <div className="flex flex-col gap-8 w-full lg:max-w-md">
+                            <p data-entrance="lines" className="text-white max-md:text-[15px]! max-md:leading-[1.6]!">
+                                Whistling Woods International (WWI) and the Tata Institute of Social Sciences (TISS) team up to offer degree and diploma programmes in Filmmaking, Animation &amp; Game Design, Acting, Media &amp; Communication, Fashion, Music and Visual communication Design.
                             </p>
-                            <div className="wwi-text-anim">
-                                <a href="#" className="inline-block bg-white text-black px-8 py-3.5 text-[11px] font-bold tracking-[0.15em] transition-colors hover:bg-gray-200">
-                                    VISIT OUR WEBSITE
+                            <div data-entrance="rise">
+                                <a
+                                    href={WEBSITE}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 bg-[#0474BA] hover:bg-[#0666a1] text-white px-6 py-2.5 text-xs md:text-sm tracking-wider font-semibold rounded-[3px] transition-colors duration-300 group"
+                                >
+                                    <span>Visit Our Website</span>
+                                    <span aria-hidden="true" className="transform group-hover:translate-x-1 transition-transform">→</span>
+                                    <span className="sr-only">(opens in a new tab)</span>
                                 </a>
                             </div>
                         </div>
 
-                        {/* Right Side: Details Grid */}
-                        <div className="flex flex-col gap-3.5 text-white lg:min-w-[400px]">
-                            <p className="wwi-text-anim text-white max-md:text-[15px]! max-md:leading-[1.6]! mt-auto">Spread across a 5.5-acre campus, WWI is equipped with industry-grade facilities and  <br className="hidden lg:block" />
-                                cutting-edge technology that enable students to develop both the academic and  <br className="hidden lg:block" />
-                                practical aspects of their craft. Our vision is to build a globally benchmarked institution  <br className="hidden lg:block" />
-                                that sets new standards for excellence in creative education. </p>
+                        {/* Right: campus */}
+                        <div className="w-full lg:max-w-152">
+                            <p data-entrance="lines" className="text-white max-md:text-[15px]! max-md:leading-[1.6]!">
+                                Spread across a 5.5-acre campus, WWI is equipped with industry-grade facilities and cutting-edge technology that enable students to develop both the academic and practical aspects of their craft. Our vision is to build a globally benchmarked institution that sets new standards for excellence in creative education.
+                            </p>
                         </div>
 
                     </div>
