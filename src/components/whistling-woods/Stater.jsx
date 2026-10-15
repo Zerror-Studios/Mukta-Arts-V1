@@ -13,10 +13,10 @@ const textContent = "The cinemas combine modern projection and sound technology 
 
 const statsData = [
     {
-        target: 110,
+        target: 37,
         prefix: "",
-        suffix: " Screens",
-        text: "A multi-screen exhibition network serving audiences across diverse markets.",
+        suffix: " Cinemas",
+        text: "Mukta A2 cinemas forming a multi-screen exhibition network that serves audiences across diverse markets.",
     },
     {
         target: 24,
@@ -115,7 +115,7 @@ const Stater = () => {
                             key={index}
                             className="stat-col flex flex-col justify-between border-l border-[#D4D4D4] pl-6 lg:pl-8 min-h-[160px] md:min-h-[180px] lg:min-h-[200px]"
                         >
-                            <h4 className="text-4xl md:text-[42px] font-normal text-black tracking-tight flex items-baseline flex-wrap">
+                            <h4 className="text-4xl md:text-[42px] font-normal text-black tracking-tight flex items-baseline flex-wrap gap-x-[0.25em]">
                                 {stat.prefix && (
                                     <span className="text-2xl md:text-3xl font-light text-neutral-600 mr-1.5">
                                         {stat.prefix}

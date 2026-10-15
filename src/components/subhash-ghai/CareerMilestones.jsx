@@ -4,6 +4,7 @@ import React, { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import useScrollReveal from "@/hooks/useScrollReveal";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -25,7 +26,6 @@ const milestonesData = [
     year: "1979",
     title: "Gautam Govinda",
     tag: "Feature Film",
-    desc: "An early action-drama reflecting the director's burgeoning narrative craft.",
     img: "/img/films/gautam-govinda.jpg",
   },
   {
@@ -33,7 +33,6 @@ const milestonesData = [
     year: "1980",
     title: "Karz",
     tag: "Cult Classic",
-    desc: "The landmark musical thriller on reincarnation that redefined style, music, and cinematic storytelling.",
     img: "/img/films/karz.jpg",
   },
   {
@@ -41,7 +40,6 @@ const milestonesData = [
     year: "1981",
     title: "Krodhi",
     tag: "Feature Film",
-    desc: "A gripping drama of righteousness, vengeance, and spiritual redemption.",
     img: "/img/films/krodhi.jpg",
   },
   {
@@ -49,7 +47,6 @@ const milestonesData = [
     year: "1982",
     title: "Vidhaata",
     tag: "Blockbuster",
-    desc: "The highest grossing film of 1982, uniting legendary screen icons on a grand scale.",
     img: "/img/films/vidhaata.jpg",
   },
   {
@@ -57,7 +54,6 @@ const milestonesData = [
     year: "1983",
     title: "Hero",
     tag: "Breakthrough",
-    desc: "A phenomenal musical breakthrough that launched new superstars and timeless melodies.",
     img: "/img/films/hero.jpg",
   },
   {
@@ -65,7 +61,6 @@ const milestonesData = [
     year: "1985",
     title: "Meri Jung",
     tag: "Courtroom Drama",
-    desc: "A fierce courtroom drama showcasing powerhouse performances and emotional intensity.",
     img: "/img/films/meri-jung.jpg",
   },
   {
@@ -73,7 +68,6 @@ const milestonesData = [
     year: "1986",
     title: "Karma",
     tag: "National Award",
-    desc: "A patriotic magnum opus awarded the National Film Award for National Integration.",
     img: "/img/films/karma.jpg",
     isMilestone: true,
   },
@@ -82,7 +76,6 @@ const milestonesData = [
     year: "1987",
     title: "Uttar Dakshin",
     tag: "Feature Film",
-    desc: "An evocative family drama exploring fraternal bonds and emotional conflicts.",
     img: "/img/films/uttar-dakshin.jpg",
   },
   {
@@ -90,7 +83,6 @@ const milestonesData = [
     year: "1989",
     title: "Ram Lakhan",
     tag: "Mega Blockbuster",
-    desc: "A multi-starrer blockbuster that became a defining pop-culture phenomenon across generations.",
     img: "/img/films/ram-lakhan.jpg",
   },
   {
@@ -98,7 +90,6 @@ const milestonesData = [
     year: "1991",
     title: "Saudagar",
     tag: "Best Director",
-    desc: "Filmfare Award winner for Best Director, staging the historic union of cinema titans.",
     img: "/img/films/saudagar.jpg",
   },
   {
@@ -106,7 +97,6 @@ const milestonesData = [
     year: "1992",
     title: "Prem Deewane",
     tag: "Romantic Adventure",
-    desc: "A breezy romantic escapade driven by comedy, youthfulness, and memorable melodies.",
     img: "/img/films/prem-deewane.jpg",
   },
   {
@@ -114,7 +104,6 @@ const milestonesData = [
     year: "1993",
     title: "Khalnayak",
     tag: "Blockbuster",
-    desc: "A groundbreaking anti-hero musical that dominated charts and theaters nationwide.",
     img: "/img/films/khalnayak.jpg",
   },
   {
@@ -122,7 +111,6 @@ const milestonesData = [
     year: "1995",
     title: "Trimurti",
     tag: "Grand Spectacle",
-    desc: "A high-octane cinematic spectacle that shattered box office opening records across India.",
     img: "/img/films/trimurti.jpg",
   },
   {
@@ -130,7 +118,6 @@ const milestonesData = [
     year: "1996",
     title: "Jaan",
     tag: "Action Romance",
-    desc: "A celebrated love story set against high-stakes action and melodious folk music.",
     img: "/img/films/jaan.jpg",
   },
   {
@@ -138,7 +125,6 @@ const milestonesData = [
     year: "1997",
     title: "Pardes",
     tag: "Global Hit",
-    desc: "Filmfare Award winner for Best Screenplay; celebrating Indian cultural ethos across the global diaspora.",
     img: "/img/films/pardes.jpg",
   },
   {
@@ -146,7 +132,6 @@ const milestonesData = [
     year: "1998",
     title: "Shyam Ghanshyam",
     tag: "Feature Film",
-    desc: "A rural emotional saga exploring fraternal loyalty, deceit, and redemption.",
     img: "/img/films/shyam-ghanshyam.jpg",
   },
   {
@@ -154,7 +139,6 @@ const milestonesData = [
     year: "1999",
     title: "Taal",
     tag: "Global Milestone",
-    desc: "First Hindi film in the US Box Office Top 20, pioneering film insurance through CineMukta Policy.",
     img: "/img/films/taal.jpg",
     isMilestone: true,
   },
@@ -173,7 +157,6 @@ const milestonesData = [
     year: "2001",
     title: "Yaadein",
     tag: "Family Drama",
-    desc: "A poignant modern drama on fatherhood, family values, and generational bonds.",
     img: "/img/films/yaadein.jpg",
   },
   {
@@ -181,7 +164,6 @@ const milestonesData = [
     year: "2004",
     title: "Aitraaz",
     tag: "Courtroom Thriller",
-    desc: "A critically acclaimed modern drama addressing power dynamics and marital loyalty.",
     img: "/img/films/aitraaz.jpg",
   },
   {
@@ -189,7 +171,6 @@ const milestonesData = [
     year: "2005",
     title: "Kisna",
     tag: "Period Epic",
-    desc: "An epic period musical romance set amidst the turbulent transition of India's independence.",
     img: "/img/films/kisna.jpg",
   },
   {
@@ -197,7 +178,6 @@ const milestonesData = [
     year: "2005",
     title: "Iqbal",
     tag: "National Award",
-    desc: "National Film Award winner, celebrated as one of Indian cinema's most heart-warming and inspirational sports stories.",
     img: "/img/films/iqbal.jpg",
     isMilestone: true,
   },
@@ -217,6 +197,15 @@ const milestonesData = [
     tag: "Exhibition Network",
     desc: "Mukta Arts enters theatrical exhibition, providing premium yet accessible moviegoing across India and the Middle East.",
     img: "/img/ma/MuktaA2Cinemas.jpg",
+    isMilestone: true,
+  },
+  {
+    id: "m-26",
+    year: "2025",
+    title: "SGM Studios Established",
+    tag: "Animation Studio",
+    desc: "SGM Studios is Mukta Arts' animation and visual storytelling arm.",
+    img: "https://muktaarts.com/Media/uploads/2026/SGM-ANIMATION-STUDIOS-MUKTA-ARTS-LTD-MOU.gif",
     isMilestone: true,
   },
 ];
@@ -247,6 +236,9 @@ export default function CareerMilestones() {
   const cardsRef = useRef([]);
   const dotsRef = useRef([]);
   const yearsRef = useRef([]);
+
+  // Section heading reveals as it enters
+  useScrollReveal(containerRef);
 
   useGSAP(
     () => {
@@ -367,7 +359,7 @@ export default function CareerMilestones() {
               Chronological Journey
             </p>
           </div> */}
-          <h2 className="mt-3 short:mt-0 text-[1.65rem] leading-none sm:text-3xl md:text-4xl lg:text-5xl short:text-xl font-['SwitzerB'] tracking-tight">
+          <h2 data-reveal="words" className="mt-3 short:mt-0 text-[1.65rem] leading-none sm:text-3xl md:text-4xl lg:text-5xl short:text-xl font-['SwitzerB'] tracking-tight">
             Milestones &amp; Films
           </h2>
         </div>
@@ -443,13 +435,12 @@ export default function CareerMilestones() {
                   >
                     {m.title}
                   </h3>
-                  <p
-                    className={`mt-1.5 md:mt-2 text-gray-600 text-xs md:text-[13px] leading-relaxed font-['SwitzerR'] short:hidden ${
-                      studio ? "line-clamp-2 md:max-w-[90%]" : "line-clamp-3"
-                    }`}
-                  >
-                    {m.desc}
-                  </p>
+                  {/* Only corporate milestones carry a description; film entries show title and tag */}
+                  {m.desc && (
+                    <p className="mt-1.5 md:mt-2 text-gray-600 text-xs md:text-[13px] leading-relaxed font-['SwitzerR'] short:hidden line-clamp-2 md:max-w-[90%]">
+                      {m.desc}
+                    </p>
+                  )}
                 </div>
               </article>
             );

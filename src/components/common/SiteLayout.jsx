@@ -3,7 +3,6 @@
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
 import LenisScroll from "@/components/common/LenisScroll";
-import Loader from "@/components/common/Loader";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
@@ -28,8 +27,6 @@ export default function SiteLayout({ children }) {
   return (
     <ViewTransitions>
       <LenisScroll>
-        <Loader />
-
         <header>
           <Header />
         </header>

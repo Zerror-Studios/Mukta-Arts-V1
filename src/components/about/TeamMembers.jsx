@@ -15,7 +15,7 @@ const team = [
       "Founder/Chairman: Whistling Woods International",
       "Director - Mukta A2 Cinemas Private Ltd",
     ],
-    image: "/img/last/2.avif",
+    image: "/img/final/about_Img/AB3/1_7_11zon_1_11zon.webp",
     profile: "/subhash-ghai",
   },
   {
@@ -25,7 +25,7 @@ const team = [
       "Director - Academics - Whistling Woods International",
       "Director - Mukta A2 Cinemas Private Ltd",
     ],
-    image: "/img/last/3.jpg",
+    image: "/img/final/about_Img/AB3/RAHUL PURI_6_11zon_5_11zon.webp",
   },
   {
     name: "Parvez Farooqui",
@@ -33,27 +33,27 @@ const team = [
       "Director - Mukta Arts Ltd",
       "Executive Director - Mukta A2 Cinemas Private Ltd",
     ],
-    image: "/img/last/4.avif",
+    image: "/img/final/about_Img/AB3/PARVEZ FAROOQUI_5_11zon_4_11zon.webp",
   },
   {
     name: "Kapil Bagla",
     titles: ["Independent Director - Mukta Arts Ltd"],
-    image: "/img/last/5.png",
+    image: "/img/final/about_Img/AB3/KAPIL BAGLA_2_11zon_2_11zon.webp",
   },
   {
     name: "Rajendra Doshi",
     titles: ["Independent Director - Mukta Arts Ltd"],
-    image: "/img/last/6.jpg",
+    image: "/img/final/about_Img/AB3/RAJENDRA DOSHI_4_11zon_6_11zon.webp",
   },
   {
     name: "Madhumati Ramchandra Lele",
     titles: ["Independent Director - Mukta Arts Ltd"],
-    image: "/img/last/7.jpg",
+    image: "/img/final/about_Img/AB3/MADHUMATI LELE_3_11zon_3_11zon.webp",
   },
   {
     name: "Rentala Chandrashekhar",
     titles: ["Independent Director - Mukta Arts Ltd"],
-    image: "/img/last/1.jpg",
+    image: "/img/final/about_Img/AB3/RENTALA CHANDRASHEKHAR_1_11zon_7_11zon.webp",
   },
 ];
 
@@ -163,13 +163,13 @@ const TeamMembers = () => {
         <div className="lg:w-5/12 flex-1 flex flex-col justify-start lg:justify-center lg:pl-12 relative min-h-0 mt-4 lg:mt-0">
 
           {/* Fills the space left on phones; a fixed 4:3 frame from lg */}
-          <div className="relative w-full flex-1 min-h-[120px] lg:flex-none lg:aspect-[4/3] mb-4 lg:mb-6 overflow-hidden bg-black/5">
+          <div className="relative w-full flex-1  lg:flex-none aspect-[2/3] mb-4 lg:mb-6 overflow-hidden bg-black/5">
             <Image
               src={activePerson.image}
               alt={activePerson.name}
               fill
-              className="object-cover object-center"
-              sizes="(max-width: 1024px) 100vw, 40vw"
+              className="object-cover object-center h-full"
+              
               priority
             />
           </div>

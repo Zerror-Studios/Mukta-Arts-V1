@@ -557,14 +557,14 @@ const programsData = [
   },
 ];
 
-const BG = "#f7f8f9";
+const BG = "#FAFAFA"; // same light ground as the schools above, so the two read as one flow
 
 /* -------------------------------------------------------------------------- */
 /*  RIPPLE SETTINGS                                                           */
 /* -------------------------------------------------------------------------- */
 const RIPPLE_COUNT = 40; // max simultaneous rings (ring buffer)
 const RIPPLE_SPACING = 0.025; // distance the cursor travels between rings
-const DEFAULT_INTENSITY = 1; // 0 = off, 1 = default, 3 = very strong
+const DEFAULT_INTENSITY = 0.3; // 0 = off, 1 = strong. Kept low so this section is no busier than its neighbours
 
 /* -------------------------------------------------------------------------- */
 /*  SHADERS                                                                   */
@@ -917,12 +917,6 @@ export default function WWAcademicPrograms({
         pin: true,
         scrub: 1,
         invalidateOnRefresh: true,
-        snap: {
-          snapTo: 1 / (numItems - 1),
-          delay: 0.1,
-          duration: { min: 0.3, max: 0.8 },
-          ease: "power2.inOut",
-        },
         onUpdate: (self) => {
           const p = self.progress * (numItems - 1);
           targetRef.current = p;

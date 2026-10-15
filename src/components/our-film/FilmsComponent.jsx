@@ -1,93 +1,84 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { gsap } from "gsap";
 import { useRouter } from "next/navigation";
+import useScrollReveal from "@/hooks/useScrollReveal";
 import { filmBriefs } from "./filmBriefs";
 
-// Categories follow muktaarts.com: E = Entertainment, S = Searchlight, R = Regional, SH = Short
+// The full catalogue, shown in release order (the client will confirm the years)
 const films = [
-  { slug: "kalicharan", title: "Kalicharan", year: 1976, cats: ["E"] },
-  { slug: "vishwanath", title: "Vishwanath", year: 1978, cats: ["E"] },
-  { slug: "gautam-govinda", title: "Gautam Govinda", year: 1979, cats: ["E"] },
-  { slug: "karz", title: "Karz", year: 1980, cats: ["E"] },
-  { slug: "krodhi", title: "Krodhi", year: 1981, cats: ["E"] },
-  { slug: "vidhaata", title: "Vidhaata", year: 1982, cats: ["E"] },
-  { slug: "hero", title: "Hero", year: 1983, cats: ["E"] },
-  { slug: "meri-jung", title: "Meri Jung", year: 1985, cats: ["E"] },
-  { slug: "karma", title: "Karma", year: 1986, cats: ["E"] },
-  { slug: "uttar-dakshin", title: "Uttar Dakshin", year: 1987, cats: ["E"] },
-  { slug: "ram-lakhan", title: "Ram Lakhan", year: 1989, cats: ["E"] },
-  { slug: "saudagar", title: "Saudagar", year: 1991, cats: ["E"] },
-  { slug: "pyar-ki-ganga-bahe", title: "Pyar Ki Ganga Bahe", year: 1993, cats: ["SH"] },
-  { slug: "prem-deewane", title: "Prem Deewane", year: 1992, cats: ["E"] },
-  { slug: "khalnayak", title: "Khalnayak", year: 1993, cats: ["E"] },
-  { slug: "trimurti", title: "Trimurti", year: 1995, cats: ["E"] },
-  { slug: "jaan", title: "Jaan", year: 1996, cats: ["E"] },
-  { slug: "pardes", title: "Pardes", year: 1997, cats: ["E"] },
-  { slug: "shyam-ghanshyam", title: "Shyam Ghanshyam", year: 1998, cats: ["E"] },
-  { slug: "taal", title: "Taal", year: 1999, cats: ["E"] },
-  { slug: "rahul", title: "Rahul", year: 2001, cats: ["E", "S"] },
-  { slug: "yaadein", title: "Yaadein", year: 2001, cats: ["E"] },
-  { slug: "badhaai-ho-badhaai", title: "Badhaai Ho Badhaai", year: 2002, cats: ["E"] },
-  { slug: "ek-aur-ek-gyarah", title: "Ek Aur Ek Gyarah", year: 2003, cats: ["E"] },
-  { slug: "joggers-park", title: "Jogger’s Park", year: 2003, cats: ["E", "S"] },
-  { slug: "aitraaz", title: "Aitraaz", year: 2004, cats: ["E"] },
-  { slug: "kisna", title: "Kisna", year: 2005, cats: ["E"] },
-  { slug: "iqbal", title: "Iqbal", year: 2005, cats: ["E", "S"] },
-  { slug: "shaadi-se-pehle", title: "Shaadi Se Pehle", year: 2006, cats: ["E"] },
-  { slug: "36-china-town", title: "36 China Town", year: 2006, cats: ["E"] },
-  { slug: "apna-sapna-money-money", title: "Apna Sapna Money Money", year: 2006, cats: ["E"] },
-  { slug: "good-boy-bad-boy", title: "Good Boy Bad Boy", year: 2007, cats: ["E"] },
-  { slug: "bombay-to-bangkok", title: "Bombay to Bangkok", year: 2008, cats: ["S"] },
-  { slug: "valu", title: "Valu", year: 2008, cats: ["R"] },
-  { slug: "black-and-white", title: "Black and White", year: 2008, cats: ["E", "S"] },
-  { slug: "sanai-choughade", title: "Sanai Choughade", year: 2008, cats: ["R"] },
-  { slug: "yuvvraaj", title: "Yuvvraaj", year: 2008, cats: ["E"] },
-  { slug: "paying-guests", title: "Paying Guests", year: 2009, cats: ["E"] },
-  { slug: "right-yaaa-wrong", title: "Right Yaaa Wrong", year: 2010, cats: ["E"] },
-  { slug: "hello-darling", title: "Hello Darling", year: 2010, cats: ["E"] },
-  { slug: "nouka-dubi", title: "Nouka Dubi / Kashmakash", year: 2011, cats: ["R"] },
-  { slug: "love-express", title: "Love Express", year: 2011, cats: ["E"] },
-  { slug: "cycle-kick", title: "Cycle Kick", year: 2011, cats: ["E"] },
-  { slug: "samhita", title: "Samhita", year: 2013, cats: ["R"] },
-  { slug: "nimbehuli", title: "Nimbehuli", year: 2014, cats: ["R"] },
-  { slug: "kaanchi", title: "Kaanchi", year: 2014, cats: ["E"] },
-  { slug: "double-di-trouble", title: "Double Di Trouble", year: 2014, cats: ["R"] },
-  { slug: "36-farmhouse", title: "36 Farmhouse", year: 2022, cats: ["E"] },
-  { slug: "vijeta", title: "Vijeta", year: 2020, cats: ["R"] },
-  { slug: "jaanki", title: "Jaanki", year: 2023, cats: ["E"] },
-  { slug: "gandhi-a-perspective", title: "Gandhi: A Perspective", year: 2020, cats: ["SH"] },
-  { slug: "tu-me-ani-amaira", title: "Tu Me Ani Amaira", year: 2025, cats: ["R"] },
+  { slug: "kalicharan", title: "Kalicharan", year: 1976 },
+  { slug: "vishwanath", title: "Vishwanath", year: 1978 },
+  { slug: "gautam-govinda", title: "Gautam Govinda", year: 1979 },
+  { slug: "karz", title: "Karz", year: 1980 },
+  { slug: "krodhi", title: "Krodhi", year: 1981 },
+  { slug: "vidhaata", title: "Vidhaata", year: 1982 },
+  { slug: "hero", title: "Hero", year: 1983 },
+  { slug: "meri-jung", title: "Meri Jung", year: 1985 },
+  { slug: "karma", title: "Karma", year: 1986 },
+  { slug: "uttar-dakshin", title: "Uttar Dakshin", year: 1987 },
+  { slug: "ram-lakhan", title: "Ram Lakhan", year: 1989 },
+  { slug: "saudagar", title: "Saudagar", year: 1991 },
+  { slug: "pyar-ki-ganga-bahe", title: "Pyar Ki Ganga Bahe", year: 1993 },
+  { slug: "prem-deewane", title: "Prem Deewane", year: 1992 },
+  { slug: "khalnayak", title: "Khalnayak", year: 1993 },
+  { slug: "trimurti", title: "Trimurti", year: 1995 },
+  { slug: "jaan", title: "Jaan", year: 1996 },
+  { slug: "pardes", title: "Pardes", year: 1997 },
+  { slug: "shyam-ghanshyam", title: "Shyam Ghanshyam", year: 1998 },
+  { slug: "taal", title: "Taal", year: 1999 },
+  { slug: "rahul", title: "Rahul", year: 2001 },
+  { slug: "yaadein", title: "Yaadein", year: 2001 },
+  { slug: "badhaai-ho-badhaai", title: "Badhaai Ho Badhaai", year: 2002 },
+  { slug: "ek-aur-ek-gyarah", title: "Ek Aur Ek Gyarah", year: 2003 },
+  { slug: "joggers-park", title: "Joggerâ€™s Park", year: 2003 },
+  { slug: "aitraaz", title: "Aitraaz", year: 2004 },
+  { slug: "kisna", title: "Kisna", year: 2005 },
+  { slug: "iqbal", title: "Iqbal", year: 2005 },
+  { slug: "shaadi-se-pehle", title: "Shaadi Se Pehle", year: 2006 },
+  { slug: "36-china-town", title: "36 China Town", year: 2006 },
+  { slug: "apna-sapna-money-money", title: "Apna Sapna Money Money", year: 2006 },
+  { slug: "good-boy-bad-boy", title: "Good Boy Bad Boy", year: 2007 },
+  { slug: "bombay-to-bangkok", title: "Bombay to Bangkok", year: 2008 },
+  { slug: "valu", title: "Valu", year: 2008 },
+  { slug: "black-and-white", title: "Black and White", year: 2008 },
+  { slug: "sanai-choughade", title: "Sanai Choughade", year: 2008 },
+  { slug: "yuvvraaj", title: "Yuvvraaj", year: 2008 },
+  { slug: "paying-guests", title: "Paying Guests", year: 2009 },
+  { slug: "right-yaaa-wrong", title: "Right Yaaa Wrong", year: 2010 },
+  { slug: "hello-darling", title: "Hello Darling", year: 2010 },
+  { slug: "nouka-dubi", title: "Nouka Dubi / Kashmakash", year: 2011 },
+  { slug: "love-express", title: "Love Express", year: 2011 },
+  { slug: "cycle-kick", title: "Cycle Kick", year: 2011 },
+  { slug: "samhita", title: "Samhita", year: 2013 },
+  { slug: "nimbehuli", title: "Nimbehuli", year: 2014 },
+  { slug: "kaanchi", title: "Kaanchi", year: 2014 },
+  { slug: "double-di-trouble", title: "Double Di Trouble", year: 2014 },
+  { slug: "36-farmhouse", title: "36 Farmhouse", year: 2022 },
+  { slug: "vijeta", title: "Vijeta", year: 2020 },
+  { slug: "jaanki", title: "Jaanki", year: 2023 },
+  { slug: "gandhi-a-perspective", title: "Gandhi: A Perspective", year: 2020 },
+  { slug: "tu-me-ani-amaira", title: "Tu Me Ani Amaira", year: 2025 },
 ].map((film) => ({
   ...film,
   id: film.slug,
   description: `Released in ${film.year}`,
   brief: filmBriefs[film.slug] || "",
   image: `/img/films/${film.slug}.jpg`,
-}));
-
-const categories = [
-  { category: "ALL", key: null },
-  { category: "ENTERTAINMENT FILMS", key: "E" },
-  { category: "SEARCHLIGHT FILMS", key: "S" },
-  { category: "SHORT FILMS", key: "SH" },
-  { category: "REGIONALS FILMS", key: "R" },
-];
-
-export const filmsData = categories.map(({ category, key }) => ({
-  category,
-  items: key ? films.filter((film) => film.cats.includes(key)) : films,
-}));
+}))
+  // Release order; the sort is stable, so films from the same year keep the order above
+  .sort((a, b) => a.year - b.year);
 
 export default function FilmsComponent() {
   const router = useRouter();
-  const [activeCategory, setActiveCategory] = useState("ALL");
-  const [displayCategory, setDisplayCategory] = useState("ALL");
   const [isAnimating, setIsAnimating] = useState(false);
 
   const gridRef = useRef(null);
   const containerRef = useRef(null);
+
+  // Heading word by word, then each film rises in as it enters
+  useScrollReveal(containerRef, { start: "top 92%" });
 
   const handleFilmClick = (e, film) => {
     e.preventDefault();
@@ -123,7 +114,6 @@ export default function FilmsComponent() {
 
     const elementsToHide = [
       containerRef.current.querySelector("h2"),
-      containerRef.current.querySelector(".flex.flex-wrap"),
       ...gsap.utils.toArray(".film-card").filter((c) => c !== card.parentElement)
     ];
 
@@ -176,53 +166,6 @@ export default function FilmsComponent() {
     });
   };
 
-  const handleCategoryChange = (category) => {
-    if (category === activeCategory || isAnimating) return;
-
-    setIsAnimating(true);
-    setActiveCategory(category);
-
-    // Animate out current cards
-    const cards = gsap.utils.toArray(".film-card", gridRef.current);
-
-    gsap.to(cards, {
-      opacity: 0,
-      y: 20,
-      scale: 0.95,
-      stagger: { amount: Math.min(0.03 * cards.length, 0.4) }, // Cap total stagger so long lists don't stall
-      duration: 0.4,
-      ease: "power2.inOut",
-      onComplete: () => {
-        setDisplayCategory(category); // Swap data after animation finishes
-      },
-    });
-  };
-
-  // Animate in new cards whenever displayCategory changes
-  useEffect(() => {
-    if (!gridRef.current) return;
-
-    const cards = gsap.utils.toArray(".film-card", gridRef.current);
-
-    // Kill any ongoing tweens to prevent conflicts
-    gsap.killTweensOf(cards);
-
-    gsap.fromTo(cards,
-      { opacity: 0, y: -20, scale: 0.95 },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        stagger: { amount: Math.min(0.05 * cards.length, 0.8) }, // Cap total stagger so long lists don't stall
-        duration: 0.6,
-        ease: "power3.out",
-        onComplete: () => {
-          setIsAnimating(false);
-        },
-      }
-    );
-  }, [displayCategory]);
-
   return (
     <section
       ref={containerRef}
@@ -231,41 +174,22 @@ export default function FilmsComponent() {
     >
       {/* Page Title */}
       <h2
-        className="text-6xl sm:text-7xl md:text-[6rem] lg:text-[7rem] font-bold tracking-tighter mb-10"
-
+        data-reveal="words"
+        className="text-6xl sm:text-7xl md:text-[6rem] lg:text-[7rem] font-bold tracking-tighter mb-12"
       >
         Our Films
       </h2>
 
-      {/* Categories Filter */}
-      <div className="flex flex-wrap gap-2 md:gap-3 mb-12">
-        {filmsData.map(({ category }) => (
-          <button
-            key={category}
-            onClick={() => handleCategoryChange(category)}
-            disabled={isAnimating}
-            className={`px-3 py-1.5 md:px-4 md:py-2 text-[10px] md:text-xs font-bold uppercase tracking-widest border transition-all duration-300 ${activeCategory === category
-              ? "bg-[#1c2c44] text-white border-[#1c2c44]" // Active state
-              : "bg-transparent text-gray-600 border-gray-400 hover:bg-gray-100 hover:text-black hover:border-gray-500"
-              }`}
-          >
-            <p>
-
-              {category}
-            </p>
-          </button>
-        ))}
-      </div>
-
-      {/* Films Grid */}
+      {/* Films Grid: the full list in release order, no filters */}
       <div
         ref={gridRef}
-        className="flex flex-wrap -ml-8 gap-y-16"
+        className="film-grid flex flex-wrap -ml-8 gap-y-16"
       >
-        {filmsData.find(cat => cat.category === displayCategory)?.items.map((film) => (
+        {films.map((film) => (
           <div
             key={film.id}
-            className="film-card opacity-0 flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_25%] pl-8"
+            data-reveal="rise"
+            className="film-card flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_25%] pl-8"
           >
             <div
               className="flex flex-col group cursor-pointer h-full"

@@ -163,6 +163,18 @@ const Header = () => {
         )}
       </div>
 
+      {/* Home only: the 3D logo docks here once it reaches the top (HeadphonesModel drives the opacity) */}
+      {pathname === '/' && (
+        <Link
+          id="header-dock-logo"
+          href="/"
+          aria-label="Mukta Arts home"
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[60] opacity-0 invisible pointer-events-none"
+        >
+          <img src="/img/sg/HeadLogo.png" alt="Mukta Arts" className="h-11 md:h-14 w-auto object-contain" draggable={false} />
+        </Link>
+      )}
+
       {/* Background Blur Overlay */}
       <div
         ref={bgOverlayRef}
@@ -215,7 +227,6 @@ const Header = () => {
                 { name: "Whistling Woods", url: "/whistling-woods" },
                 { name: "Mukta A2 Cinemas", url: "/mukta-a2-cinemas" },
                 { name: "SGM Studios", url: "/sgm-studios" },
-                // { name: "Mukta VN Films", url: "/mukta-vn-films" }
               ]
             },
             { name: "Submit Script", url: "/submit-script" }

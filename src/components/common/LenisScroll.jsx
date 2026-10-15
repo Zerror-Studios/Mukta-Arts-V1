@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 import Lenis from "lenis";
 import { usePathname } from "next/navigation";
 import { gsap, ScrollTrigger } from "@/lib/motion";
+import { isScrollLocked } from "@/lib/scrollLock";
 
 export default function LenisScroll({ children }) {
   const lenis = useRef(null);
@@ -29,8 +30,8 @@ export default function LenisScroll({ children }) {
     lenis.current = instance;
     window.lenis = instance;
 
-    // The first-visit loader restarts scrolling when it clears
-    if (window.__MUKTA_INTRO__ === true) instance.stop();
+    // The home intro locks scrolling before Lenis exists; it restarts it when done
+    if (isScrollLocked()) instance.stop();
 
     // Sync Lenis with GSAP ScrollTrigger
     instance.on('scroll', ScrollTrigger.update);

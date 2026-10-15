@@ -5,7 +5,7 @@ import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { RiFacebookFill, RiTwitterXLine, RiAddLine } from "@remixicon/react";
+import { RiAddLine } from "@remixicon/react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -102,20 +102,6 @@ const BoardOfDirectors = () => {
               </p>
 
               <div className="flex gap-2">
-                <a
-                  href="#"
-                  className="w-8 h-8 flex items-center justify-center border border-white/20 text-white hover:bg-white hover:text-[#00609C] transition-colors duration-300"
-                  aria-label={`${director.name} Facebook`}
-                >
-                  <RiFacebookFill size={16} />
-                </a>
-                <a
-                  href="#"
-                  className="w-8 h-8 flex items-center justify-center border border-white/20 text-white hover:bg-white hover:text-[#00609C] transition-colors duration-300"
-                  aria-label={`${director.name} X / Twitter`}
-                >
-                  <RiTwitterXLine size={16} />
-                </a>
                 <a
                   href="#"
                   className="w-8 h-8 flex items-center justify-center border border-white/20 text-white hover:bg-white hover:text-[#00609C] transition-colors duration-300"

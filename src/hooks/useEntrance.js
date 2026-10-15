@@ -43,7 +43,7 @@ function addToTimeline(tl, el, at, splits) {
       counter,
       {
         value: target,
-        duration: COUNT_DURATION,
+        duration: parseFloat(el.dataset.countDuration) || COUNT_DURATION,
         ease: EASE,
         onUpdate: () => {
           el.textContent = countText(el, counter.value);
@@ -82,7 +82,8 @@ function addToTimeline(tl, el, at, splits) {
  *   data-entrance="line"   hairline drawing in from the left
  *   data-entrance="count"  number counting up to data-count-to; the element's text must be
  *                          only the number, with data-count-prefix / data-count-suffix
- *                          (render the final value, e.g. "50+", so it reads without JS)
+ *                          (render the final value, e.g. "50+", so it reads without JS);
+ *                          data-count-duration="<seconds>" shortens the count
  * Items play in DOM order, each starting `gap` seconds after the one before;
  * data-entrance-at="<seconds>" pins an item to an exact time instead.
  * Do not nest [data-entrance] elements. Only split static text (React must not re-render it).

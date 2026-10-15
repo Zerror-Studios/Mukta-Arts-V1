@@ -1,25 +1,20 @@
 import { createPageMetadata } from "@/lib/seo";
 import AboutHero from "@/components/about/AboutHero";
 import MissionVision from "@/components/about/MissionVision";
-import AboutEcosystem from "@/components/about/AboutEcosystem";
-import BoardOfDirectors from "@/components/about/BoardOfDirectors";
 import TeamMembers from "@/components/about/TeamMembers";
 import InvestorRelations from "@/components/about/InvestorRelations";
-import FilmLegacy from "@/components/about/FilmLegacy";
-import FilmsSection from "@/components/home/FilmsSection";
 import CareerMilestones from "@/components/subhash-ghai/CareerMilestones";
 
+// Hero, intro and stats, Board of Directors, Milestones & Films, Investor Relations.
+// Every section is light, so nothing blue sits against the blue footer.
 const AboutPage = () => {
   return (
     <>
       <AboutHero />
       <MissionVision />
-      {/* <FilmLegacy /> */}
-      <CareerMilestones />
-      {/* <AboutEcosystem /> */}
-      {/* <BoardOfDirectors /> */}
       <TeamMembers />
-      {/* <InvestorRelations /> */}
+      <CareerMilestones />
+      <InvestorRelations />
     </>
   );
 };

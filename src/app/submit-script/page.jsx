@@ -5,7 +5,8 @@ import { createPageMetadata } from "@/lib/seo";
 const page = () => {
     return (
         <>
-            <SubmitScriptPage />
+            {/* Large files go through Vercel Blob when a store is connected, otherwise straight to the API route */}
+            <SubmitScriptPage blobUploads={Boolean(process.env.BLOB_READ_WRITE_TOKEN)} />
             <LocationInfo />
         </>
     );

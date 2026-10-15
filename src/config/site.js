@@ -45,9 +45,9 @@ export const siteConfig = {
   },
   socials: {
     instagram: "https://www.instagram.com/muktaartsltd/",
-    linkedin: "https://www.linkedin.com/company/mukta-arts-limited/",
-    youtube: "https://www.youtube.com/@MuktaArtsLtd",
-    facebook: "https://www.facebook.com/MuktaArtsLtd/",
+    linkedin: "https://www.linkedin.com/in/muktaartsltd/",
+    youtube: "https://www.youtube.com/muktaarts",
+    facebook: "https://www.facebook.com/MuktaArts/",
   },
 };
 
@@ -125,14 +125,12 @@ export const siteRoutes = [
     priority: 0.3,
     noIndex: true,
   },
-  // Hidden draft, not linked from the menu yet.
   {
     path: "/mukta-vn-films",
     title: "Mukta VN Films",
     description:
       "Mukta VN Films is Mukta Arts’ film programming and distribution services venture, established in 2014 as a joint venture with UFO Moviez.",
-    priority: 0.3,
-    noIndex: true,
+    priority: 0.7,
   },
   // Hidden draft of the Whistling Woods hero.
   {

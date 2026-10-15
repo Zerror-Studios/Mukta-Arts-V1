@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { gsap, ScrollTrigger, SplitText, EASE, DURATION_LONG, STAGGER, RISE, MOTION_OK } from "@/lib/motion";
 
 const slides = [
   {
@@ -96,9 +95,41 @@ const FilmLegacy = () => {
   const indexRefs = useRef([]);
   const tagRefs = useRef([]);
   const descRefs = useRef([]);
+  const titlesWrapRef = useRef(null);
+  const subtitleRefs = useRef([]);
 
   useGSAP(() => {
-    gsap.registerPlugin(ScrollTrigger);
+    // Heading reveal, the home page's rise: the titles row and the first panel's heading
+    // as the section enters, then each panel's heading as that panel takes over
+    let revealHeading = () => {};
+    let shown = 0;
+    const mm = gsap.matchMedia();
+    mm.add(MOTION_OK, () => {
+      const splits = subtitleRefs.current.map((h) => SplitText.create(h, { type: "lines" }));
+      revealHeading = (i) =>
+        gsap.fromTo(
+          splits[i].lines,
+          { autoAlpha: 0, y: RISE },
+          { autoAlpha: 1, y: 0, duration: DURATION_LONG, ease: EASE, stagger: STAGGER, overwrite: true }
+        );
+
+      gsap.set(splits[0].lines, { autoAlpha: 0, y: RISE });
+      gsap.fromTo(
+        titlesWrapRef.current,
+        { autoAlpha: 0, y: RISE * 2 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: DURATION_LONG,
+          ease: EASE,
+          scrollTrigger: { trigger: containerRef.current, start: "top 70%", once: true },
+          onStart: () => revealHeading(0),
+        }
+      );
+      return () => {
+        revealHeading = () => {};
+      };
+    });
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -109,6 +140,13 @@ const FilmLegacy = () => {
         pin: true,
         anticipatePin: 1,
         invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          const current = Math.min(slides.length - 1, Math.round(self.progress * (slides.length - 1) + 0.15));
+          if (current !== shown) {
+            shown = current;
+            revealHeading(current);
+          }
+        },
       },
     });
 
@@ -200,7 +238,7 @@ const FilmLegacy = () => {
       <div className="relative z-20 h-full w-full flex flex-col justify-center py-6 md:py-10">
         {/* Titles Container */}
         <div className="w-full overflow-hidden mb-6 md:mb-10">
-          <div className="px-6 md:px-12 lg:px-16">
+          <div ref={titlesWrapRef} className="px-6 md:px-12 lg:px-16">
             <div
               className="flex items-center gap-12 md:gap-28 lg:gap-36 whitespace-nowrap w-max relative"
               ref={titlesContainerRef}
@@ -272,7 +310,10 @@ const FilmLegacy = () => {
                 }}
               >
                 {/* Subtitle */}
-                <h3 className="text-xl sm:text-2xl md:text-3xl font-medium tracking-tight text-white font-['SwitzerM'] mb-3 md:mb-4">
+                <h3
+                  ref={(el) => (subtitleRefs.current[i] = el)}
+                  className="text-xl sm:text-2xl md:text-3xl font-medium tracking-tight text-white font-['SwitzerM'] mb-3 md:mb-4"
+                >
                   {slide.subtitle}
                 </h3>
 

@@ -20,10 +20,10 @@ const ABOUTWD = () => {
             description: "For over 18 years, WWI has shaped creative talent through world-class education, industry exposure, and hands-on learning."
         },
         {
-            value: 4000,
+            value: 4500,
             suffix: "+",
             format: true,
-            description: "A global community of 4,000+ alumni shaping successful careers across film, media, communication, and the creative industries."
+            description: "A global community of 4,500+ alumni shaping successful careers across film, media, communication, and the creative industries."
         },
         {
             value: 1300,

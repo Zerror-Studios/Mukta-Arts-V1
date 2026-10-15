@@ -1,3 +1,4 @@
+import { preload } from "react-dom";
 import Hero from "@/components/home/Hero";
 import VideoSection from "@/components/home/VideoSection";
 import FilmsSection from "@/components/home/FilmsSection";
@@ -9,6 +10,9 @@ import StackedCards from "@/components/home/StackedCards";
 import OldCamera from "@/components/home/OldCamera";
 
 const HomePage = () => {
+  // Start fetching the hero model with the HTML, not after the scripts load: the intro waits for it
+  preload("/model/headphones.glb", { as: "fetch", crossOrigin: "anonymous" });
+
   return (
     <>
       <Hero />

@@ -8,6 +8,8 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import FilmsSection from "./FilmsSection";
+import useAfterIntro from "@/hooks/useAfterIntro";
+import useInView from "@/hooks/useInView";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -271,6 +273,9 @@ export default function SpiralScene() {
   const progressRef = useRef(0);
 
   const timelineRef = useRef(null);
+  // The nine card textures load once the home intro has played; the canvas only draws near the screen
+  const cardsOn = useAfterIntro();
+  const inView = useInView(containerRef);
 
   useGSAP(
     () => {
@@ -373,23 +378,26 @@ export default function SpiralScene() {
       <div className="sticky top-0 w-full h-screen overflow-hidden">
 
         <div className=" NAMEDIV1 absolute top-0 left-0 z-[-1]  w-full h-full flex justify-center items-center">
-          <h5 className="  w-[90vw] max-sm:text-justify sm:w-2/3  capitalize  text-center">Mukta  Arts  is  the  vision  of  Subhash  Ghai  ,  one  of  India's  most  celebrated  filmmakers,
-            who  founded  the  company  in  1978.  What  started  with  landmark  films  like  Karz,  Ram
-            Lakhan,  Khalnayak  and  Pardes  has  grown  into  an  entertainment  group  spanning
-            production,  education,  exhibition  and  animation  .  Through  Whistling  Woods
-            International  ,  one  of  Asia's  leading  film  schools,  Mukta  A2  Cinemas  and  SGM
-            Studios  ,  the  group  continues  to  shape  how  stories  are  made,  taught  and  experienced
-            across India.</h5>
+          {/* Word for word from the content doc; the bold runs are bold there too */}
+          <h5 className="w-[90vw] sm:w-2/3 text-center font-['SwitzerR'] text-balance">
+            Mukta Arts is the vision of <strong className="font-['SwitzerB'] font-normal">Subhash Ghai</strong>, one of India&apos;s most celebrated filmmakers,
+            who founded the company in 1978. What started with landmark films like Karz, Ram Lakhan, Khalnayak and Pardes
+            has grown into an entertainment group spanning <strong className="font-['SwitzerB'] font-normal">production, education, exhibition and animation</strong>.
+            Through <strong className="font-['SwitzerB'] font-normal">Whistling Woods International</strong>, one of Asia&apos;s leading film schools,{" "}
+            <strong className="font-['SwitzerB'] font-normal">Mukta A2 Cinemas</strong> and <strong className="font-['SwitzerB'] font-normal">SGM Studios</strong>,
+            the group continues to shape how stories are made, taught and experienced across India.
+          </h5>
         </div>
 
         <Canvas
           className="spiral-canvas relative z-[1]"
+          frameloop={inView ? "always" : "never"}
           camera={{ position: [0, 0, 22], fov: 52 }}
           gl={{ antialias: true, alpha: true }}
           style={{ background: "transparent" }}
         >
           <Suspense fallback={null}>
-            <SpiralCards progressRef={progressRef} />
+            {cardsOn && <SpiralCards progressRef={progressRef} />}
           </Suspense>
         </Canvas>
       </div>

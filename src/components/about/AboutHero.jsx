@@ -12,11 +12,11 @@ if (typeof window !== "undefined") {
 }
 
 const carouselItems = [
-    { src: "/img/last/1.jpg" },
-    { src: "/img/last/3.jpg" },
-    { src: "/img/last/5.png" },
-    { src: "/img/last/6.jpg" },
-    { src: "/img/last/7.jpg" },
+    { src: "/img/final/about_Img/AB1/SG_0024_1_11zon_1_11zon.webp" },
+    { src: "/img/final/about_Img/AB1/SG_0063_2_11zon_2_11zon.webp" },
+    { src: "/img/final/about_Img/AB1/SG_0068_3_11zon_3_11zon.webp" },
+    { src: "/img/final/about_Img/AB1/SG_0113_4_11zon_4_11zon.webp" },
+    { src: "/img/final/about_Img/AB1/SG_0117_5_11zon_5_11zon.webp" },
 ];
 
 const AboutHero = () => {

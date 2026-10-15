@@ -17,13 +17,27 @@ import {
     X,
     CheckCircle2,
 } from 'lucide-react';
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
+import { upload } from '@vercel/blob/client';
+import useEntrance from '@/hooks/useEntrance';
+import useScrollReveal from '@/hooks/useScrollReveal';
+import {
+    SUBMISSION_FOLDER,
+    MAX_FILE_MB,
+    PITCH_DECK_TYPES,
+    CERTIFICATE_TYPES,
+    FORMATS,
+    GENRES,
+    LOGLINE_MAX,
+    SYNOPSIS_MAX,
+    validateSubmission,
+    safeFileName,
+} from '@/lib/scriptSubmission';
 
 /* -------------------------------------------------------------------------- */
 /*  CONFIG – edit these as needed                                             */
 /* -------------------------------------------------------------------------- */
 
+// TODO(client): the legal disclaimer text is still pending from the client; don't write one.
 // Paste the legal disclaimer here once you have it (one string per paragraph).
 // While this array is empty, the "Legal Disclaimer" section is hidden and the
 // Declaration section is automatically numbered 04 instead of 05.
@@ -32,31 +46,13 @@ const LEGAL_DISCLAIMER = [
     // "Paragraph 2 ...",
 ];
 
-const FORMATS = ['Feature Film', 'Web Series'];
-
-const GENRES = [
-    'Drama',
-    'Thriller',
-    'Comedy',
-    'Romance',
-    'Action',
-    'Mystery/Crime',
-    'Horror',
-    'Family/Social',
-    'Other',
-];
-
-const LOGLINE_MAX = 300;
-const SYNOPSIS_MAX = 3000;
-const MAX_FILE_MB = 20;
-
 const PITCH_DECK_RULES = {
-    mimes: ['application/pdf'],
+    mimes: PITCH_DECK_TYPES,
     label: 'PDF',
 };
 
 const CERTIFICATE_RULES = {
-    mimes: ['application/pdf', 'image/jpeg', 'image/png'],
+    mimes: CERTIFICATE_TYPES,
     label: 'JPG, PNG, PDF',
 };
 
@@ -107,7 +103,7 @@ const borderFor = (error) => (error ? 'border-red-600' : 'border-[#202020]');
 const FormSection = ({ number, title, note, children }) => (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 pt-8 sm:pt-10 border-t border-[#202020]">
         <div className="lg:col-span-4">
-            <div className="form-element lg:sticky lg:top-28 flex flex-col gap-3">
+            <div data-reveal="rise" className="form-element lg:sticky lg:top-28 flex flex-col gap-3">
                 <h2 className="text-[#black] text-sm sm:text-base tabular-nums">{number}</h2>
                 <h3 className="text-2xl sm:text-3xl lg:text-4xl font-medium tracking-tight text-black leading-tight">{title}</h3>
                 {note && <p className="text-[#555] text-sm sm:text-[15px] leading-relaxed max-w-sm">{note}</p>}
@@ -174,15 +170,18 @@ const IconSelect = ({ icon: Icon, error, children, ...props }) => (
     </div>
 );
 
-const FileDropzone = ({ file, onSelect, onRemove, accept, formatLabel, error }) => {
+const FileDropzone = ({ file, onSelect, onRemove, accept, formatLabel, error, disabled }) => {
     const inputRef = useRef(null);
     const [dragging, setDragging] = useState(false);
 
-    const openPicker = () => inputRef.current?.click();
+    const openPicker = () => {
+        if (!disabled) inputRef.current?.click();
+    };
 
     const handleDrop = (e) => {
         e.preventDefault();
         setDragging(false);
+        if (disabled) return;
         const dropped = e.dataTransfer.files?.[0];
         if (dropped) onSelect(dropped);
     };
@@ -257,7 +256,7 @@ const FileDropzone = ({ file, onSelect, onRemove, accept, formatLabel, error }) 
 /*  PAGE                                                                      */
 /* -------------------------------------------------------------------------- */
 
-const SubmitScriptPage = () => {
+const SubmitScriptPage = ({ blobUploads = false }) => {
     const containerRef = useRef(null);
     const formRef = useRef(null);
 
@@ -269,38 +268,15 @@ const SubmitScriptPage = () => {
     const [submitting, setSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [submitError, setSubmitError] = useState('');
+    const [submitStage, setSubmitStage] = useState('');
 
     const hasLegal = LEGAL_DISCLAIMER.length > 0;
     const declarationNumber = hasLegal ? '05' : '04';
 
-    useGSAP(() => {
-        const tl = gsap.timeline();
-
-        // Header animation
-        tl.from(".header-anim", {
-            y: 40,
-            opacity: 0,
-            duration: 0.8,
-            stagger: 0.15,
-            ease: "power3.out",
-            delay: 0.2
-        })
-            // Form fields animation
-            .from(".form-element", {
-                y: 20,
-                opacity: 0,
-                duration: 0.6,
-                stagger: 0.04,
-                ease: "power2.out"
-            }, "-=0.4")
-            // Image animation
-            .from(".image-anim", {
-                scale: 1.05,
-                opacity: 0,
-                duration: 1,
-                ease: "power2.out"
-            }, "-=0.6");
-    }, { scope: containerRef });
+    // The shared page entrance (headline word by word, intro line by line, then the banner),
+    // and each form section's heading rising in as it enters
+    useEntrance(containerRef);
+    useScrollReveal(formRef);
 
     /* ---------------------------- handlers ---------------------------- */
 
@@ -359,48 +335,22 @@ const SubmitScriptPage = () => {
         else setCertificate(null);
     };
 
+    // Typed fields use the same rules as the API route; the files are checked here
     const validate = () => {
-        const e = {};
-        const v = values;
-        const positiveInt = (val) => /^\d+$/.test(String(val).trim()) && Number(val) > 0;
-
-        if (!v.firstName.trim()) e.firstName = 'Enter your first name.';
-        if (!v.lastName.trim()) e.lastName = 'Enter your last name.';
-
-        if (!v.email.trim()) e.email = 'Enter your email address.';
-        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.email.trim())) e.email = 'Enter a valid email address.';
-
-        const phoneDigits = v.phone.replace(/\D/g, '');
-        if (!v.phone.trim()) e.phone = 'Enter your phone number.';
-        else if (phoneDigits.length < 7 || phoneDigits.length > 15) e.phone = 'Enter a valid phone number.';
-
-        if (!v.title.trim()) e.title = 'Enter the screenplay title.';
-
-        if (!v.format) e.format = 'Select a format.';
-
-        if (!v.genre) e.genre = 'Select a genre.';
-        else if (v.genre === 'Other' && !v.genreOther.trim()) e.genreOther = 'Specify the genre.';
-
-        if (v.format === 'Feature Film' && !positiveInt(v.runtime)) {
-            e.runtime = 'Enter the approximate runtime in minutes.';
-        }
-        if (v.format === 'Web Series') {
-            if (!positiveInt(v.episodes)) e.episodes = 'Enter the number of episodes.';
-            if (!positiveInt(v.episodeDuration)) e.episodeDuration = 'Enter the approximate minutes per episode.';
-        }
-
-        if (!v.logline.trim()) e.logline = 'Enter a logline.';
-        if (!v.synopsis.trim()) e.synopsis = 'Enter a synopsis.';
-
-        if (!pitchDeck) e.pitchDeck = e.pitchDeck || 'Upload your pitch deck (PDF).';
-        if (!v.swaNumber.trim()) e.swaNumber = 'Enter your SWA registration number.';
+        const e = validateSubmission(values, declarations);
+        if (!pitchDeck) e.pitchDeck = 'Upload your pitch deck (PDF).';
         if (!certificate) e.swaCertificate = 'Upload your SWA registration certificate.';
-
-        if (!Object.values(declarations).every(Boolean)) {
-            e.declarations = 'All declarations must be confirmed before submitting.';
-        }
-
         return e;
+    };
+
+    const focusFirstError = () => {
+        requestAnimationFrame(() => {
+            const first = formRef.current?.querySelector('[aria-invalid="true"]');
+            if (first) {
+                first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                first.focus({ preventScroll: true });
+            }
+        });
     };
 
     const handleSubmit = async (ev) => {
@@ -417,34 +367,71 @@ const SubmitScriptPage = () => {
         setErrors(merged);
 
         if (Object.values(merged).some(Boolean)) {
-            requestAnimationFrame(() => {
-                const first = formRef.current?.querySelector('[aria-invalid="true"]');
-                if (first) {
-                    first.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    first.focus({ preventScroll: true });
-                }
-            });
+            focusFirstError();
             return;
         }
 
         setSubmitting(true);
         try {
-            const formData = new FormData();
-            Object.entries(values).forEach(([k, val]) => formData.append(k, val));
-            formData.append('declarations', JSON.stringify(declarations));
-            formData.append('pitchDeck', pitchDeck);
-            formData.append('swaCertificate', certificate);
+            const payload = {
+                values,
+                declarations,
+                website: formRef.current?.elements?.website?.value || '',
+            };
+            let res;
 
-            // TODO: replace with your real endpoint
-            // const res = await fetch('/api/script-submission', { method: 'POST', body: formData });
-            // if (!res.ok) throw new Error('Request failed');
-            await new Promise((resolve) => setTimeout(resolve, 800)); // placeholder
+            if (blobUploads) {
+                // 1. Files go straight from the browser to private Blob storage (they are too large
+                //    to pass through a Vercel function), 2. the route emails everything with both files attached.
+                const send = async (file, kind) => {
+                    const { pathname } = await upload(`${SUBMISSION_FOLDER}/${kind}-${safeFileName(file.name)}`, file, {
+                        access: 'private',
+                        handleUploadUrl: '/api/script-submission/upload',
+                        contentType: file.type,
+                        multipart: file.size > 5 * 1024 * 1024,
+                    });
+                    return { pathname, name: file.name };
+                };
+
+                setSubmitStage('Uploading your files…');
+                const [deck, cert] = await Promise.all([send(pitchDeck, 'pitch-deck'), send(certificate, 'swa-certificate')]);
+
+                setSubmitStage('Sending your submission…');
+                res = await fetch('/api/script-submission', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...payload, files: { pitchDeck: deck, swaCertificate: cert } }),
+                });
+            } else {
+                // No Blob store: the files travel with the form itself
+                const body = new FormData();
+                body.append('payload', JSON.stringify(payload));
+                body.append('pitchDeck', pitchDeck);
+                body.append('swaCertificate', certificate);
+
+                setSubmitStage('Sending your submission…');
+                res = await fetch('/api/script-submission', { method: 'POST', body });
+            }
+
+            if (!res.ok) {
+                const { error, fields } = await res.json().catch(() => ({}));
+                if (fields) {
+                    setErrors(fields);
+                    focusFirstError();
+                }
+                throw new Error(error || 'Request failed');
+            }
 
             setSubmitted(true);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         } catch (err) {
-            setSubmitError('Your submission could not be sent. Check your connection and try again.');
+            setSubmitError(
+                err?.message && err.message !== 'Request failed' && !/fetch/i.test(err.message)
+                    ? err.message
+                    : 'Your submission could not be sent. Check your connection and try again.'
+            );
         } finally {
+            setSubmitStage('');
             setSubmitting(false);
         }
     };
@@ -465,16 +452,16 @@ const SubmitScriptPage = () => {
             <div className=" mx-auto max-sm:pt-[3vh]">
                 {/* Header */}
                 <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-10 sm:mb-16 md:mb-24 gap-6 sm:gap-8">
-                    <h2 className="header-anim text-5xl sm:text-6xl md:text-7xl lg:text-[7.5rem] font-medium tracking-tighter text-black leading-[1] lg:leading-[0.95]">
+                    <h2 data-entrance="words" className="text-5xl sm:text-6xl md:text-7xl lg:text-[7.5rem] font-medium tracking-tighter text-black leading-[1] lg:leading-[0.95]">
                         Script<br />Submission
                     </h2>
-                    <p className="header-anim text-[#555] text-sm sm:text-base md:text-lg max-w-md leading-relaxed lg:pb-3">
+                    <p data-entrance="lines" className="text-[#555] text-sm sm:text-base md:text-lg max-w-md leading-relaxed lg:pb-3">
                         Submit your original screenplay to Mukta Arts and give your story the opportunity to be discovered and considered by our creative team.
                     </p>
                 </div>
 
                 {/* Banner Image */}
-                <div className="image-anim relative w-full h-[220px] sm:h-[320px] md:h-[420px] lg:h-[480px] overflow-hidden mb-12 sm:mb-16 md:mb-20">
+                <div data-entrance="fade" className="relative w-full h-[220px] sm:h-[320px] md:h-[420px] lg:h-[480px] overflow-hidden mb-12 sm:mb-16 md:mb-20">
                     <img
                         src="https://images.unsplash.com/photo-1515634928627-2a4e0dae3ddf?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                         alt="Script writing placeholder"
@@ -506,374 +493,384 @@ const SubmitScriptPage = () => {
                         ref={formRef}
                         onSubmit={handleSubmit}
                         noValidate
-                        className="flex flex-col gap-12 sm:gap-16 w-full"
+                        aria-busy={submitting}
                     >
-                        {/* ------------------ 1. PERSONAL DETAILS ------------------ */}
-                        <FormSection
-                            number="01"
-                            title="Personal details"
-                            note="Tell us who you are and how we can reach you."
-                        >
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-                                <Field label="First name" required error={errors.firstName}>
-                                    <IconInput
-                                        icon={User}
-                                        type="text"
-                                        name="firstName"
-                                        autoComplete="given-name"
-                                        placeholder="example name"
-                                        value={values.firstName}
-                                        onChange={handleChange}
-                                        error={errors.firstName}
-                                    />
-                                </Field>
-
-                                <Field label="Last name" required error={errors.lastName}>
-                                    <IconInput
-                                        icon={User}
-                                        type="text"
-                                        name="lastName"
-                                        autoComplete="family-name"
-                                        placeholder="example name"
-                                        value={values.lastName}
-                                        onChange={handleChange}
-                                        error={errors.lastName}
-                                    />
-                                </Field>
-
-                                <Field label="Email address" required error={errors.email}>
-                                    <IconInput
-                                        icon={Mail}
-                                        type="email"
-                                        name="email"
-                                        autoComplete="email"
-                                        placeholder="example@mail.com"
-                                        value={values.email}
-                                        onChange={handleChange}
-                                        error={errors.email}
-                                    />
-                                </Field>
-
-                                <Field label="Phone number" required error={errors.phone}>
-                                    <IconInput
-                                        icon={Phone}
-                                        type="tel"
-                                        name="phone"
-                                        autoComplete="tel"
-                                        placeholder="123 456 7890"
-                                        value={values.phone}
-                                        onChange={handleChange}
-                                        error={errors.phone}
-                                    />
-                                </Field>
-                            </div>
-                        </FormSection>
-
-                        {/* ------------------ 2. PROJECT DETAILS ------------------ */}
-                        <FormSection
-                            number="02"
-                            title="Project details"
-                            note="The essentials of your story: title, format, genre, length and premise."
-                        >
-                            <Field
-                                label="Screenplay title"
-                                required
-                                hint="Title of the proposed project."
-                                error={errors.title}
+                        {/* Locks every field while the submission is being sent */}
+                        <fieldset disabled={submitting} className="flex flex-col gap-12 sm:gap-16 w-full min-w-0 m-0 p-0 border-0">
+                            {/* ------------------ 1. PERSONAL DETAILS ------------------ */}
+                            <FormSection
+                                number="01"
+                                title="Personal details"
+                                note="Tell us who you are and how we can reach you."
                             >
-                                <IconInput
-                                    icon={Film}
-                                    type="text"
-                                    name="title"
-                                    placeholder="Enter title"
-                                    value={values.title}
-                                    onChange={handleChange}
-                                    error={errors.title}
-                                />
-                            </Field>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-                                {/* Format */}
-                                <Field label="Format" required error={errors.format}>
-                                    <div
-                                        role="radiogroup"
-                                        aria-label="Format"
-                                        className={`grid grid-cols-2 border ${borderFor(errors.format)}`}
-                                    >
-                                        {FORMATS.map((f, i) => {
-                                            const active = values.format === f;
-                                            return (
-                                                <button
-                                                    key={f}
-                                                    type="button"
-                                                    role="radio"
-                                                    aria-checked={active}
-                                                    aria-invalid={errors.format && i === 0 ? 'true' : undefined}
-                                                    onClick={() => handleFormat(f)}
-                                                    className={`py-3.5 text-[14px] sm:text-[15px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-inset ${i === 0 ? 'border-r border-[#202020]' : ''
-                                                        } ${active ? 'bg-black text-white' : 'bg-transparent text-black hover:bg-gray-100'}`}
-                                                >
-                                                    {f}
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-                                </Field>
-
-                                {/* Genre */}
-                                <Field label="Genre" required error={errors.genre}>
-                                    <IconSelect
-                                        icon={Tag}
-                                        name="genre"
-                                        value={values.genre}
-                                        onChange={handleChange}
-                                        error={errors.genre}
-                                    >
-                                        <option value="" disabled>
-                                            Select genre
-                                        </option>
-                                        {GENRES.map((g) => (
-                                            <option key={g} value={g} className="text-black">
-                                                {g}
-                                            </option>
-                                        ))}
-                                    </IconSelect>
-                                </Field>
-                            </div>
-
-                            {values.genre === 'Other' && (
-                                <Field label="Specify genre" required error={errors.genreOther}>
-                                    <IconInput
-                                        icon={Tag}
-                                        type="text"
-                                        name="genreOther"
-                                        placeholder="Enter genre"
-                                        value={values.genreOther}
-                                        onChange={handleChange}
-                                        error={errors.genreOther}
-                                    />
-                                </Field>
-                            )}
-
-                            {/* Duration */}
-                            {!values.format && (
-                                <Field
-                                    label="Duration"
-                                    required
-                                    hint="Select a format above to enter the duration."
-                                >
-                                    <div className="border border-dashed border-gray-300 py-3.5 px-4 text-[14px] text-gray-400">
-                                        Feature films: runtime in minutes. Web series: number of episodes and minutes per episode.
-                                    </div>
-                                </Field>
-                            )}
-
-                            {values.format === 'Feature Film' && (
-                                <Field
-                                    label="Duration (minutes)"
-                                    required
-                                    hint="Approximate runtime of the feature film."
-                                    error={errors.runtime}
-                                >
-                                    <IconInput
-                                        icon={Clock}
-                                        type="number"
-                                        min="1"
-                                        inputMode="numeric"
-                                        name="runtime"
-                                        placeholder="e.g. 120"
-                                        value={values.runtime}
-                                        onChange={handleChange}
-                                        error={errors.runtime}
-                                    />
-                                </Field>
-                            )}
-
-                            {values.format === 'Web Series' && (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-                                    <Field label="Number of episodes" required error={errors.episodes}>
+                                    <Field label="First name" required error={errors.firstName}>
                                         <IconInput
-                                            icon={Hash}
-                                            type="number"
-                                            min="1"
-                                            inputMode="numeric"
-                                            name="episodes"
-                                            placeholder="e.g. 8"
-                                            value={values.episodes}
+                                            icon={User}
+                                            type="text"
+                                            name="firstName"
+                                            autoComplete="given-name"
+                                            placeholder="example name"
+                                            value={values.firstName}
                                             onChange={handleChange}
-                                            error={errors.episodes}
+                                            error={errors.firstName}
                                         />
                                     </Field>
+
+                                    <Field label="Last name" required error={errors.lastName}>
+                                        <IconInput
+                                            icon={User}
+                                            type="text"
+                                            name="lastName"
+                                            autoComplete="family-name"
+                                            placeholder="example name"
+                                            value={values.lastName}
+                                            onChange={handleChange}
+                                            error={errors.lastName}
+                                        />
+                                    </Field>
+
+                                    <Field label="Email address" required error={errors.email}>
+                                        <IconInput
+                                            icon={Mail}
+                                            type="email"
+                                            name="email"
+                                            autoComplete="email"
+                                            placeholder="example@mail.com"
+                                            value={values.email}
+                                            onChange={handleChange}
+                                            error={errors.email}
+                                        />
+                                    </Field>
+
+                                    <Field label="Phone number" required error={errors.phone}>
+                                        <IconInput
+                                            icon={Phone}
+                                            type="tel"
+                                            name="phone"
+                                            autoComplete="tel"
+                                            placeholder="123 456 7890"
+                                            value={values.phone}
+                                            onChange={handleChange}
+                                            error={errors.phone}
+                                        />
+                                    </Field>
+                                </div>
+                            </FormSection>
+
+                            {/* ------------------ 2. PROJECT DETAILS ------------------ */}
+                            <FormSection
+                                number="02"
+                                title="Project details"
+                                note="The essentials of your story: title, format, genre, length and premise."
+                            >
+                                <Field
+                                    label="Screenplay title"
+                                    required
+                                    hint="Title of the proposed project."
+                                    error={errors.title}
+                                >
+                                    <IconInput
+                                        icon={Film}
+                                        type="text"
+                                        name="title"
+                                        placeholder="Enter title"
+                                        value={values.title}
+                                        onChange={handleChange}
+                                        error={errors.title}
+                                    />
+                                </Field>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+                                    {/* Format */}
+                                    <Field label="Format" required error={errors.format}>
+                                        <div
+                                            role="radiogroup"
+                                            aria-label="Format"
+                                            className={`grid grid-cols-2 border ${borderFor(errors.format)}`}
+                                        >
+                                            {FORMATS.map((f, i) => {
+                                                const active = values.format === f;
+                                                return (
+                                                    <button
+                                                        key={f}
+                                                        type="button"
+                                                        role="radio"
+                                                        aria-checked={active}
+                                                        aria-invalid={errors.format && i === 0 ? 'true' : undefined}
+                                                        onClick={() => handleFormat(f)}
+                                                        className={`py-3.5 text-[14px] sm:text-[15px] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-inset ${i === 0 ? 'border-r border-[#202020]' : ''
+                                                            } ${active ? 'bg-black text-white' : 'bg-transparent text-black hover:bg-gray-100'}`}
+                                                    >
+                                                        {f}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </Field>
+
+                                    {/* Genre */}
+                                    <Field label="Genre" required error={errors.genre}>
+                                        <IconSelect
+                                            icon={Tag}
+                                            name="genre"
+                                            value={values.genre}
+                                            onChange={handleChange}
+                                            error={errors.genre}
+                                        >
+                                            <option value="" disabled>
+                                                Select genre
+                                            </option>
+                                            {GENRES.map((g) => (
+                                                <option key={g} value={g} className="text-black">
+                                                    {g}
+                                                </option>
+                                            ))}
+                                        </IconSelect>
+                                    </Field>
+                                </div>
+
+                                {values.genre === 'Other' && (
+                                    <Field label="Specify genre" required error={errors.genreOther}>
+                                        <IconInput
+                                            icon={Tag}
+                                            type="text"
+                                            name="genreOther"
+                                            placeholder="Enter genre"
+                                            value={values.genreOther}
+                                            onChange={handleChange}
+                                            error={errors.genreOther}
+                                        />
+                                    </Field>
+                                )}
+
+                                {/* Duration */}
+                                {!values.format && (
                                     <Field
-                                        label="Duration per episode (minutes)"
+                                        label="Duration"
                                         required
-                                        hint="Approximate duration of each episode."
-                                        error={errors.episodeDuration}
+                                        hint="Select a format above to enter the duration."
+                                    >
+                                        <div className="border border-dashed border-gray-300 py-3.5 px-4 text-[14px] text-gray-400">
+                                            Feature films: runtime in minutes. Web series: number of episodes and minutes per episode.
+                                        </div>
+                                    </Field>
+                                )}
+
+                                {values.format === 'Feature Film' && (
+                                    <Field
+                                        label="Duration (minutes)"
+                                        required
+                                        hint="Approximate runtime of the feature film."
+                                        error={errors.runtime}
                                     >
                                         <IconInput
                                             icon={Clock}
                                             type="number"
                                             min="1"
                                             inputMode="numeric"
-                                            name="episodeDuration"
-                                            placeholder="e.g. 45"
-                                            value={values.episodeDuration}
+                                            name="runtime"
+                                            placeholder="e.g. 120"
+                                            value={values.runtime}
                                             onChange={handleChange}
-                                            error={errors.episodeDuration}
+                                            error={errors.runtime}
                                         />
                                     </Field>
-                                </div>
-                            )}
-
-                            {/* Logline */}
-                            <Field
-                                label="Logline"
-                                required
-                                hint="A concise, compelling summary of the story in 1–3 sentences."
-                                error={errors.logline}
-                            >
-                                <IconTextarea
-                                    icon={Quote}
-                                    rows="3"
-                                    name="logline"
-                                    maxLength={LOGLINE_MAX}
-                                    placeholder="Your story in 1–3 sentences..."
-                                    value={values.logline}
-                                    onChange={handleChange}
-                                    error={errors.logline}
-                                />
-                                <p className="text-[12px] text-gray-400 text-right -mt-1">
-                                    {values.logline.length}/{LOGLINE_MAX}
-                                </p>
-                            </Field>
-
-                            {/* Synopsis */}
-                            <Field
-                                label="Synopsis"
-                                required
-                                hint="Outline the central premise, key characters, main conflict and narrative direction."
-                                error={errors.synopsis}
-                            >
-                                <IconTextarea
-                                    icon={PenLine}
-                                    rows="8"
-                                    name="synopsis"
-                                    maxLength={SYNOPSIS_MAX}
-                                    placeholder="Text here..."
-                                    value={values.synopsis}
-                                    onChange={handleChange}
-                                    error={errors.synopsis}
-                                />
-                                <p className="text-[12px] text-gray-400 text-right -mt-1">
-                                    {values.synopsis.length}/{SYNOPSIS_MAX}
-                                </p>
-                            </Field>
-                        </FormSection>
-
-                        {/* ------------------ 3. REQUIRED DOCUMENTS ------------------ */}
-                        <FormSection
-                            number="03"
-                            title="Required documents"
-                            note="All documents listed below are mandatory. Incomplete submissions will not be considered."
-                        >
-                            <Field
-                                label="A. Pitch deck"
-                                required
-                                hint="Introduce the project, its central premise, key characters, narrative direction and creative vision."
-                                error={errors.pitchDeck}
-                            >
-                                <FileDropzone
-                                    file={pitchDeck}
-                                    accept=".pdf,application/pdf"
-                                    formatLabel={PITCH_DECK_RULES.label}
-                                    error={errors.pitchDeck}
-                                    onSelect={(f) => handleFile('pitchDeck', f, PITCH_DECK_RULES)}
-                                    onRemove={() => removeFile('pitchDeck')}
-                                />
-                            </Field>
-
-                            <Field label="B. SWA registration number" required error={errors.swaNumber}>
-                                <IconInput
-                                    icon={BadgeCheck}
-                                    type="text"
-                                    name="swaNumber"
-                                    placeholder="Enter registration number"
-                                    value={values.swaNumber}
-                                    onChange={handleChange}
-                                    error={errors.swaNumber}
-                                />
-                            </Field>
-
-                            <Field
-                                label="C. SWA registration certificate"
-                                required
-                                hint="Only SWA-registered submissions will be reviewed."
-                                error={errors.swaCertificate}
-                            >
-                                <FileDropzone
-                                    file={certificate}
-                                    accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
-                                    formatLabel={CERTIFICATE_RULES.label}
-                                    error={errors.swaCertificate}
-                                    onSelect={(f) => handleFile('swaCertificate', f, CERTIFICATE_RULES)}
-                                    onRemove={() => removeFile('swaCertificate')}
-                                />
-                            </Field>
-                        </FormSection>
-
-                        {/* ------------------ 4. LEGAL DISCLAIMER (optional) ------------------ */}
-                        {hasLegal && (
-                            <FormSection number="04" title="Legal disclaimer">
-                                <div className="form-element border border-[#202020] bg-white p-5 sm:p-6 max-h-72 overflow-y-auto flex flex-col gap-3">
-                                    {LEGAL_DISCLAIMER.map((para, i) => (
-                                        <p key={i} className="text-[13px] sm:text-[14px] text-[#555] leading-relaxed">
-                                            {para}
-                                        </p>
-                                    ))}
-                                </div>
-                            </FormSection>
-                        )}
-
-                        {/* ------------------ DECLARATION AND CONFIRMATION ------------------ */}
-                        <FormSection
-                            number={declarationNumber}
-                            title="Declaration and confirmation"
-                            note="Before submitting, confirm the following. All declarations are mandatory."
-                        >
-                            <div className="form-element flex flex-col gap-4">
-                                {DECLARATIONS.map(({ key, text }, i) => (
-                                    <label key={key} className="flex items-start gap-3.5 cursor-pointer group">
-                                        <input
-                                            type="checkbox"
-                                            checked={declarations[key]}
-                                            onChange={() => handleDeclaration(key)}
-                                            aria-invalid={errors.declarations && !declarations[key] && i === 0 ? 'true' : undefined}
-                                            className="mt-0.5 h-5 w-5 shrink-0 accent-black cursor-pointer"
-                                        />
-                                        <span className="text-[14px] sm:text-[15px] text-[#555] leading-relaxed group-hover:text-black transition-colors">
-                                            {text}
-                                        </span>
-                                    </label>
-                                ))}
-                                {errors.declarations && (
-                                    <p className="text-[13px] text-red-600">{errors.declarations}</p>
                                 )}
-                            </div>
 
-                            {/* Submit Button */}
-                            {submitError && (
-                                <p role="alert" className="form-element text-[14px] text-red-600">
-                                    {submitError}
-                                </p>
-                            )}
-                            <button
-                                type="submit"
-                                disabled={submitting}
-                                className="form-element mt-2 sm:mt-4 w-full py-3.5 sm:py-4 bg-black text-white text-[12px] sm:text-[13px] font-medium tracking-[0.1em] hover:bg-gray-900 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                                {values.format === 'Web Series' && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+                                        <Field label="Number of episodes" required error={errors.episodes}>
+                                            <IconInput
+                                                icon={Hash}
+                                                type="number"
+                                                min="1"
+                                                inputMode="numeric"
+                                                name="episodes"
+                                                placeholder="e.g. 8"
+                                                value={values.episodes}
+                                                onChange={handleChange}
+                                                error={errors.episodes}
+                                            />
+                                        </Field>
+                                        <Field
+                                            label="Duration per episode (minutes)"
+                                            required
+                                            hint="Approximate duration of each episode."
+                                            error={errors.episodeDuration}
+                                        >
+                                            <IconInput
+                                                icon={Clock}
+                                                type="number"
+                                                min="1"
+                                                inputMode="numeric"
+                                                name="episodeDuration"
+                                                placeholder="e.g. 45"
+                                                value={values.episodeDuration}
+                                                onChange={handleChange}
+                                                error={errors.episodeDuration}
+                                            />
+                                        </Field>
+                                    </div>
+                                )}
+
+                                {/* Logline */}
+                                <Field
+                                    label="Logline"
+                                    required
+                                    hint="A concise, compelling summary of the story in 1–3 sentences."
+                                    error={errors.logline}
+                                >
+                                    <IconTextarea
+                                        icon={Quote}
+                                        rows="3"
+                                        name="logline"
+                                        maxLength={LOGLINE_MAX}
+                                        placeholder="Your story in 1–3 sentences..."
+                                        value={values.logline}
+                                        onChange={handleChange}
+                                        error={errors.logline}
+                                    />
+                                    <p className="text-[12px] text-gray-400 text-right -mt-1">
+                                        {values.logline.length}/{LOGLINE_MAX}
+                                    </p>
+                                </Field>
+
+                                {/* Synopsis */}
+                                <Field
+                                    label="Synopsis"
+                                    required
+                                    hint="Outline the central premise, key characters, main conflict and narrative direction."
+                                    error={errors.synopsis}
+                                >
+                                    <IconTextarea
+                                        icon={PenLine}
+                                        rows="8"
+                                        name="synopsis"
+                                        maxLength={SYNOPSIS_MAX}
+                                        placeholder="Text here..."
+                                        value={values.synopsis}
+                                        onChange={handleChange}
+                                        error={errors.synopsis}
+                                    />
+                                    <p className="text-[12px] text-gray-400 text-right -mt-1">
+                                        {values.synopsis.length}/{SYNOPSIS_MAX}
+                                    </p>
+                                </Field>
+                            </FormSection>
+
+                            {/* ------------------ 3. REQUIRED DOCUMENTS ------------------ */}
+                            <FormSection
+                                number="03"
+                                title="Required documents"
+                                note="All documents listed below are mandatory. Incomplete submissions will not be considered."
                             >
-                                {submitting ? 'SUBMITTING...' : 'SUBMIT SCRIPT'}
-                            </button>
-                        </FormSection>
+                                <Field
+                                    label="A. Pitch deck"
+                                    required
+                                    hint="Introduce the project, its central premise, key characters, narrative direction and creative vision."
+                                    error={errors.pitchDeck}
+                                >
+                                    <FileDropzone
+                                        file={pitchDeck}
+                                        accept=".pdf,application/pdf"
+                                        formatLabel={PITCH_DECK_RULES.label}
+                                        error={errors.pitchDeck}
+                                        onSelect={(f) => handleFile('pitchDeck', f, PITCH_DECK_RULES)}
+                                        onRemove={() => removeFile('pitchDeck')}
+                                        disabled={submitting}
+                                    />
+                                </Field>
+
+                                <Field label="B. SWA registration number" required error={errors.swaNumber}>
+                                    <IconInput
+                                        icon={BadgeCheck}
+                                        type="text"
+                                        name="swaNumber"
+                                        placeholder="Enter registration number"
+                                        value={values.swaNumber}
+                                        onChange={handleChange}
+                                        error={errors.swaNumber}
+                                    />
+                                </Field>
+
+                                <Field
+                                    label="C. SWA registration certificate"
+                                    required
+                                    hint="Only SWA-registered submissions will be reviewed."
+                                    error={errors.swaCertificate}
+                                >
+                                    <FileDropzone
+                                        file={certificate}
+                                        accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+                                        formatLabel={CERTIFICATE_RULES.label}
+                                        error={errors.swaCertificate}
+                                        onSelect={(f) => handleFile('swaCertificate', f, CERTIFICATE_RULES)}
+                                        onRemove={() => removeFile('swaCertificate')}
+                                        disabled={submitting}
+                                    />
+                                </Field>
+                            </FormSection>
+
+                            {/* ------------------ 4. LEGAL DISCLAIMER (optional) ------------------ */}
+                            {hasLegal && (
+                                <FormSection number="04" title="Legal disclaimer">
+                                    <div className="form-element border border-[#202020] bg-white p-5 sm:p-6 max-h-72 overflow-y-auto flex flex-col gap-3">
+                                        {LEGAL_DISCLAIMER.map((para, i) => (
+                                            <p key={i} className="text-[13px] sm:text-[14px] text-[#555] leading-relaxed">
+                                                {para}
+                                            </p>
+                                        ))}
+                                    </div>
+                                </FormSection>
+                            )}
+
+                            {/* ------------------ DECLARATION AND CONFIRMATION ------------------ */}
+                            <FormSection
+                                number={declarationNumber}
+                                title="Declaration and confirmation"
+                                note="Before submitting, confirm the following. All declarations are mandatory."
+                            >
+                                <div className="form-element flex flex-col gap-4">
+                                    {DECLARATIONS.map(({ key, text }, i) => (
+                                        <label key={key} className="flex items-start gap-3.5 cursor-pointer group">
+                                            <input
+                                                type="checkbox"
+                                                checked={declarations[key]}
+                                                onChange={() => handleDeclaration(key)}
+                                                aria-invalid={errors.declarations && !declarations[key] && i === 0 ? 'true' : undefined}
+                                                className="mt-0.5 h-5 w-5 shrink-0 accent-black cursor-pointer"
+                                            />
+                                            <span className="text-[14px] sm:text-[15px] text-[#555] leading-relaxed group-hover:text-black transition-colors">
+                                                {text}
+                                            </span>
+                                        </label>
+                                    ))}
+                                    {errors.declarations && (
+                                        <p className="text-[13px] text-red-600">{errors.declarations}</p>
+                                    )}
+                                </div>
+
+                                {/* Submit Button */}
+                                {submitError && (
+                                    <p role="alert" className="form-element text-[14px] text-red-600">
+                                        {submitError}
+                                    </p>
+                                )}
+                                <button
+                                    type="submit"
+                                    disabled={submitting}
+                                    className="form-element mt-2 sm:mt-4 w-full py-3.5 sm:py-4 bg-black text-white text-[12px] sm:text-[13px] font-medium tracking-[0.1em] hover:bg-gray-900 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                                >
+                                    {submitting ? 'SUBMITTING...' : 'SUBMIT SCRIPT'}
+                                </button>
+                                {submitStage && (
+                                    <p aria-live="polite" className="text-[13px]! text-[#555]">{submitStage}</p>
+                                )}
+                                {/* Spam trap: hidden from people, filled in by bots */}
+                                <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
+                            </FormSection>
+                        </fieldset>
                     </form>
                 )}
             </div>

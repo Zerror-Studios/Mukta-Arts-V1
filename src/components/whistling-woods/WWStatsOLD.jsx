@@ -13,13 +13,13 @@ const textContent = "Founded in 2006 by Subhash Ghai within Mumbai’s iconic Fi
 
 const statsData = [
     {
-        target: 4000,
+        target: 4500,
         prefix: "",
         suffix: "+",
         text: "Film and Media Industry Alumni",
     },
     {
-        target: 1000,
+        target: 1300,
         prefix: "",
         suffix: "+",
         text: "Students on campus",

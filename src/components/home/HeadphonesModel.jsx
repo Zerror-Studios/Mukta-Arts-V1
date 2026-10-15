@@ -5,6 +5,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/dist/ScrollTrigger';
+import { modelIntro, setModelReady } from '@/lib/homeIntro';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
@@ -12,11 +13,14 @@ if (typeof window !== 'undefined') {
 
 export function Model(props) {
   const { scene } = useGLTF('/model/headphones.glb');
+  const introRef = useRef();
   const groupRef = useRef();
   const spinRef = useRef();
-  const { size, camera } = useThree();
+  const { size, camera, gl, scene: rootScene } = useThree();
 
   const stateRef = useRef({ footerProgress: 0 });
+  const heroTlRef = useRef(null);
+  const dockRef = useRef({ canvas: null, logo: null, last: -1 });
   const isDragging = useRef(false);
   const previousMouse = useRef({ x: 0, y: 0 });
   const targetRotation = useRef({ x: 0, y: 0 });
@@ -49,7 +53,61 @@ export function Model(props) {
     };
   }, []);
 
+  // Get the GPU ready while the model is still out of view (textures uploaded, shaders
+  // compiled), so the first frames of the hero intro never stutter. Then tell the hero.
+  useEffect(() => {
+    let cancelled = false;
+    scene.traverse((obj) => {
+      if (!obj.isMesh) return;
+      [].concat(obj.material).forEach((material) => {
+        Object.values(material).forEach((value) => {
+          if (value?.isTexture) gl.initTexture(value);
+        });
+      });
+    });
+    const compiled = gl.compileAsync ? gl.compileAsync(rootScene, camera) : Promise.resolve(gl.compile(rootScene, camera));
+    compiled
+      .catch(() => {})
+      .then(() => requestAnimationFrame(() => !cancelled && setModelReady(true)));
+
+    return () => {
+      cancelled = true;
+      setModelReady(false);
+    };
+  }, [scene, gl, rootScene, camera]);
+
   useFrame((state, delta) => {
+    // Hero intro (driven by Hero.jsx): rise from below, spin and settle into place
+    if (introRef.current) {
+      introRef.current.position.y = modelIntro.y;
+      introRef.current.rotation.y = modelIntro.spin;
+      introRef.current.rotation.x = modelIntro.tilt;
+      introRef.current.scale.setScalar(modelIntro.scale);
+    }
+
+    // 0. Dock: as the shrinking model reaches the top it cross-fades into the flat logo
+    //    centred in the header, and comes back when the hero (or the footer) needs it
+    const dock = dockRef.current;
+    if (!dock.canvas) dock.canvas = document.getElementById('hero-logo-canvas');
+    if (!dock.logo || !dock.logo.isConnected) dock.logo = document.getElementById('header-dock-logo');
+    if (dock.canvas) {
+      const heroP = heroTlRef.current ? heroTlRef.current.progress() : 0;
+      const t = THREE.MathUtils.clamp((heroP - 0.75) / 0.25, 0, 1);
+      const docked = t * t * (3 - 2 * t);
+      const back = THREE.MathUtils.clamp(stateRef.current.footerProgress * 5, 0, 1);
+      const logoOpacity = docked * (1 - back);
+
+      if (Math.abs(logoOpacity - dock.last) > 0.001) {
+        dock.last = logoOpacity;
+        dock.canvas.style.opacity = String(Math.max(1 - docked, back));
+        if (dock.logo) {
+          dock.logo.style.opacity = String(logoOpacity);
+          dock.logo.style.visibility = logoOpacity > 0.01 ? 'visible' : 'hidden';
+          dock.logo.style.pointerEvents = logoOpacity > 0.5 ? 'auto' : 'none';
+        }
+      }
+    }
+
     // 1. Follow the footer div position
     if (groupRef.current) {
       const footerProgress = stateRef.current.footerProgress;
@@ -120,6 +178,7 @@ export function Model(props) {
         }
       });
 
+      heroTlRef.current = tl;
       tl.to(groupRef.current.scale, { x: 1, y: 1, z: 1, ease: "power2.inOut" }, 0);
       tl.to(groupRef.current.position, { y: 3, ease: "power2.inOut" }, 0);
 
@@ -179,11 +238,13 @@ export function Model(props) {
   }, []);
 
   return (
-    <group ref={groupRef} {...props}>
-      <group ref={spinRef}>
-        <Center>
-          <primitive object={scene} />
-        </Center>
+    <group ref={introRef}>
+      <group ref={groupRef} {...props}>
+        <group ref={spinRef}>
+          <Center>
+            <primitive object={scene} />
+          </Center>
+        </group>
       </group>
     </group>
   );
@@ -211,7 +272,7 @@ export default function HeadphonesCanvas() {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-10 pointer-events-none flex items-center justify-center">
+    <div id="hero-logo-canvas" className="fixed inset-0 z-10 pointer-events-none flex items-center justify-center">
       <div id="3d-canvas-container" className="w-full h-full pointer-events-auto">
         <Canvas camera={{ position: [0, 0, 8], fov: 45 }} className="w-full h-full">
           <ambientLight intensity={1} />

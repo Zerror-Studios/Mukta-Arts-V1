@@ -27,9 +27,9 @@ const statsData = [
         text: "Defining cinematic successes that captured audiences and became an enduring part of popular culture.",
     },
     {
-        target: 48,
+        target: 45,
         prefix: "",
-        suffix: "",
+        suffix: "+",
         title: "Years of Filmmaking",
         text: "Pioneering the industry through bold storytelling, landmark films and a vision that has continually pushed the boundaries of Indian cinema.",
     },

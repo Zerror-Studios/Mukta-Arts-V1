@@ -17,9 +17,9 @@ const stats = [
     text: "Whistling Woods International empowers the next generation through professional education across film, media and creative arts.",
   },
   {
-    endValue: 45,
-    suffix: "+",
-    label: "Screens",
+    endValue: 37,
+    suffix: "",
+    label: "Mukta A2 Cinemas",
     text: "Mukta A2 Cinemas brings diverse cinematic experiences to audiences through its exhibition network.",
   },
 ];

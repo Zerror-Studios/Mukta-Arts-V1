@@ -139,7 +139,7 @@ export default function CardsShowcase() {
     <div className="w-full h-[100vh] relative z-[10] mt-[10vh] md:mt-[30vh] overflow-hidden">
       {/* Title */}
       <div className="w-full absolute top-[-5%] md:top-[-10%] left-2 px-4 md:px-10 pt-10 md:pt-20 z-50 pointer-events-none">
-        <h2 className="text-[12vw] md:text-[8vw] font-semibold tracking-tighter text-black">Awards.</h2>
+        <h2 className="text-[12vw] md:text-[8vw] font-semibold tracking-tighter text-black">Honours.</h2>
       </div>
 
       {/* 3D Container */}

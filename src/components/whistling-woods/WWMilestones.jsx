@@ -6,6 +6,16 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 const UNIQUE_DATA = [
     {
+        year: '2006',
+        image: '/img/ma/WhistlingWoods.jpg',
+        text: '· Located in the heart of filmcity, Mumbai. Founded by Subhash Ghai.\n\n· Introduced India’s first programme for Producers.\n\n· Introduced India’s first long-term full-time programme in Animation.',
+    },
+    {
+        year: '2008',
+        image: '/img/final/home/home2/2O5A3438.webp',
+        text: '· Launched India’s 1st MBA in Media & Entertainment.',
+    },
+    {
         year: '2010',
         image: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=1920',
         text: '· Recognised as one of the top 10 film schools globally by the Hollywood Reporter.\n\n· Received CILECT membership, a mark of global credibility and excellence in film & media education.',
@@ -268,7 +278,7 @@ const WWMilestones = () => {
                     </h2> */}
 
                     <h4 className='mb-3 md:mb-5 max-md:text-[1.5rem]! max-md:leading-[1.2]!'>
-                        WWI Milestones — From Vision To <br className="hidden md:block" /> A Global Creative Community
+                        WWI Milestones — From A Vision To <br className="hidden md:block" /> A Global Creative Community
                     </h4>
                     <p className="text-sm mx-auto text-white/90 max-w-md leading-relaxed max-md:text-[13px]! max-md:leading-snug!">
                         From a bold vision to a thriving community shaping the future of

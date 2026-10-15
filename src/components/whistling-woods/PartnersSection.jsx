@@ -1,31 +1,13 @@
 "use client";
 
 import React, { useRef } from "react";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
+import useScrollReveal from "@/hooks/useScrollReveal";
 
 export default function AlumniWorkSection() {
     const sectionRef = useRef(null);
 
-    // GSAP Animations
-    useGSAP(() => {
-        const tl = gsap.timeline();
-
-        // Animate the heading
-        tl.fromTo(
-            ".heading",
-            { y: 30, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }
-        );
-
-        // Stagger animate the marquee rows instead of individual cards for better performance
-        tl.fromTo(
-            ".marquee-container",
-            { y: 40, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.8, stagger: 0.15, ease: "power3.out" },
-            "-=0.4"
-        );
-    }, { scope: sectionRef });
+    // Heading word by word, then each marquee row rises in, as the section enters
+    useScrollReveal(sectionRef);
 
     // Extracted companies grouped into 3 rows for a dense, visually appealing layout
     const row1 = [
@@ -121,7 +103,7 @@ export default function AlumniWorkSection() {
         >
             <div className="w-full">
                 {/* Heading */}
-                <h4 className="heading text-[32px] md:text-[42px] font-semibold text-center text-[#111] mb-10 md:mb-16 tracking-tight px-6">
+                <h4 data-reveal="words" className="heading text-[32px] md:text-[42px] font-semibold text-center text-[#111] mb-10 md:mb-16 tracking-tight px-6">
                     Where Our Alumni Work
                 </h4>
 
@@ -157,7 +139,7 @@ export default function AlumniWorkSection() {
                 }} />
 
                 {/* Row 1 - Moves Left */}
-                <div className="marquee-container w-full relative mb-4 md:mb-6">
+                <div data-reveal="rise" className="marquee-container w-full relative mb-4 md:mb-6">
                     <div className="animate-marquee flex w-max">
                         <div className="flex">
                             {renderCards(row1, "r1b1")}
@@ -166,7 +148,7 @@ export default function AlumniWorkSection() {
                 </div>
 
                 {/* Row 2 - Moves Right (Reverse) */}
-                <div className="marquee-container w-full relative mb-4 md:mb-6">
+                <div data-reveal="rise" className="marquee-container w-full relative mb-4 md:mb-6">
                     <div className="animate-marquee-reverse flex w-max">
                         <div className="flex">
                             {renderCards(row2, "r2b1")}
@@ -175,25 +157,12 @@ export default function AlumniWorkSection() {
                 </div>
 
                 {/* Row 3 - Moves Left */}
-                <div className="marquee-container w-full relative mb-8 md:mb-12">
+                <div data-reveal="rise" className="marquee-container w-full relative mb-8 md:mb-12">
                     <div className="animate-marquee flex w-max" style={{ animationDuration: '45s' }}>
                         <div className="flex">
                             {renderCards(row3, "r3b1")}
                         </div>
                     </div>
-                </div>
-
-                {/* Carousel Indicators (Static to match original design) */}
-                <div className="flex justify-center items-center gap-2">
-                    {[0, 1, 2, 3, 4].map((index) => (
-                        <div
-                            key={index}
-                            className={`w-[7px] h-[7px] rounded-full ${index === 1
-                                ? "bg-[#0070f3] border border-[#0070f3]"
-                                : "bg-transparent border border-gray-300"
-                                }`}
-                        />
-                    ))}
                 </div>
 
             </div>

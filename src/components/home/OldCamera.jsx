@@ -8,6 +8,8 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import * as THREE from "three";
+import useAfterIntro from "@/hooks/useAfterIntro";
+import useInView from "@/hooks/useInView";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -26,12 +28,14 @@ function FilmReel() {
         }
     });
 
+    // The group's six names, same order as the footer strip
     const content = [
-        { title: "45+", subtitle: "Years of Legacy", image: "/img/final/home/all/20_YAADEIN_(2001).jpg" },
-        { title: "50+", subtitle: "Films Produced", image: "/img/final/home/all/24_EK_AUR_EK_GYARAH_(2003).jpg" },
-        { title: "35", subtitle: "Blockbusters", image: "/img/final/home/all/29_SHAADI_SE_PEHLE_(2006).jpg" },
-        { title: "4000+", subtitle: "Alumni", image: "/img/final/home/all/UTTAR DAKSHIN (HINDI).jpg" },
-        { title: "57+", subtitle: "Cinema Theatres", image: "/img/final/home/all/50_DOUBLE_DI_TROUBLE_(2014).jpeg" },
+        { title: "Mukta Productions", image: "/img/final/home/all/04_KARZ_(1980).jpg" },
+        { title: "Whistling Woods International", image: "/img/ma/WhistlingWoods.jpg" },
+        { title: "Mukta A2 Cinemas", image: "/img/ma/MuktaA2Cinemas.jpg" },
+        { title: "Mukta VN Films", image: "/img/final/home/all/17_PARDES_(1997).jpg" },
+        { title: "SGM Studios", image: "/img/final/home/all/52_36_FARMHOUSE_(2022).jpg" },
+        { title: "Subhash Ghai", image: "/img/sg/1.jpg" },
     ];
 
     // Duplicate multiple times for a seamless scroll effect
@@ -65,8 +69,7 @@ function FilmReel() {
 
                             {/* Text Content */}
                             <div className="relative z-10 text-center">
-                                <h3 className="text-[#f97316] text-2xl md:text-4xl! font-bold mb-1 drop-shadow-md">{item.title}</h3>
-                                <p className="text-white text-[10px] md:text-sm opacity-90 drop-shadow-md font-semibold">{item.subtitle}</p>
+                                <h3 className="text-[#f97316] text-lg! md:text-2xl! font-bold uppercase tracking-wide whitespace-nowrap drop-shadow-md">{item.title}</h3>
                             </div>
                         </div>
                     ))}
@@ -169,6 +172,10 @@ export default function OldCamera() {
     const text3Ref = useRef(null);
     const buttonRef = useRef(null);
     const bgImageRef = useRef(null);
+    // Far below the fold: load the camera only once the home intro has played,
+    // and only draw it while the section is near the screen
+    const sceneOn = useAfterIntro();
+    const inView = useInView(containerRef);
 
     useGSAP(() => {
         const tl = gsap.timeline({
@@ -224,7 +231,7 @@ export default function OldCamera() {
 
                 {/* Title */}
                 <h2 className="absolute top-[10%] tracking-tighter left-[5%] md:left-[4%] z-40 text-black leading-none pointer-events-none">
-                    About us.
+                    Subhash Ghai.
                 </h2>
 
                 {/* Text Content */}
@@ -290,25 +297,27 @@ export default function OldCamera() {
 
                 {/* 3D Canvas */}
                 <div className="absolute inset-0 z-10 w-full h-full pointer-events-none">
-                    <Canvas
+                    {sceneOn && (
+                        <Canvas
+                            frameloop={inView ? "always" : "never"}
+                            camera={{ position: [0, 0, 5], fov: 45 }}
+                            className="w-full h-full pointer-events-none"
+                            dpr={[1, 2]} // Support for high-res screens
+                        >
+                            <ambientLight intensity={0.4} />
+                            <directionalLight position={[5, 10, 5]} intensity={1.2} />
+                            <Environment preset="studio" />
 
-                        camera={{ position: [0, 0, 5], fov: 45 }}
-                        className="w-full h-full pointer-events-none"
-                        dpr={[1, 2]} // Support for high-res screens
-                    >
-                        <ambientLight intensity={0.4} />
-                        <directionalLight position={[5, 10, 5]} intensity={1.2} />
-                        <Environment preset="studio" />
+                            <AnimatedCameraGroup />
 
-                        <AnimatedCameraGroup />
-
-                        {/* <OrbitControls
-                        enableZoom={false}
-                        enablePan={false}
-                        minPolarAngle={Math.PI / 3}
-                        maxPolarAngle={Math.PI / 1.5}
-                    /> */}
-                    </Canvas>
+                            {/* <OrbitControls
+                            enableZoom={false}
+                            enablePan={false}
+                            minPolarAngle={Math.PI / 3}
+                            maxPolarAngle={Math.PI / 1.5}
+                        /> */}
+                        </Canvas>
+                    )}
                 </div>
 
                 <FilmReel />
@@ -318,5 +327,3 @@ export default function OldCamera() {
     );
 }
 
-// Preload the model to prevent popping in
-useGLTF.preload("/model/camera.glb");

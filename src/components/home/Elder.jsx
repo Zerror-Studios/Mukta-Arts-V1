@@ -1,28 +1,27 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Link from 'next/link';
 import { useGSAP } from '@gsap/react';
+import { gsap, EASE, DURATION, STAGGER, RISE, MOTION_OK } from '@/lib/motion';
 
-gsap.registerPlugin(ScrollTrigger);
-
+// Copy is word for word from the home page content doc; **double asterisks** mark the
+// phrases that are bold there. `link` is an internal page, `website` an external one.
 const data = [
     {
         title: "Whistling Woods International",
         image: "/img/final/home/home2/2O5A3438.webp",
-        shortDesc: "Whistling Woods International (WWI) is India’s premier institute for Film, Communication, and Creative Arts. ",
-        fullDesc: `● Among the world's ten best film schools, as rated by The Hollywood Reporter, more than once.
-● 7 specialised schools under one roof, spanning filmmaking, acting, animation, design, fashion, media and music.
-● IIM Mumbai x WWI: India's first MBA in Media & Entertainment from an IIM.
-● TISS degrees, with a curriculum shaped by working industry professionals.
-●  Built for what's next, with tech labs alongside  Apple, NVIDIA, Epic Games, 
-Sony and more. 
-●  4,000+ alumni  shaping Indian and global media and entertainment and  1,300 
-current students. `,
+        shortDesc: "Whistling Woods International (WWI) is India’s premier institute for Film, Communication, and Creative Arts.",
+        bullets: [
+            "Among the **world's ten best film schools**, as rated by The Hollywood Reporter, more than once.",
+            "**7 specialised schools** under one roof, spanning filmmaking, acting, animation, design, fashion, media and music.",
+            "IIM Mumbai x WWI: India's **first MBA in Media & Entertainment** from an IIM.",
+            "**TISS degrees**, with a curriculum shaped by working industry professionals.",
+            "Built for what's next, with tech labs alongside **Apple, NVIDIA, Epic Games, Sony and more.**",
+            "**4,500+ alumni** shaping Indian and global media and entertainment and **1,300+** current students.",
+        ],
         photo: "/img/ma/WhistlingWoods.jpg",
         website: "https://www.whistlingwoods.net/",
-        pos: "top-[15%] left-[15%]",
         color1: "#c02690",
         color2: "#2d346b"
     },
@@ -30,19 +29,14 @@ current students. `,
         title: "Mukta Arts Productions",
         image: "/img/final/home/home2/2O5A4368.webp",
         shortDesc: "The house behind Karz, Hero, Ram Lakhan, Pardes and Taal, producing 50+ stories that have stayed with Indian audiences since 1978.",
-        fullDesc: `
-        ●  50+ films  produced and co-produced since 1978, in  Hindi and regional 
-languages. 
-●  35 blockbusters,  many of which remain among the most  loved films in Indian 
-cinema.
-●  8 regional films  across Marathi, Bengali, Punjabi and Kannada, including Valu, 
-Samhita, Noukadubi and Vijeta. 
-●  National Award winner for Iqbal, named Best Film on Other Social Issues. 
-●  India's first listed Hindi film company  , the first  to go public on the stock 
-exchanges, in 2000.
-        `,
-        website: "",
-        pos: "bottom-[5%] left-[85%]",
+        bullets: [
+            "**50+ films** produced and co-produced since 1978, in Hindi and regional languages.",
+            "**35 blockbusters,** many of which remain among the most loved films in Indian cinema.",
+            "**8 regional films** across Marathi, Bengali, Punjabi and Kannada, including Valu, Samhita, Noukadubi and Vijeta.",
+            "**National Award winner for Iqbal, named Best Film on Other Social Issues.**",
+            "**India's first listed Hindi film company**, the first to go public on the stock exchanges, in 2000.",
+        ],
+        link: "/our-films",
         color1: "#a52288",
         color2: "#272a63"
     },
@@ -50,51 +44,61 @@ exchanges, in 2000.
         title: "Mukta VN Films",
         image: "/img/ma/MuktaVNFilms.jpg",
         shortDesc: "Mukta VN Films is Mukta Arts’ film programming and distribution services venture, established in 2014 as a joint venture with UFO Moviez.",
-        fullDesc: `
-        ●  Around 195 screens  have been programmed nationwide,  across a growing 
-network of cinemas. 
-●  A trusted partner to cinema operators  , working where  content, exhibition and 
-audience demand meet. 
-●  A legacy in programming  , rooted in Mukta Arts' earlier Mukta Movies 
-Distributors division. 
-●  Part of India's multiplex story  ,  having  programmed for PVR, INOX, Cinepolis, 
-Big Cinemas, Fame, Fun Cinemas, DT and Carnival Cinemas  in their early 
-years.`,
-        website: null,
-        pos: "top-[5%] right-[0%]",
+        bullets: [
+            "**Around 195 screens** have been programmed nationwide, across a growing network of cinemas.",
+            "**A trusted partner to cinema operators**, working where content, exhibition and audience demand meet.",
+            "**A legacy in programming**, rooted in Mukta Arts' earlier Mukta Movies Distributors division.",
+            "Part of India's multiplex story, having **programmed for PVR, INOX, Cinepolis, Big Cinemas, Fame, Fun Cinemas, DT and Carnival Cinemas** in their early years.",
+        ],
+        link: "/mukta-vn-films",
         color1: "#7e1c79",
         color2: "#202257"
     },
     {
         title: "Mukta A2 Cinemas",
         image: "/img/final/home/home2/TOPIWALA.webp",
-        shortDesc: "Mukta A2 Cinemas is the exhibition arm of Mukta Arts, founded with a vision to make the big- screen experience accessible to audiences across India.",
-        fullDesc: `
-        ●  57 screens across 19 cities  in India, and growing. 
-●  Iconic properties  including New Excelsior in South Mumbai, Sun City in Vile 
-Parle, Ratnanjali Square in Ahmedabad, Orbit Plaza in Surat and Konark 70MM 
-in Hyderabad. 
-●  Big-screen experience, pocket-friendly prices  , making  the multiplex 
-accessible beyond metro audiences. 
-●  International presence  through a 6-screen multiplex in the Kingdom of Bahrain.
-        `,
+        shortDesc: "Mukta A2 Cinemas is the exhibition arm of Mukta Arts, founded with a vision to make the big-screen experience accessible to audiences across India.",
+        // TODO(client): the doc's "Manages XX screens across XX" line still needs the figures
+        // from the Mukta A2 content doc; until then the first bullet uses the confirmed 37 cinemas.
+        bullets: [
+            "**37 Mukta A2 cinemas**, and growing.",
+            "**Iconic properties** including New Excelsior in South Mumbai, Sun City in Vile Parle, Ratnanjali Square in Ahmedabad, Orbit Plaza in Surat and Konrak Theatre in Hyderabad.",
+            "**Big-screen experience, pocket-friendly prices**, making the multiplex accessible beyond metro audiences.",
+            "**International presence** through a 6-screen multiplex in the Kingdom of Bahrain.",
+        ],
         website: "https://muktaa2cinemas.in/",
-        pos: "bottom-[5%] left-[15%]",
         color1: "#5d186c",
         color2: "#191a4b"
     },
     {
-        title: "SGM STUDIOS",
+        title: "SGM Studios",
         image: "https://muktaarts.com/Media/uploads/2026/SGM-ANIMATION-STUDIOS-MUKTA-ARTS-LTD-MOU.gif",
-        shortDesc: "For SGM Studios the page format won’t work. It’ll have to be an introduction text (below) with a couple of photos I will share that can be placed as a carousel or showreel under.",
-        fullDesc: `
-       SGM Studios is Mukta Arts' animation and visual storytelling arm, built to carry the company's cinematic legacy into the world of animation and new-age entertainment. The studio develops original, culturally rooted IP, bringing together creative talent and emerging technology to craft visually distinctive worlds and character-driven narratives for audiences across India and beyond. Its work spans animation, digital formats and franchise development, with the ambition of building properties that can travel across film, series and other forms of entertainment, pairing decades of experience in cinema with the creative range of animation. 
-        `,
-        website: "https://muktaa2cinemas.in/",
-        pos: "bottom-[5%] left-[15%]",
+        shortDesc: "SGM Studios is Mukta Arts' animation and visual storytelling arm.",
+        // No bullets for SGM: the panel carries the introduction, and SGM has no external site
+        paragraphs: [
+            "SGM Studios is Mukta Arts' animation and visual storytelling arm, built to carry the company's cinematic legacy into the world of animation and new-age entertainment. The studio develops original, culturally rooted IP, bringing together creative talent and emerging technology to craft visually distinctive worlds and character-driven narratives for audiences across India and beyond.",
+            "Its work spans animation, digital formats and franchise development, with the ambition of building properties that can travel across film, series and other forms of entertainment, pairing decades of experience in cinema with the creative range of animation.",
+        ],
         color1: "#5d186c",
         color2: "#191a4b"
     }
+];
+
+// "**bold** rest" -> text with <strong> runs
+const rich = (text) =>
+    text.split(/(\*\*[^*]+\*\*)/g).filter(Boolean).map((part, i) =>
+        part.startsWith("**") ? (
+            <strong key={i} className="font-['SwitzerSB'] font-normal text-white">{part.slice(2, -2)}</strong>
+        ) : (
+            <React.Fragment key={i}>{part}</React.Fragment>
+        )
+    );
+
+// The closing paragraph, split into its bold and regular runs (bold as in the content doc)
+const finalCopy = [
+    { text: "For nearly five decades,", bold: true },
+    { text: "Mukta Arts has been telling stories that became a part of India’s cultural memory. From iconic films and unforgettable music to cinema, education and new forms of storytelling,", bold: false },
+    { text: "Mukta continues to build on a legacy shaped by a belief in the power of the moving image.", bold: true },
 ];
 
 const finalColors = {
@@ -109,8 +113,22 @@ const Elder = () => {
     const popupsRef = useRef([]);
     const finalRef = useRef(null);
     const overlayRef = useRef(null);
+    const panelRef = useRef(null);
     const [activeItem, setActiveItem] = useState(null);
     const scrollTimeout = useRef(null);
+
+    // The opened panel builds in with the section's own rise: photo/title, intro, then each bullet
+    useGSAP(() => {
+        if (!activeItem) return;
+        const mm = gsap.matchMedia();
+        mm.add(MOTION_OK, () => {
+            gsap.fromTo(
+                ".panel-reveal",
+                { autoAlpha: 0, y: RISE },
+                { autoAlpha: 1, y: 0, duration: DURATION, ease: EASE, stagger: STAGGER, delay: 0.3 }
+            );
+        });
+    }, { scope: panelRef, dependencies: [activeItem] });
 
     useEffect(() => {
         const handleScroll = () => {
@@ -289,7 +307,10 @@ const Elder = () => {
                             <h2
                                 key={i}
                                 ref={el => titlesRef.current[i] = el}
-                                className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight text-[#7889a1] opacity-50 text-left"
+                                // Sized to the column so the longest name sits on one line at every width (on phones a
+                                // break would leave a word alone); text-balance is the fallback on very narrow screens.
+                                // `!` because the global h2 size in fonts.css is unlayered and would win over the utilities.
+                                className="text-[6.3vw]! leading-[1.1]! md:text-[3.4rem]! lg:text-[3.9rem]! lg:whitespace-nowrap text-balance font-bold tracking-tight text-[#7889a1] opacity-50 text-left"
                                 style={{ willChange: "transform, opacity, color" }}
                             >
                                 {item.title}
@@ -320,11 +341,21 @@ const Elder = () => {
                                 >
                                     +
                                 </button>
+                                {item.link && (
+                                    <Link
+                                        href={item.link}
+                                        onClick={(e) => e.stopPropagation()}
+                                        className="inline-flex items-center gap-2 bg-[#0474BA] hover:bg-[#0666a1] text-white px-4 py-2 md:px-6 md:py-2.5 text-[10px] md:text-sm tracking-wider font-semibold rounded-[3px] transition-all duration-300 shadow-md hover:shadow-lg group cursor-pointer"
+                                    >
+                                        <span>View More</span>
+                                        <span className="transform group-hover:translate-x-1 transition-transform">→</span>
+                                    </Link>
+                                )}
                                 {item.website && (
                                     <a
                                         href={item.website}
                                         target="_blank"
-                                        rel="noreferrer"
+                                        rel="noopener noreferrer"
                                         onClick={(e) => e.stopPropagation()}
                                         className="text-[10px] md:text-xs uppercase tracking-widest border-b border-white/40 hover:border-white text-white/80 hover:text-white transition-colors pb-0.5 cursor-pointer py-1 md:py-2"
                                     >
@@ -339,40 +370,45 @@ const Elder = () => {
                 {/* Final Text */}
                 <div
                     ref={finalRef}
-                    className="absolute z-30 w-full max-w-5xl px-4 md:px-12 opacity-0 invisible pointer-events-none flex flex-col items-center justify-center text-center"
+                    className="absolute z-30 w-full max-w-7xl px-4 md:px-12 opacity-0 invisible pointer-events-none flex flex-col items-center justify-center text-center"
                 >
-                    <h4 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold leading-tight text-white/90 flex flex-wrap justify-center text-center gap-x-1.5 md:gap-x-3 gap-y-1 md:gap-y-2">
-                        {"For nearly five decades, Mukta Arts has been telling stories that became a part of India’s cultural memory. From iconic films and unforgettable music to cinema, education and new forms of storytelling, Mukta continues to build on a legacy shaped by a belief in the power of the moving image."
-                            .split(/\s+/)
-                            .map((word, i) => (
+                    {/* Wide and set smaller, so it reads in four or five lines on a 15" laptop */}
+                    <h4 className="text-[1.6rem]! leading-[1.25]! md:text-[2.4rem]! md:leading-[1.25]! font-normal text-white/90 flex flex-wrap justify-center text-center gap-x-1.5 md:gap-x-[0.28em] gap-y-1 md:gap-y-1.5">
+                        {finalCopy.flatMap((run, r) =>
+                            run.text.split(/\s+/).map((word, i) => (
                                 <span
-                                    key={i}
-                                    className={`final-word opacity-0 translate-y-8 inline-block ${i >= 4 ? 'text-[#e2a866]' : ''}`}
+                                    key={`${r}-${i}`}
+                                    className={`final-word opacity-0 translate-y-8 inline-block ${run.bold ? "font-['SwitzerB'] text-white" : "font-['SwitzerM'] text-[#e2a866]"}`}
                                 >
                                     {word}
                                 </span>
-                            ))}
+                            ))
+                        )}
                     </h4>
                 </div>
 
                 {/* Sidebar for Full Description */}
                 <div
+                    ref={panelRef}
                     className={`fixed top-0 right-0 h-[100dvh] w-full md:w-[50vw] bg-[#0474BA] backdrop-blur-2xl border-l border-white/10 z-[888] transform transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] ${activeItem ? 'translate-x-0' : 'translate-x-full'} pointer-events-auto shadow-2xl flex flex-col`}
                 >
                     <button
                         onClick={() => setActiveItem(null)}
-                        className="absolute top-4 left-4 md:top-8 md:left-8 text-white text-lg md:text-xl font-extralight hover:text-white/60 transition-colors cursor-pointer w-10 h-10 md:w-12 md:h-12 flex items-center justify-center z-20 bg-black/20 hover:bg-black/40 backdrop-blur-md rounded-full"
+                        className="absolute top-20 left-4 md:top-24 md:left-8 text-white text-lg md:text-xl font-extralight hover:text-white/60 transition-colors cursor-pointer w-10 h-10 md:w-12 md:h-12 flex items-center justify-center z-20 bg-black/20 hover:bg-black/40 backdrop-blur-md rounded-full"
                     >
                         ✕
                     </button>
 
-                    <div className="flex-1 overflow-y-auto p-5 pt-20 md:p-16 lg:p-20 flex flex-col">
+                    <div className="flex-1 overflow-y-auto p-5 pt-36 md:p-16 md:pt-40 lg:p-20 lg:pt-40 flex flex-col">
                         {activeItem && (
                             <>
-                                <h2 className={`${activeItem.title?.trim() === "Whistling Woods International" ? "hidden" : ""} text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-4 md:mb-6 tracking-wide`}>{activeItem.title}</h2>
+                                {/* A photo stands in for the title where there is one, so the name is not repeated */}
+                                {!activeItem.photo && (
+                                    <h2 className="panel-reveal text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-4 md:mb-6 tracking-wide">{activeItem.title}</h2>
+                                )}
 
                                 {activeItem.photo && (
-                                    <div className="w-full aspect-video rounded-xl overflow-hidden mb-6 md:mb-8 flex-shrink-0 shadow-2xl relative border border-white/10 group">
+                                    <div className="panel-reveal w-full aspect-video rounded-xl overflow-hidden mb-6 md:mb-8 flex-shrink-0 shadow-2xl relative border border-white/10 group">
                                         <img
                                             src={activeItem.photo}
                                             alt={activeItem.title}
@@ -382,51 +418,48 @@ const Elder = () => {
                                     </div>
                                 )}
 
-                                <div className="text-white/80 text-xs sm:text-sm md:text-base lg:text-lg font-light leading-relaxed space-y-4">
-                                    {activeItem.fullDesc.split('\n\n').map((block, bIdx) => {
-                                        const lines = block.split('\n');
-                                        const isBulletList = lines.some(line => /^\s*[●•\-\*]/.test(line));
+                                <div className="text-white/80 text-sm md:text-base lg:text-lg font-light leading-relaxed space-y-5">
+                                    <div className="panel-reveal text-white text-base md:text-lg lg:text-xl leading-snug font-['SwitzerM']">
+                                        {activeItem.shortDesc}
+                                    </div>
 
-                                        if (isBulletList) {
-                                            return (
-                                                <ul key={bIdx} className="space-y-3 pl-1">
-                                                    {lines.map((line, lIdx) => {
-                                                        const trimmed = line.trim();
-                                                        if (!trimmed) return null;
-                                                        const isBullet = /^[●•\-\*]/.test(trimmed);
-                                                        if (isBullet) {
-                                                            const bulletContent = trimmed.replace(/^[●•\-\*]\s*/, '');
-                                                            return (
-                                                                <li key={lIdx} className="flex items-start gap-3">
-                                                                    <span className="text-[#e2a866] text-xs md:text-sm mt-1 flex-shrink-0 select-none">●</span>
-                                                                    <span className="flex-1">{bulletContent}</span>
-                                                                </li>
-                                                            );
-                                                        }
-                                                        return <p key={lIdx}>{trimmed}</p>;
-                                                    })}
-                                                </ul>
-                                            );
-                                        }
+                                    {activeItem.bullets && (
+                                        <ul className="space-y-3 md:space-y-4 pl-1">
+                                            {activeItem.bullets.map((bullet, i) => (
+                                                <li key={i} className="panel-reveal flex items-start gap-3">
+                                                    <span className="text-[#e2a866] text-[0.6em] mt-[0.55em] flex-shrink-0 select-none" aria-hidden="true">●</span>
+                                                    <span className="flex-1">{rich(bullet)}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
 
-                                        return (
-                                            <p key={bIdx} className="whitespace-pre-line">
-                                                {block}
-                                            </p>
-                                        );
-                                    })}
+                                    {activeItem.paragraphs?.map((para, i) => (
+                                        <div key={i} className="panel-reveal">{para}</div>
+                                    ))}
                                 </div>
 
-                                {activeItem.website && (
-                                    <div className="mt-8 md:mt-12 mb-4">
-                                        <a
-                                            href={activeItem.website}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            className="inline-flex items-center justify-center px-6 py-3 md:px-8 md:py-4 bg-white text-black hover:bg-gray-200 text-[10px] md:text-xs lg:text-sm font-medium tracking-[0.2em] uppercase transition-colors"
-                                        >
-                                            Visit Website
-                                        </a>
+                                {(activeItem.link || activeItem.website) && (
+                                    <div className="panel-reveal mt-8 md:mt-12 mb-4 flex flex-wrap items-center gap-4">
+                                        {activeItem.link && (
+                                            <Link
+                                                href={activeItem.link}
+                                                className="inline-flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 bg-white text-black hover:bg-gray-200 text-[10px] md:text-xs lg:text-sm font-medium tracking-[0.2em] uppercase transition-colors group"
+                                            >
+                                                View More
+                                                <span className="transform group-hover:translate-x-1 transition-transform">→</span>
+                                            </Link>
+                                        )}
+                                        {activeItem.website && (
+                                            <a
+                                                href={activeItem.website}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center justify-center px-6 py-3 md:px-8 md:py-4 bg-white text-black hover:bg-gray-200 text-[10px] md:text-xs lg:text-sm font-medium tracking-[0.2em] uppercase transition-colors"
+                                            >
+                                                Visit Website
+                                            </a>
+                                        )}
                                     </div>
                                 )}
                             </>

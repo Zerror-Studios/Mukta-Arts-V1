@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { Draggable } from "gsap/dist/Draggable";
 import Image from "next/image";
+import useScrollReveal from "@/hooks/useScrollReveal";
 
 if (typeof window !== "undefined") {
     gsap.registerPlugin(Draggable);
@@ -22,6 +23,10 @@ const itemSize = "w-[260px] h-[195px] sm:w-[320px] sm:h-[240px] md:w-[420px] md:
 const WWlast = () => {
     const containerRef = useRef(null);
     const trackRef = useRef(null);
+    const sectionRef = useRef(null);
+
+    // Heading reveal as the section enters
+    useScrollReveal(sectionRef);
 
     useEffect(() => {
         const track = trackRef.current;
@@ -73,15 +78,13 @@ const WWlast = () => {
     }, []);
 
     return (
-        <section className="relative w-full pt-20 md:pt-32 pb-12 md:pb-16 overflow-hidden bg-[#FAFAFA]">
+        <section ref={sectionRef} className="relative w-full pt-20 md:pt-32 pb-12 md:pb-16 overflow-hidden bg-[#FAFAFA]">
             <div className=" px-4 md:px-8 mb-12 md:mb-24 ">
                 <div className="flex flex-col lg:flex-row justify-between items-start gap-5 md:gap-8 lg:gap-16 ">
-                    <h4 className="text-5xl capitalize md:text-7xl lg:text-[5.5rem] font-bold tracking-tighter text-black max-w-3xl leading-[1.05]">
+                    <h4 data-reveal="words" className="text-5xl capitalize md:text-7xl lg:text-[5.5rem] font-bold tracking-tighter text-black max-w-3xl leading-[1.05]">
                         whistling woods <br /> gallery
                     </h4>
-                    <p className="text-[#555]  text-lg md:text-xl lg:ml-auto max-w-[28rem] leading-relaxed font-medium max-md:text-base! max-md:leading-relaxed!">
-                        Pioneering India&apos;s cinematic corporatization, premier media pedagogy at Whistling Woods International, and multiplex storytelling across generations.
-                    </p>
+
                 </div>
             </div>
 

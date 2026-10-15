@@ -1,8 +1,7 @@
-// Page entrances wait until nothing is covering the page: the first-visit loader,
-// or the menu panel that sweeps across during a page change. Otherwise they would
-// play underneath it and the visitor would land on text that is already in place.
+// Page entrances wait until nothing is covering the page: the menu panel that
+// sweeps across during a page change. Otherwise they would play underneath it and
+// the visitor would land on text that is already in place.
 
-const INTRO_FAILSAFE_MS = 4000;
 const TRANSITION_FAILSAFE_MS = 2500;
 
 let held = false;
@@ -31,9 +30,4 @@ export function whenRevealsReleased(fn) {
   }
   waiting.add(fn);
   return () => waiting.delete(fn);
-}
-
-// The inline script in the root layout marks the first visit before any JS runs.
-if (typeof window !== "undefined" && window.__MUKTA_INTRO__ === true) {
-  holdReveals(INTRO_FAILSAFE_MS);
 }
