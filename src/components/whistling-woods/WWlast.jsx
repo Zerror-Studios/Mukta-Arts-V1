@@ -10,13 +10,41 @@ if (typeof window !== "undefined") {
     gsap.registerPlugin(Draggable);
 }
 
+const W2 = "/img/final/WW/W2/";
+
+// Campaign portraits interleaved with film stills
 const carouselItems = [
-    { src: "/img/last/1.jpg" },
-    { src: "/img/last/3.jpg" },
-    { src: "/img/last/5.png" },
-    { src: "/img/last/6.jpg" },
-    { src: "/img/last/7.jpg" },
-];
+    "WHISTLING WOODS CAMPAIGN 09.04.jpg",
+    "110.jpg",
+    "WHISTLING WOODS CAMPAIGN 09.04_1.jpg",
+    "1L0.jpg",
+    "WHISTLING WOODS CAMPAIGN 09.04_2.jpg",
+    "220.jpg",
+    "WHISTLING WOODS CAMPAIGN 09.04_3.jpg",
+    "30.jpg",
+    "WHISTLING WOODS CAMPAIGN 09.04_4.jpg",
+    "330.jpg",
+    "WHISTLING WOODS CAMPAIGN 09.04_5.jpg",
+    "440.jpg",
+    "WHISTLING WOODS CAMPAIGN 09.04_6.jpg",
+    "50.jpg",
+    "WHISTLING WOODS CAMPAIGN 09.04_7.jpg",
+    "55..tiff0.jpg",
+    "WHISTLING WOODS CAMPAIGN 09.04_8.jpg",
+    "6L0.jpg",
+    "WHISTLING WOODS CAMPAIGN 09.04_9.jpg",
+    "7L0.jpg",
+    "WHISTLING WOODS CAMPAIGN 09.04_10.jpg",
+    "90.jpg",
+    "WHISTLING WOODS CAMPAIGN 09.04_11.jpg",
+    "WHISTLING WOODS CAMPAIGN 09.04_12.jpg",
+    "WHISTLING WOODS CAMPAIGN 09.04_13.jpg",
+    "WHISTLING WOODS CAMPAIGN 09.04_14.jpg",
+    "WHISTLING WOODS CAMPAIGN 09.04_15.jpg",
+    "WHISTLING WOODS CAMPAIGN 09.04_16.jpg",
+    "WHISTLING WOODS CAMPAIGN 09.04_17.jpg",
+    "WHISTLING WOODS CAMPAIGN 09.04_18.jpg",
+].map((file) => ({ src: encodeURI(W2 + file) }));
 
 const itemSize = "w-[260px] h-[195px] sm:w-[320px] sm:h-[240px] md:w-[420px] md:h-[300px]";
 
@@ -37,7 +65,7 @@ const WWlast = () => {
 
         tl.to(track, {
             xPercent: -50,
-            duration: 35, // Smooth slow scrolling
+            duration: carouselItems.length * 7, // Smooth slow scrolling, same speed regardless of item count
         });
 
         let dragStartProgress = 0;
