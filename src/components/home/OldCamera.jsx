@@ -40,8 +40,8 @@ function FilmReel({ running }) {
         { value: "45+", label: "Years of Legacy", image: "/img/final/home/all/04_KARZ_(1980).jpg" },
         { value: "50+", label: "Films Produced", image: "/img/final/home/all/06_HERO_(1982).jpg" },
         { value: "35", label: "Blockbusters", image: "/img/final/home/all/10_RAM_LAKHAN_(1987).jpg" },
-        { value: "4000+", label: "Alumni", image: "/img/final/home/all/17_PARDES_(1997).jpg" },
-        { value: "57+", label: "Cinema Theatres", image: "/img/final/home/all/19_TAAL_(1999).jpg" },
+        { value: "4500+", label: "Alumni", image: "/img/final/home/all/17_PARDES_(1997).jpg" },
+        { value: "37", label: " Mukta A2 Cinemas", image: "/img/final/home/all/19_TAAL_(1999).jpg" },
     ];
 
     // Duplicate multiple times for a seamless scroll effect

@@ -125,13 +125,6 @@ export const siteRoutes = [
     priority: 0.3,
     noIndex: true,
   },
-  {
-    path: "/mukta-vn-films",
-    title: "Mukta VN Films",
-    description:
-      "Mukta VN Films is Mukta Arts’ film programming and distribution services venture, established in 2014 as a joint venture with UFO Moviez.",
-    priority: 0.7,
-  },
   // Hidden draft of the Whistling Woods hero.
   {
     path: "/wd",

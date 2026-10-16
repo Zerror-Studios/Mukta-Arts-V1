@@ -18,7 +18,7 @@ const data = [
             "IIM Mumbai x WWI: India's **first MBA in Media & Entertainment** from an IIM.",
             "**TISS degrees**, with a curriculum shaped by working industry professionals.",
             "Built for what's next, with tech labs alongside **Apple, NVIDIA, Epic Games, Sony and more.**",
-            "**4,500+ alumni** shaping Indian and global media and entertainment and **1,300+** current students.",
+            "**4,000+ alumni** shaping Indian and global media and entertainment and **1,300** current students.",
         ],
         photo: "/img/ma/WhistlingWoods.jpg",
         website: "https://www.whistlingwoods.net/",
@@ -50,7 +50,6 @@ const data = [
     //         "**A legacy in programming**, rooted in Mukta Arts' earlier Mukta Movies Distributors division.",
     //         "Part of India's multiplex story, having **programmed for PVR, INOX, Cinepolis, Big Cinemas, Fame, Fun Cinemas, DT and Carnival Cinemas** in their early years.",
     //     ],
-    //     link: "/mukta-vn-films",
     //     color1: "#7e1c79",
     //     color2: "#202257"
     // },
@@ -58,11 +57,10 @@ const data = [
         title: "Mukta A2 Cinemas",
         image: "/img/final/home/home2/TOPIWALA.webp",
         shortDesc: "Mukta A2 Cinemas is the exhibition arm of Mukta Arts, founded with a vision to make the big-screen experience accessible to audiences across India.",
-        // TODO(client): the doc's "Manages XX screens across XX" line still needs the figures
-        // from the Mukta A2 content doc; until then the first bullet uses the confirmed 37 cinemas.
+        // TODO(client): the doc's last line, "Manage XX screens across XX", is left out until it has figures
         bullets: [
-            "**37 Mukta A2 cinemas**, and growing.",
-            "**Iconic properties** including New Excelsior in South Mumbai, Sun City in Vile Parle, Ratnanjali Square in Ahmedabad, Orbit Plaza in Surat and Konrak Theatre in Hyderabad.",
+            "**57 screens across 19 cities** in India, and growing.",
+            "**Iconic properties** including New Excelsior in South Mumbai, Sun City in Vile Parle, Ratnanjali Square in Ahmedabad, Orbit Plaza in Surat and Konark 70MM in Hyderabad.",
             "**Big-screen experience, pocket-friendly prices**, making the multiplex accessible beyond metro audiences.",
             "**International presence** through a 6-screen multiplex in the Kingdom of Bahrain.",
         ],
