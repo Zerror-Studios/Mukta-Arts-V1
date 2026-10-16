@@ -3,6 +3,7 @@
 
 "use client";
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { smoothScrollTo } from '@/lib/smoothScroll';
 
 const UNIQUE_DATA = [
     {
@@ -197,7 +198,7 @@ const WWMilestones = () => {
             const el = sectionRef.current;
             const total = el.offsetHeight - window.innerHeight;
             const top = el.getBoundingClientRect().top + window.scrollY + (i / (N - 1)) * total;
-            window.scrollTo({ top, behavior: 'smooth' });
+            smoothScrollTo(top);
         } else {
             targetRef.current = i;
             kick();

@@ -223,6 +223,12 @@ if (!decadeLabelIndexes.includes(milestonesData.length - 1)) {
   decadeLabelIndexes.push(milestonesData.length - 1);
 }
 
+// Labels right beside the first or last one would overlap it on phones
+const crowdedLabelIndexes = decadeLabelIndexes.filter((i) => {
+  const t = i / (milestonesData.length - 1);
+  return t > 0 && t < 1 && (t < 0.12 || t > 0.88);
+});
+
 const pad = (n) => String(n).padStart(2, "0");
 
 export default function CareerMilestones() {
@@ -336,7 +342,7 @@ export default function CareerMilestones() {
       ref={containerRef}
       // --ph is the image height: it leaves room for the header, footer and card copy,
       // so the whole section always fits one screen (svh avoids mobile URL-bar jumps)
-      className="relative h-svh w-full bg-[#F8F9FA] overflow-hidden text-black select-none flex flex-col [--ph:min(44svh,calc(100svh-330px))] md:[--ph:min(48svh,calc(100svh-400px))] short:[--ph:calc(100svh-170px)]"
+      className="relative h-svh w-full bg-[#F8F9FA] overflow-hidden text-black select-none flex flex-col [--ph:min(48svh,calc(100svh-380px))] md:[--ph:min(48svh,calc(100svh-420px))] short:[--ph:calc(100svh-190px)]"
     >
       {/* Oversized outlined year behind the track */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
@@ -350,8 +356,8 @@ export default function CareerMilestones() {
         </span>
       </div>
 
-      {/* Header */}
-      <header className="relative z-20 flex items-end justify-between gap-4 px-5 sm:px-8 md:px-16 pt-7 md:pt-12 short:pt-4 pointer-events-none">
+      {/* Header: starts below the fixed site header (5rem / 7rem tall) and shares its side padding */}
+      <header className="relative z-20 flex items-end justify-between gap-4 px-6 md:px-8 pt-[calc(5rem+8px)] md:pt-[calc(7rem+8px)] pointer-events-none">
         <div className="min-w-0">
           {/* <div className="flex items-center gap-3 short:hidden">
             <span className="w-6 md:w-8 h-px bg-black/30" />
@@ -359,7 +365,7 @@ export default function CareerMilestones() {
               Chronological Journey
             </p>
           </div> */}
-          <h2 data-reveal="words" className="mt-3 short:mt-0 text-[1.65rem] leading-none sm:text-3xl md:text-4xl lg:text-5xl short:text-xl font-['SwitzerB'] tracking-tight">
+          <h2 data-reveal="words" className="text-[32px]! sm:text-[40px]! lg:text-[clamp(40px,3.4vw,56px)]! short:text-[24px]! leading-none! font-['SwitzerB'] tracking-tight">
             Milestones &amp; Films
           </h2>
         </div>
@@ -421,23 +427,23 @@ export default function CareerMilestones() {
                     className="w-full h-full object-cover grayscale scale-[1.06] transition-[filter,transform] duration-1000 ease-out group-data-[active=true]:grayscale-0 group-data-[active=true]:scale-100"
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-black/55 via-transparent to-transparent" />
-                  <span className="absolute left-2.5 bottom-2.5 md:left-4 md:bottom-4 max-w-[calc(100%-1.25rem)] truncate px-2 py-1 text-[9px] md:text-[10px] font-mono uppercase tracking-[0.15em] md:tracking-[0.2em] text-white border border-white/40 backdrop-blur-sm bg-black/20">
+                  {/* <span className="absolute left-2.5 bottom-2.5 md:left-4 md:bottom-4 max-w-[calc(100%-1.25rem)] truncate px-2 py-1 text-[9px] md:text-[10px] font-mono uppercase tracking-[0.15em] md:tracking-[0.2em] text-white border border-white/40 backdrop-blur-sm bg-black/20">
                     {m.tag}
-                  </span>
+                  </span> */}
                 </div>
 
                 {/* Copy */}
-                <div className="mt-3 md:mt-5 short:mt-2.5">
+                <div className="mt-[12px] md:mt-[18px] short:mt-[8px]">
                   <h3
                     className={`font-['SwitzerB'] uppercase tracking-tight leading-[1.05] ${
-                      studio ? "text-base sm:text-lg md:text-2xl short:text-base" : "text-[15px] md:text-lg short:text-sm"
+                      studio ? "text-[17px] md:text-[22px] short:text-[15px]" : "text-[15px] md:text-[17px] short:text-[13px]"
                     }`}
                   >
                     {m.title}
                   </h3>
                   {/* Only corporate milestones carry a description; film entries show title and tag */}
                   {m.desc && (
-                    <p className="mt-1.5 md:mt-2 text-gray-600 text-xs md:text-[13px] leading-relaxed font-['SwitzerR'] short:hidden line-clamp-2 md:max-w-[90%]">
+                    <p className="mt-[6px] md:mt-[8px] text-gray-600 text-[12px]! md:text-[13px]! leading-[1.5]! font-['SwitzerR'] short:hidden line-clamp-2 md:max-w-[90%]">
                       {m.desc}
                     </p>
                   )}
@@ -449,15 +455,15 @@ export default function CareerMilestones() {
       </div>
 
       {/* Timeline footer */}
-      <footer className="relative z-20 px-5 sm:px-8 md:px-16 pt-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] md:pb-10 short:pt-2 short:pb-3">
-        <div className="relative h-5 mb-2">
+      <footer className="relative z-20 px-6 md:px-8 pt-[16px] pb-[max(24px,env(safe-area-inset-bottom))] md:pb-[36px] short:pt-[8px] short:pb-[12px]">
+        <div className="relative h-[16px] mb-[8px]">
           {milestonesData.map((m, i) =>
             decadeLabelIndexes.includes(i) ? (
               <span
                 key={m.id}
                 ref={(el) => (yearsRef.current[i] = el)}
                 data-passed={i === 0}
-                className="absolute bottom-0 -translate-x-1/2 text-[9px] sm:text-[10px] md:text-[11px] font-mono tracking-wider md:tracking-widest text-gray-400 transition-colors duration-300 data-[passed=true]:text-black first:translate-x-0 last:-translate-x-full"
+                className={`absolute bottom-0 -translate-x-1/2 ${crowdedLabelIndexes.includes(i) ? "max-sm:hidden" : ""} text-[9px] sm:text-[10px] md:text-[11px] font-mono tracking-wider md:tracking-widest text-gray-400 transition-colors duration-300 data-[passed=true]:text-black first:translate-x-0 last:-translate-x-full`}
                 style={{ left: `${(i / (milestonesData.length - 1)) * 100}%` }}
               >
                 {m.year}
@@ -486,7 +492,7 @@ export default function CareerMilestones() {
           ))}
         </div>
 
-        <div className="mt-4 flex items-center gap-3 text-xs md:text-sm short:hidden">
+        {/* <div className="mt-[14px] flex items-center gap-3 text-[12px] md:text-[13px] short:hidden">
           <span ref={activeYearRef} className="font-mono tracking-widest text-gray-500 tabular-nums">
             {milestonesData[0].year}
           </span>
@@ -494,7 +500,7 @@ export default function CareerMilestones() {
           <span ref={activeTitleRef} className="font-['SwitzerSB'] uppercase tracking-wider truncate">
             {milestonesData[0].title}
           </span>
-        </div>
+        </div> */}
       </footer>
     </section>
   );

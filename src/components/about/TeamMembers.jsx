@@ -99,8 +99,10 @@ const TeamMembers = () => {
           if (inner && inner.parentElement) {
             const targetY = newIndex * itemHeight;
             const containerHeight = inner.parentElement.offsetHeight;
+            const maxShift = Math.max(0, inner.offsetHeight - containerHeight);
+            // Keep the active name centred in the window
             gsap.to(inner, {
-              y: targetY > containerHeight / 2 ? -(targetY - containerHeight / 2 + itemHeight) : 0,
+              y: -Math.min(maxShift, Math.max(0, targetY - (containerHeight - itemHeight) / 2)),
               duration: 0.3,
               ease: "power2.out",
             });
@@ -114,26 +116,27 @@ const TeamMembers = () => {
   const activePerson = team[activeIndex];
 
   return (
-    <section ref={sectionRef} className="relative w-full h-svh bg-[#FAFAFA] text-black flex items-center overflow-hidden pt-20 pb-6 lg:py-10">
-      <div className="w-full mx-auto px-4 md:px-8 flex flex-col lg:flex-row gap-4 lg:gap-16 h-full lg:max-h-[700px]">
+    <section ref={sectionRef} className="relative w-full h-svh bg-[#FAFAFA] text-black overflow-hidden pt-[calc(5rem+8px)] pb-6 md:pt-[calc(7rem+8px)] lg:pb-12">
+      {/* Starts below the fixed header (5rem / 7rem tall) and shares its side padding */}
+      <div className="w-full h-full px-6 md:px-8 flex flex-col lg:flex-row gap-5 lg:gap-16">
 
         {/* Left Column: Heading */}
-        <div className="lg:w-3/12 flex flex-col justify-start lg:pt-10 shrink-0">
-          <p className="text-[#555] text-xs lg:text-sm tracking-wide uppercase mb-1 lg:mb-3">Board of Directors</p>
-          <h5 data-reveal="words" className="text-3xl lg:text-5xl font-semibold text-black leading-tight tracking-tight">
+        <div className="lg:w-3/12 flex flex-col shrink-0">
+          <p className="text-[#555] text-[12px]! lg:text-[13px]! leading-none! tracking-wide uppercase mb-2 lg:mb-4">Board of Directors</p>
+          <h5 data-reveal="words" className="text-[28px]! lg:text-[clamp(32px,2.6vw,44px)]! leading-[1.1]! font-semibold text-black tracking-tight">
             People Behind<br className="hidden lg:block" /> The Vision
           </h5>
         </div>
 
-        {/* Middle Column: Names List */}
-        <div className="lg:w-4/12 relative h-[28svh] lg:h-full lg:max-h-full flex items-start shrink-0">
+        {/* Middle Column: Names List (a three-name scrolling window on phones, the full list from lg) */}
+        <div className="lg:w-4/12 relative h-[132px] lg:h-auto lg:self-start flex items-start shrink-0">
           {/* Scrollable Container (hidden overflow, controlled by GSAP) */}
           <div className="relative w-full h-full overflow-hidden">
             <div ref={namesInnerRef} className="w-full relative flex flex-col">
               {team.map((person, i) => (
                 <div
                   key={person.name}
-                  className={`h-12 flex items-center transition-all duration-300 ${activeIndex === i ? "text-black text-lg lg:text-[1.35rem] font-medium" : "text-black/40 text-base lg:text-[1.05rem] font-light"
+                  className={`h-[44px] lg:h-[46px] flex items-center transition-all duration-300 ${activeIndex === i ? "text-black text-[17px] lg:text-[20px] font-medium" : "text-black/40 text-[15px] lg:text-[16px] font-light"
                     }`}
                 >
                   {person.name}
@@ -142,8 +145,8 @@ const TeamMembers = () => {
             </div>
           </div>
 
-          {/* Right Border Line & Indicator */}
-          <div ref={lineTrackRef} className="absolute right-0 top-0 bottom-0 w-px bg-black/15">
+          {/* Right Border Line & Indicator, from the first name's centre to the last's */}
+          <div ref={lineTrackRef} className="absolute right-0 top-[22px] bottom-[22px] lg:top-[23px] lg:bottom-[23px] w-px bg-black/15">
             {/* Bold solid line that draws down */}
             <div
               ref={lineFillRef}
@@ -160,32 +163,36 @@ const TeamMembers = () => {
         </div>
 
         {/* Right Column: Person Info */}
-        <div className="lg:w-5/12 flex-1 flex flex-col justify-start lg:justify-center lg:pl-12 relative min-h-0 mt-4 lg:mt-0">
+        <div className="lg:w-5/12 flex-1 flex flex-col lg:pl-12 relative min-h-0">
 
-          {/* Fills the space left on phones; a fixed 4:3 frame from lg */}
-          <div className="relative w-full flex-1  lg:flex-none aspect-[2/3] mb-4 lg:mb-6 overflow-hidden bg-black/5">
-            <Image
-              src={activePerson.image}
-              alt={activePerson.name}
-              fill
-              className="object-cover object-center h-full"
-              
-              priority
-            />
+          {/* The slot takes whatever height the titles and button leave; inside it a 4:5 portrait
+              frame takes that height (narrowing to the column if needed), so phones get a portrait, not a crop */}
+          <div className="relative flex-1 min-h-0 mb-4 lg:mb-5">
+            <div className="relative h-full max-w-full aspect-[4/5] overflow-hidden bg-black/5">
+              <Image
+                src={activePerson.image}
+                alt={activePerson.name}
+                fill
+                sizes="(min-width: 1024px) 40vw, 90vw"
+                className="object-cover object-[50%_20%]"
+                priority
+              />
+            </div>
           </div>
 
-          <div className="text-[#555] text-xs md:text-[0.95rem] space-y-1 mb-4 lg:mb-8 font-light shrink-0">
+          {/* Three lines tall for everyone, so the photo doesn't resize between directors */}
+          <div className="text-[#555] min-h-[57px] md:min-h-[61px] lg:min-h-[66px] mb-4 lg:mb-5 font-light shrink-0">
             {activePerson.titles.map((title) => (
-              <p key={title}>{title}</p>
+              <p key={title} className="text-[13px]! md:text-[14px]! lg:text-[15px]! leading-[1.45]!">{title}</p>
             ))}
           </div>
 
           {/* Only Subhash Ghai has a profile page; the row keeps its height so nothing jumps */}
-          <div className="flex items-center min-h-9 md:min-h-10 shrink-0 mt-auto lg:mt-0 pb-4 lg:pb-0">
+          <div className="flex items-center min-h-[42px] shrink-0">
             {activePerson.profile && (
               <Link
                 href={activePerson.profile}
-                className="inline-flex items-center gap-2 bg-[#0474BA] hover:bg-[#0666a1] text-white px-6 py-2.5 text-xs md:text-sm tracking-wider font-semibold rounded-[3px] transition-colors duration-300 group"
+                className="inline-flex items-center gap-2 bg-[#0474BA] hover:bg-[#0666a1] text-white px-[22px] py-[11px] text-[13px] leading-none tracking-wider font-semibold rounded-[3px] transition-colors duration-300 group"
               >
                 <span>View Full Profile</span>
                 <span className="transform group-hover:translate-x-1 transition-transform">→</span>

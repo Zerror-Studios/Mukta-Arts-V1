@@ -28,14 +28,13 @@ function FilmReel() {
         }
     });
 
-    // The group's six names, same order as the footer strip
+    // Section 9 of the home page content doc: five frames, one figure each
     const content = [
-        { title: "Mukta Productions", image: "/img/final/home/all/04_KARZ_(1980).jpg" },
-        { title: "Whistling Woods International", image: "/img/ma/WhistlingWoods.jpg" },
-        { title: "Mukta A2 Cinemas", image: "/img/ma/MuktaA2Cinemas.jpg" },
-        { title: "Mukta VN Films", image: "/img/final/home/all/17_PARDES_(1997).jpg" },
-        { title: "SGM Studios", image: "/img/final/home/all/52_36_FARMHOUSE_(2022).jpg" },
-        { title: "Subhash Ghai", image: "/img/sg/1.jpg" },
+        { value: "45+", label: "Years of Legacy", image: "/img/final/home/all/04_KARZ_(1980).jpg" },
+        { value: "50+", label: "Films Produced", image: "/img/final/home/all/06_HERO_(1982).jpg" },
+        { value: "35", label: "Blockbusters", image: "/img/final/home/all/10_RAM_LAKHAN_(1987).jpg" },
+        { value: "4000+", label: "Alumni", image: "/img/final/home/all/17_PARDES_(1997).jpg" },
+        { value: "57+", label: "Cinema Theatres", image: "/img/final/home/all/19_TAAL_(1999).jpg" },
     ];
 
     // Duplicate multiple times for a seamless scroll effect
@@ -69,7 +68,8 @@ function FilmReel() {
 
                             {/* Text Content */}
                             <div className="relative z-10 text-center">
-                                <h3 className="text-[#f97316] text-lg! md:text-2xl! font-bold uppercase tracking-wide whitespace-nowrap drop-shadow-md">{item.title}</h3>
+                                <h3 className="text-[#f97316] text-3xl! md:text-5xl! leading-none! font-bold tracking-tight whitespace-nowrap drop-shadow-md">{item.value}</h3>
+                                <p className="mt-1 md:mt-2 text-white text-xs md:text-base font-semibold uppercase tracking-wide whitespace-nowrap drop-shadow-md">{item.label}</p>
                             </div>
                         </div>
                     ))}

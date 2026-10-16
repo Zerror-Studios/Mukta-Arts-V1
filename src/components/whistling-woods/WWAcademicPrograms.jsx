@@ -521,6 +521,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useTexture } from "@react-three/drei";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { smoothScrollTo } from "@/lib/smoothScroll";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -982,7 +983,7 @@ export default function WWAcademicPrograms({
       const st = stRef.current;
       if (!st) return;
       const y = st.start + (i / (numItems - 1)) * (st.end - st.start);
-      window.scrollTo({ top: y, behavior: "smooth" });
+      smoothScrollTo(y);
     },
     [numItems]
   );

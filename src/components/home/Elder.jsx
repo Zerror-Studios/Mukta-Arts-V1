@@ -40,20 +40,20 @@ const data = [
         color1: "#a52288",
         color2: "#272a63"
     },
-    {
-        title: "Mukta VN Films",
-        image: "/img/ma/MuktaVNFilms.jpg",
-        shortDesc: "Mukta VN Films is Mukta Arts’ film programming and distribution services venture, established in 2014 as a joint venture with UFO Moviez.",
-        bullets: [
-            "**Around 195 screens** have been programmed nationwide, across a growing network of cinemas.",
-            "**A trusted partner to cinema operators**, working where content, exhibition and audience demand meet.",
-            "**A legacy in programming**, rooted in Mukta Arts' earlier Mukta Movies Distributors division.",
-            "Part of India's multiplex story, having **programmed for PVR, INOX, Cinepolis, Big Cinemas, Fame, Fun Cinemas, DT and Carnival Cinemas** in their early years.",
-        ],
-        link: "/mukta-vn-films",
-        color1: "#7e1c79",
-        color2: "#202257"
-    },
+    // {
+    //     title: "Mukta VN Films",
+    //     image: "/img/ma/MuktaVNFilms.jpg",
+    //     shortDesc: "Mukta VN Films is Mukta Arts’ film programming and distribution services venture, established in 2014 as a joint venture with UFO Moviez.",
+    //     bullets: [
+    //         "**Around 195 screens** have been programmed nationwide, across a growing network of cinemas.",
+    //         "**A trusted partner to cinema operators**, working where content, exhibition and audience demand meet.",
+    //         "**A legacy in programming**, rooted in Mukta Arts' earlier Mukta Movies Distributors division.",
+    //         "Part of India's multiplex story, having **programmed for PVR, INOX, Cinepolis, Big Cinemas, Fame, Fun Cinemas, DT and Carnival Cinemas** in their early years.",
+    //     ],
+    //     link: "/mukta-vn-films",
+    //     color1: "#7e1c79",
+    //     color2: "#202257"
+    // },
     {
         title: "Mukta A2 Cinemas",
         image: "/img/final/home/home2/TOPIWALA.webp",
@@ -105,6 +105,13 @@ const finalColors = {
     color1: "#3c1a5e",
     color2: "#881a28"
 };
+
+// Timeline length of one item. At SCROLL_PER_UNIT one item gets ~144vh of scroll, about what a
+// popup travels (100vh plus its own height), so it moves with the scroll.
+const ITEM_SPAN = 8;
+const SCROLL_PER_UNIT = 18; // vh of scroll per second of timeline
+// The intro and the closing words take ~10 more timeline seconds; the last 100vh is the sticky screen
+const SECTION_HEIGHT = `${(data.length * ITEM_SPAN + 10) * SCROLL_PER_UNIT + 100}vh`;
 
 const Elder = () => {
     const containerRef = useRef(null);
@@ -190,10 +197,11 @@ const Elder = () => {
                 ease: "power1.inOut"
             }, `step${i}`);
 
-            // Continuous vertical parallax movement
+            // The popup rises from just below the screen to just above it (100vh + its own height)
+            // across the whole item, so it moves at roughly the scroll's own speed (see SECTION_HEIGHT)
             tl.fromTo(popupsRef.current[i],
-                { y: "100vh" },
-                { y: "-100vh", duration: 3.5, ease: "none" },
+                { y: "100vh", yPercent: 0 },
+                { y: 0, yPercent: -100, duration: ITEM_SPAN, ease: "none" },
                 `step${i}`
             );
 
@@ -204,8 +212,8 @@ const Elder = () => {
                 `step${i}`
             );
 
-            // Hold for a bit
-            tl.to({}, { duration: 1.5 }, `step${i}+=1`);
+            // Hand over to the next item as this popup leaves the top of the screen
+            tl.addLabel(`end${i}`, `step${i}+=${ITEM_SPAN - 1.5}`);
 
             // Fade them out if not the last item
             if (i !== data.length - 1) {
@@ -245,8 +253,9 @@ const Elder = () => {
     return (
         <div
             ref={containerRef}
-            className="w-full h-[700vh] relative z-[888] text-white overflow-clip"
+            className="w-full relative z-[888] text-white overflow-clip"
             style={{
+                height: SECTION_HEIGHT,
                 "--color1": "#0474BA",
                 "--color2": "#0474BA",
             }}
@@ -399,7 +408,7 @@ const Elder = () => {
                         ✕
                     </button>
 
-                    <div className="flex-1 overflow-y-auto p-5 pt-36 md:p-16 md:pt-40 lg:p-20 lg:pt-40 flex flex-col">
+                    <div data-lenis-prevent className="flex-1 overflow-y-auto p-5 pt-36 md:p-16 md:pt-40 lg:p-20 lg:pt-40 flex flex-col">
                         {activeItem && (
                             <>
                                 {/* A photo stands in for the title where there is one, so the name is not repeated */}

@@ -20,6 +20,7 @@ import {
 import { upload } from '@vercel/blob/client';
 import useEntrance from '@/hooks/useEntrance';
 import useScrollReveal from '@/hooks/useScrollReveal';
+import { smoothScrollTo } from '@/lib/smoothScroll';
 import {
     SUBMISSION_FOLDER,
     MAX_FILE_MB,
@@ -347,7 +348,7 @@ const SubmitScriptPage = ({ blobUploads = false }) => {
         requestAnimationFrame(() => {
             const first = formRef.current?.querySelector('[aria-invalid="true"]');
             if (first) {
-                first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                smoothScrollTo(first, { center: true });
                 first.focus({ preventScroll: true });
             }
         });
@@ -423,7 +424,7 @@ const SubmitScriptPage = ({ blobUploads = false }) => {
             }
 
             setSubmitted(true);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            smoothScrollTo(0);
         } catch (err) {
             setSubmitError(
                 err?.message && err.message !== 'Request failed' && !/fetch/i.test(err.message)
@@ -815,7 +816,7 @@ const SubmitScriptPage = ({ blobUploads = false }) => {
                             {/* ------------------ 4. LEGAL DISCLAIMER (optional) ------------------ */}
                             {hasLegal && (
                                 <FormSection number="04" title="Legal disclaimer">
-                                    <div className="form-element border border-[#202020] bg-white p-5 sm:p-6 max-h-72 overflow-y-auto flex flex-col gap-3">
+                                    <div className="form-element border border-[#202020] bg-white p-5 sm:p-6 max-h-72 overflow-y-auto flex flex-col gap-3" data-lenis-prevent>
                                         {LEGAL_DISCLAIMER.map((para, i) => (
                                             <p key={i} className="text-[13px] sm:text-[14px] text-[#555] leading-relaxed">
                                                 {para}
