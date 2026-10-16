@@ -3,24 +3,40 @@ import React, { useRef, useEffect } from 'react';
 import { useGLTF, Environment, Center } from '@react-three/drei';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-import gsap from 'gsap';
-import ScrollTrigger from 'gsap/dist/ScrollTrigger';
+// The same GSAP + ScrollTrigger instance as the rest of the site, so these triggers update in
+// step with Lenis instead of on a second, separate copy listening to the scroll on its own
+import { gsap } from '@/lib/motion';
 import { modelIntro, setModelReady } from '@/lib/homeIntro';
 
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
+// Reused every frame while the model follows the header logo / footer, instead of allocating new vectors
+const _point = new THREE.Vector3();
+const _dir = new THREE.Vector3();
+const _dockPos = new THREE.Vector3();
+const _footerPos = new THREE.Vector3();
+const TURN = Math.PI * 2;
+
+// Where the centre of a DOM element lands on the z = 0 plane the model moves in
+function elementToWorld(el, size, camera, out) {
+  const rect = el.getBoundingClientRect();
+  const x = ((rect.left + rect.width / 2) / size.width) * 2 - 1;
+  const y = -((rect.top + rect.height / 2) / size.height) * 2 + 1;
+  _point.set(x, y, 0).unproject(camera);
+  _dir.copy(_point).sub(camera.position).normalize();
+  const distance = -camera.position.z / _dir.z;
+  return out.copy(camera.position).add(_dir.multiplyScalar(distance));
 }
 
-export function Model(props) {
+export function Model({ onDrawingChange, ...props }) {
   const { scene } = useGLTF('/model/headphones.glb');
   const introRef = useRef();
   const groupRef = useRef();
   const spinRef = useRef();
   const { size, camera, gl, scene: rootScene } = useThree();
 
-  const stateRef = useRef({ footerProgress: 0 });
+  // dockP: 0 in the hero, 1 once shrunk into the header's top-left corner
+  const stateRef = useRef({ footerProgress: 0, dockP: 0, minimised: false });
   const heroTlRef = useRef(null);
-  const dockRef = useRef({ canvas: null, logo: null, last: -1 });
+  const dockRef = useRef({ canvas: null, logo: null, footer: null, last: -1, drawing: true });
   const isDragging = useRef(false);
   const previousMouse = useRef({ x: 0, y: 0 });
   const targetRotation = useRef({ x: 0, y: 0 });
@@ -35,7 +51,8 @@ export function Model(props) {
       isDragging.current = false;
     };
     const handlePointerMove = (e) => {
-      if (isDragging.current) {
+      // No dragging while it sits minimised in the corner
+      if (isDragging.current && !stateRef.current.minimised) {
         const deltaX = e.clientX - previousMouse.current.x;
         targetRotation.current.y += deltaX * 0.01;
         previousMouse.current = { x: e.clientX, y: e.clientY };
@@ -44,11 +61,14 @@ export function Model(props) {
 
     window.addEventListener('pointerdown', handlePointerDown);
     window.addEventListener('pointerup', handlePointerUp);
+    // A touch that turns into a scroll ends in pointercancel, not pointerup
+    window.addEventListener('pointercancel', handlePointerUp);
     window.addEventListener('pointermove', handlePointerMove);
 
     return () => {
       window.removeEventListener('pointerdown', handlePointerDown);
       window.removeEventListener('pointerup', handlePointerUp);
+      window.removeEventListener('pointercancel', handlePointerUp);
       window.removeEventListener('pointermove', handlePointerMove);
     };
   }, []);
@@ -85,71 +105,55 @@ export function Model(props) {
       introRef.current.scale.setScalar(modelIntro.scale);
     }
 
-    // 0. Dock: as the shrinking model reaches the top it cross-fades into the flat logo
-    //    centred in the header, and comes back when the hero (or the footer) needs it
+    const { footerProgress, dockP } = stateRef.current;
     const dock = dockRef.current;
-    if (!dock.canvas) dock.canvas = document.getElementById('hero-logo-canvas');
-    if (!dock.logo || !dock.logo.isConnected) dock.logo = document.getElementById('header-dock-logo');
-    if (dock.canvas) {
-      const heroP = heroTlRef.current ? heroTlRef.current.progress() : 0;
-      const t = THREE.MathUtils.clamp((heroP - 0.75) / 0.25, 0, 1);
-      const docked = t * t * (3 - 2 * t);
-      const back = THREE.MathUtils.clamp(stateRef.current.footerProgress * 5, 0, 1);
-      const logoOpacity = docked * (1 - back);
 
-      if (Math.abs(logoOpacity - dock.last) > 0.001) {
-        dock.last = logoOpacity;
-        dock.canvas.style.opacity = String(Math.max(1 - docked, back));
-        if (dock.logo) {
-          dock.logo.style.opacity = String(logoOpacity);
-          dock.logo.style.visibility = logoOpacity > 0.01 ? 'visible' : 'hidden';
-          dock.logo.style.pointerEvents = logoOpacity > 0.5 ? 'auto' : 'none';
-        }
-      }
-    }
-
-    // 1. Follow the footer div position
+    // 1. Shrink towards the dock logo in the header's top-left corner, then follow the footer div
     if (groupRef.current) {
-      const footerProgress = stateRef.current.footerProgress;
+      const pos = groupRef.current.position;
+
+      // Docked spot (the centre of the header logo), blended in as the hero timeline scrolls
+      _dockPos.set(0, 0, 0);
+      if (dockP > 0) {
+        if (!dock.logo || !dock.logo.isConnected) dock.logo = document.getElementById('header-dock-logo');
+        if (dock.logo) elementToWorld(dock.logo, size, camera, _dockPos).multiplyScalar(dockP);
+        else _dockPos.set(0, 3 * dockP, 0);
+      }
+      pos.copy(_dockPos);
 
       if (footerProgress > 0) {
-        const targetDiv = document.getElementById('footer-headphone');
-        if (targetDiv) {
-          const rect = targetDiv.getBoundingClientRect();
-          // Map center of the div in screen coordinates (-1 to 1)
-          const x = ((rect.left + rect.width / 2) / size.width) * 2 - 1;
-          const y = -((rect.top + rect.height / 2) / size.height) * 2 + 1;
-
-          // Unproject to 3D space
-          const vector = new THREE.Vector3(x, y, 0);
-          vector.unproject(camera);
-          const dir = vector.sub(camera.position).normalize();
-          const distance = -camera.position.z / dir.z;
-          const targetPos = camera.position.clone().add(dir.multiplyScalar(distance));
-
-          const startX = 0;
-          const startY = 3;
+        if (!dock.footer || !dock.footer.isConnected) dock.footer = document.getElementById('footer-headphone');
+        if (dock.footer) {
+          const targetPos = elementToWorld(dock.footer, size, camera, _footerPos);
 
           // Eased progress for smooth transition matching GSAP
           const easeProgress = footerProgress < 0.5
             ? 2 * footerProgress * footerProgress
             : 1 - Math.pow(-2 * footerProgress + 2, 2) / 2;
 
-          groupRef.current.position.x = startX + (targetPos.x - startX) * easeProgress;
-          groupRef.current.position.y = startY + (targetPos.y - startY) * easeProgress;
-          groupRef.current.position.z = targetPos.z * easeProgress;
+          pos.lerp(targetPos, easeProgress);
         }
       }
     }
 
-    // 2. Mouse Rotation
+    // 2. Rotation
     if (spinRef.current) {
+      // Minimised (shrinking into or sitting in the corner): stop spinning and settle facing front,
+      // so it lines up with the flat header logo it cross-fades into
+      const minimised = dockP > 0.02 && footerProgress === 0;
+      if (minimised && !stateRef.current.minimised) {
+        targetRotation.current.y = Math.round(spinRef.current.rotation.y / TURN) * TURN;
+        isDragging.current = false;
+      }
+      stateRef.current.minimised = minimised;
+
       // Smoothly interpolate current rotation to target drag rotation
       spinRef.current.rotation.y = THREE.MathUtils.lerp(spinRef.current.rotation.y, targetRotation.current.y, 0.1);
 
       // Auto rotate locally when in hero and not dragging
-      if (stateRef.current.footerProgress === 0 && !isDragging.current) {
-        targetRotation.current.y += delta * 0.5;
+      if (!minimised && footerProgress === 0 && !isDragging.current) {
+        // Capped so a long frame (or the first one after drawing resumes) never jumps the spin
+        targetRotation.current.y += Math.min(delta, 0.1) * 0.5;
       }
     }
   });
@@ -157,9 +161,44 @@ export function Model(props) {
   useEffect(() => {
     if (!groupRef.current) return;
 
+    // 0. Dock: as the shrinking model reaches the top it cross-fades into the flat logo
+    //    in the header's top-left corner, and comes back when the hero (or the footer) needs it.
+    //    Driven by the scroll timelines below instead of every frame; while the canvas is fully
+    //    faded out it stops drawing altogether (it covers the whole screen).
+    const dock = dockRef.current;
+    const updateDock = () => {
+      if (!dock.canvas) dock.canvas = document.getElementById('hero-logo-canvas');
+      if (!dock.logo || !dock.logo.isConnected) dock.logo = document.getElementById('header-dock-logo');
+      if (!dock.canvas) return;
+
+      const heroP = heroTlRef.current ? heroTlRef.current.progress() : 0;
+      const t = THREE.MathUtils.clamp((heroP - 0.75) / 0.25, 0, 1);
+      const docked = t * t * (3 - 2 * t);
+      const back = THREE.MathUtils.clamp(stateRef.current.footerProgress * 5, 0, 1);
+      const logoOpacity = docked * (1 - back);
+      const canvasOpacity = Math.max(1 - docked, back);
+
+      if (Math.abs(logoOpacity - dock.last) > 0.001) {
+        dock.last = logoOpacity;
+        dock.canvas.style.opacity = String(canvasOpacity);
+        if (dock.logo) {
+          dock.logo.style.opacity = String(logoOpacity);
+          dock.logo.style.visibility = logoOpacity > 0.01 ? 'visible' : 'hidden';
+          dock.logo.style.pointerEvents = logoOpacity > 0.5 ? 'auto' : 'none';
+        }
+      }
+
+      const drawing = canvasOpacity > 0.001;
+      if (drawing !== dock.drawing) {
+        dock.drawing = drawing;
+        onDrawingChange?.(drawing);
+      }
+    };
+
     const ctx = gsap.context(() => {
       // Hero to Navbar timeline
       const tl = gsap.timeline({
+        onUpdate: updateDock,
         scrollTrigger: {
           trigger: document.body,
           start: "top -49%",
@@ -180,7 +219,8 @@ export function Model(props) {
 
       heroTlRef.current = tl;
       tl.to(groupRef.current.scale, { x: 1, y: 1, z: 1, ease: "power2.inOut" }, 0);
-      tl.to(groupRef.current.position, { y: 3, ease: "power2.inOut" }, 0);
+      // The move itself happens every frame (useFrame), towards wherever the header logo is
+      tl.to(stateRef.current, { dockP: 1, ease: "power2.inOut" }, 0);
 
       // Footer timeline setup
       let mm = gsap.matchMedia();
@@ -195,6 +235,7 @@ export function Model(props) {
             scrub: 1,
             onUpdate: (self) => {
               stateRef.current.footerProgress = self.progress;
+              updateDock();
             }
           }
         });
@@ -211,6 +252,7 @@ export function Model(props) {
 
             onUpdate: (self) => {
               stateRef.current.footerProgress = self.progress;
+              updateDock();
             }
           }
         });
@@ -227,6 +269,7 @@ export function Model(props) {
 
             onUpdate: (self) => {
               stateRef.current.footerProgress = self.progress;
+              updateDock();
             }
           }
         });
@@ -234,8 +277,16 @@ export function Model(props) {
       });
     });
 
-    return () => ctx.revert();
-  }, []);
+    updateDock();
+
+    return () => {
+      ctx.revert();
+      if (!dock.drawing) {
+        dock.drawing = true;
+        onDrawingChange?.(true);
+      }
+    };
+  }, [onDrawingChange]);
 
   return (
     <group ref={introRef}>
@@ -254,6 +305,8 @@ useGLTF.preload('/model/headphones.glb');
 
 export default function HeadphonesCanvas() {
   const [modelScale, setModelScale] = React.useState(30);
+  // False while the model is docked in the header and this canvas is fully faded out
+  const [drawing, setDrawing] = React.useState(true);
 
   useEffect(() => {
     const updateScale = () => {
@@ -274,12 +327,18 @@ export default function HeadphonesCanvas() {
   return (
     <div id="hero-logo-canvas" className="fixed inset-0 z-10 pointer-events-none flex items-center justify-center">
       <div id="3d-canvas-container" className="w-full h-full pointer-events-auto">
-        <Canvas camera={{ position: [0, 0, 8], fov: 45 }} className="w-full h-full">
+        <Canvas
+          camera={{ position: [0, 0, 8], fov: 45 }}
+          className="w-full h-full"
+          frameloop={drawing ? "always" : "never"}
+          // Full-screen canvas: capped at 1.5x it looks the same and draws ~45% fewer pixels than 2x
+          dpr={[1, 1.5]}
+        >
           <ambientLight intensity={1} />
           <directionalLight position={[10, 10, 5]} intensity={0} />
           <directionalLight position={[-10, -10, -5]} intensity={0} />
           <Environment preset="city" />
-          <Model position={[0, 0, 0]} scale={modelScale} />
+          <Model position={[0, 0, 0]} scale={modelScale} onDrawingChange={setDrawing} />
         </Canvas>
       </div>
     </div>

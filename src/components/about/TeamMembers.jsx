@@ -192,7 +192,7 @@ const TeamMembers = () => {
             {activePerson.profile && (
               <Link
                 href={activePerson.profile}
-                className="inline-flex items-center gap-2 bg-[#0474BA] hover:bg-[#0666a1] text-white px-[22px] py-[11px] text-[13px] leading-none tracking-wider font-semibold rounded-[3px] transition-colors duration-300 group"
+                className="inline-flex items-center gap-2 bg-[#1B123D] hover:bg-[#2A1D5C] text-white px-[22px] py-[11px] text-[13px] leading-none tracking-wider font-semibold rounded-[3px] transition-colors duration-300 group"
               >
                 <span>View Full Profile</span>
                 <span className="transform group-hover:translate-x-1 transition-transform">→</span>

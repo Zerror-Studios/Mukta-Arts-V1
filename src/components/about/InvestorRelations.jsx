@@ -171,7 +171,7 @@ const InvestorRelations = () => {
                 href={`${IR}/Unpaid-Dividend-Information.php`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-4 inline-flex w-fit items-center gap-2 bg-[#0474BA] hover:bg-[#0666a1] text-white px-6 py-2.5 text-xs md:text-sm tracking-wider font-semibold rounded-[3px] transition-colors duration-300 group"
+                className="mt-4 inline-flex w-fit items-center gap-2 bg-[#1B123D] hover:bg-[#2A1D5C] text-white px-6 py-2.5 text-xs md:text-sm tracking-wider font-semibold rounded-[3px] transition-colors duration-300 group"
               >
                 <span>Unclaimed Dividend</span>
                 <span className="transform group-hover:translate-x-1 transition-transform">→</span>

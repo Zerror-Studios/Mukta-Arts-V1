@@ -28,8 +28,10 @@ const Header = () => {
     if (tl.current) tl.current.kill();
     tl.current = gsap.timeline({ paused: true });
 
+    // autoAlpha: while the menu is closed the overlay is also visibility:hidden, so the browser
+    // never works on its full-screen backdrop blur during normal scrolling
     tl.current.to(bgOverlayRef.current, {
-      opacity: 1,
+      autoAlpha: 1,
       pointerEvents: "auto",
       duration: 0.8,
       ease: "power2.inOut"
@@ -83,7 +85,7 @@ const Header = () => {
 
     // Fade out menu contents (including dropdown sub-items)
     gsap.to('.menu-item-text, .menu-line, .menu-subitem-text', { opacity: 0, duration: 0.4, ease: 'power2.inOut', stagger: 0.02 });
-    gsap.to(bgOverlayRef.current, { opacity: 0, duration: 0.5, ease: 'power2.inOut' });
+    gsap.to(bgOverlayRef.current, { autoAlpha: 0, duration: 0.5, ease: 'power2.inOut' });
 
     // Expand menu to cover screen
     gsap.to(menuOverlayRef.current, {
@@ -155,30 +157,28 @@ const Header = () => {
 
   return (
     <header ref={containerRef} className="fixed top-0 left-0 w-full z-50 p-6 md:p-8 flex justify-between items-center pointer-events-none z-99999">
-      <div className="pointer-events-auto relative z-[60]">
-        {pathname !== '/' && (
+      <div className={`${pathname === '/' ? 'pointer-events-none' : 'pointer-events-auto'} relative z-[60]`}>
+        {pathname !== '/' ? (
           <Link href="/">
             <img src="/img/logo/logo.png" alt="Logo" className="h-8 md:h-12 w-auto object-contain" />
+          </Link>
+        ) : (
+          // Home only: the 3D logo docks here once it reaches the top left (HeadphonesModel drives the opacity)
+          <Link
+            id="header-dock-logo"
+            href="/"
+            aria-label="Mukta Arts home"
+            className="block opacity-0 invisible pointer-events-none"
+          >
+            <img src="/img/sg/HeadLogo.png" alt="Mukta Arts" className="h-11 md:h-14 w-auto object-contain" draggable={false} />
           </Link>
         )}
       </div>
 
-      {/* Home only: the 3D logo docks here once it reaches the top (HeadphonesModel drives the opacity) */}
-      {pathname === '/' && (
-        <Link
-          id="header-dock-logo"
-          href="/"
-          aria-label="Mukta Arts home"
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[60] opacity-0 invisible pointer-events-none"
-        >
-          <img src="/img/sg/HeadLogo.png" alt="Mukta Arts" className="h-11 md:h-14 w-auto object-contain" draggable={false} />
-        </Link>
-      )}
-
       {/* Background Blur Overlay */}
       <div
         ref={bgOverlayRef}
-        className="fixed inset-0 w-screen h-screen bg-black/70 opacity-0 pointer-events-none z-[40]"
+        className="fixed inset-0 w-screen h-screen bg-black/70 opacity-0 invisible pointer-events-none z-[40]"
         style={{ backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)' }}
         onClick={() => setIsMenuOpen(false)}
       ></div>
@@ -193,9 +193,9 @@ const Header = () => {
       >
         <button
           ref={menuButtonRef}
-          className={`relative flex items-center justify-center gap-3 px-7 py-1 overflow-hidden group transition-colors duration-300 ${isMenuOpen ? 'bg-white text-[#0474BA]' : 'bg-[#111] text-white hover:bg-[#222]'}`}
+          className={`relative flex items-center justify-center gap-3 px-7 py-1 overflow-hidden group transition-colors duration-300 ${isMenuOpen ? 'bg-white text-[#1B123D]' : 'bg-[#111] text-white hover:bg-[#222]'}`}
         >
-          <div className={`absolute inset-0 translate-y-[101%] group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] ${isMenuOpen ? 'bg-[#111]' : 'bg-[#0474BA]'}`}></div>
+          <div className={`absolute inset-0 translate-y-[101%] group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] ${isMenuOpen ? 'bg-[#111]' : 'bg-[#1B123D]'}`}></div>
           <span
             ref={menuTextRef}
             className={`relative z-10 transition-colors duration-500 delay-100 block min-w-[3rem] text-center ${isMenuOpen ? 'group-hover:text-white' : ''}`}
@@ -208,7 +208,7 @@ const Header = () => {
       {/* Side Menu Overlay */}
       <div
         ref={menuOverlayRef}
-        className="fixed top-0 right-0 w-full md:w-[50vw] h-[100svh] bg-[#0474BA] translate-x-full pointer-events-auto flex flex-col justify-center px-8 md:px-20 z-50 shadow-2xl"
+        className="fixed top-0 right-0 w-full md:w-[50vw] h-[100svh] bg-[#1B123D] translate-x-full pointer-events-auto flex flex-col justify-center px-8 md:px-20 z-50 shadow-2xl"
       >
 
         <div className="flex flex-col w-full relative mt-[20vh] mb-auto">

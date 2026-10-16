@@ -60,7 +60,7 @@ export default async function Image() {
             width: 56,
             height: 3,
             marginTop: 30,
-            backgroundColor: "#0474BA",
+            backgroundColor: "#1B123D",
           }}
         />
         <div

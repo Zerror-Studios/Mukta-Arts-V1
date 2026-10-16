@@ -96,7 +96,7 @@ const MNFILMS = () => {
                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-x-16 md:gap-y-16">
                     {highlights.map((text, i) => (
                         <li key={i} data-reveal="rise" className="border-l border-[#D4D4D4] pl-6 lg:pl-8">
-                            <span className="block font-mono text-xs tracking-[0.2em] text-[#0474BA] mb-4">
+                            <span className="block font-mono text-xs tracking-[0.2em] text-[#1B123D] mb-4">
                                 {String(i + 1).padStart(2, "0")}
                             </span>
                             <p className="text-[#555] text-base! md:text-lg! leading-relaxed max-w-[560px]">

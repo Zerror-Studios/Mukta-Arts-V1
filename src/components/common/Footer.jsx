@@ -9,7 +9,7 @@ export default function Footer() {
   const isHome = pathname === '/';
 
   return (
-    <div id="footer" className="min-h-screen bg-[#0474BA] text-white flex flex-col font-sans relative overflow-hidden">
+    <div id="footer" className="min-h-screen bg-[#1B123D] text-white flex flex-col font-sans relative overflow-hidden">
 
       {/* Top Navigation / Stats Bar */}
       <div className="w-full flex flex-wrap justify-between items-center px-4 md:px-8 py-4 text-[10px] md:text-xs font-semibold tracking-wider uppercase opacity-90">

@@ -522,6 +522,7 @@ import { useTexture } from "@react-three/drei";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { smoothScrollTo } from "@/lib/smoothScroll";
+import useInView from "@/hooks/useInView";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -883,6 +884,8 @@ export default function WWAcademicPrograms({
   showControls = true, // show the slider under the image
 }) {
   const sectionRef = useRef(null);
+  // The ripple canvas only draws while the section is near the screen
+  const inView = useInView(sectionRef);
   const stRef = useRef(null);
   const targetRef = useRef(0); // float 0 .. n-1, driven by scroll
   const prevActive = useRef(0);
@@ -999,6 +1002,7 @@ export default function WWAcademicPrograms({
       <div className="relative order-2 z-10 aspect-4/5 max-h-[52svh] w-full shrink-0 overflow-hidden shadow-2xl sm:aspect-[1.28/1] md:absolute md:left-1/2 md:top-1/2 md:max-h-[76vh] md:w-[41vw] md:-translate-x-1/2 md:-translate-y-1/2">
         <Canvas
           dpr={[1, 2]}
+          frameloop={inView ? "always" : "never"}
           camera={{ position: [0, 0, 5], fov: 35 }}
           gl={{ antialias: true, alpha: true }}
           style={{ background: "#e5e7eb" }}

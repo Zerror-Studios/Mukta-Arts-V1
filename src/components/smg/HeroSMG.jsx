@@ -15,7 +15,7 @@ const HeroSMG = () => {
             <div className="absolute inset-0 w-full h-full z-0">
                 {/* Note: Placeholder â€” replace with an SGM Studios still */}
                 <img
-                    src="https://images.unsplash.com/photo-1635322966219-b75ed372eb01?q=80&w=1740&auto=format&fit=crop"
+                    src="/img/final/home/home2/2O5A4368.webp"
                     alt="SGM Studios Background"
                     className="object-cover w-full h-full object-center"
                 />

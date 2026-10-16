@@ -68,7 +68,7 @@ const HeroSG = () => {
                     className="relative order-1 lg:order-2 h-[400px] md:h-[600px] lg:h-[700px]"
                 >
                     <img
-                        src="/img/sg/1.jpg"
+                        src="/img/final/SG/S1/DSC00988 2_2_11zon.webp"
                         alt="Subhash Ghai"
                         className="w-full h-full object-cover object-center"
                     />

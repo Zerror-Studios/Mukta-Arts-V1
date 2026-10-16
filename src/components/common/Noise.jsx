@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { div } from "three/src/nodes/math/OperatorNode";
 
 export default function Noise({
   opacity = 0.09,      // overlay strength (0–1)

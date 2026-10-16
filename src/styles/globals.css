@@ -8,8 +8,13 @@
 @custom-variant short (@media (max-height: 500px));
 
 * {
-  scroll-behavior: smooth;
   user-select: none;
+}
+
+/* Native smooth scrolling only when Lenis is off (reduced motion). With Lenis running it would
+   fight Lenis and ScrollTrigger's own instant scroll jumps, which shows up as jitter. */
+html:not(.lenis) {
+  scroll-behavior: smooth;
 }
 
 body {

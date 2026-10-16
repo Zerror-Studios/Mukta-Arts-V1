@@ -120,6 +120,7 @@ const Elder = () => {
     const popupsRef = useRef([]);
     const finalRef = useRef(null);
     const overlayRef = useRef(null);
+    const bgRef = useRef(null);
     const panelRef = useRef(null);
     const [activeItem, setActiveItem] = useState(null);
     const scrollTimeout = useRef(null);
@@ -138,8 +139,12 @@ const Elder = () => {
     }, { scope: panelRef, dependencies: [activeItem] });
 
     useEffect(() => {
+        // Wheel events fire dozens of times a second: only touch the overlay's classes when
+        // the zoom actually switches, so the page is not restyled on every event
+        let zoomed = false;
         const handleScroll = () => {
-            if (overlayRef.current) {
+            if (!zoomed && overlayRef.current) {
+                zoomed = true;
                 overlayRef.current.classList.add('scale-[1.03]');
                 overlayRef.current.classList.remove('scale-100');
             }
@@ -147,6 +152,7 @@ const Elder = () => {
                 clearTimeout(scrollTimeout.current);
             }
             scrollTimeout.current = setTimeout(() => {
+                zoomed = false;
                 if (overlayRef.current) {
                     overlayRef.current.classList.remove('scale-[1.03]');
                     overlayRef.current.classList.add('scale-100');
@@ -190,7 +196,7 @@ const Elder = () => {
             tl.to(titlesRef.current[i], { color: "#ffffff", opacity: 1, duration: 1 }, `step${i}`);
 
             // Change background gradient smoothly over the entire scroll of this item
-            tl.to(containerRef.current, {
+            tl.to(bgRef.current, {
                 "--color1": item.color1,
                 "--color2": item.color2,
                 duration: 3.5,
@@ -227,7 +233,7 @@ const Elder = () => {
         });
 
         // Fade in final text container & change background to final smoothly
-        tl.to(containerRef.current, {
+        tl.to(bgRef.current, {
             "--color1": finalColors.color1,
             "--color2": finalColors.color2,
             duration: 3,
@@ -254,26 +260,32 @@ const Elder = () => {
         <div
             ref={containerRef}
             className="w-full relative z-[888] text-white overflow-clip"
-            style={{
-                height: SECTION_HEIGHT,
-                "--color1": "#0474BA",
-                "--color2": "#0474BA",
-            }}
+            style={{ height: SECTION_HEIGHT }}
         >
-            <div
-                className="w-full h-[100vh] sticky top-0 left-0 overflow-hidden flex items-center justify-center"
-                style={{ background: "linear-gradient(135deg, var(--color1) 0%, var(--color2) 100%)" }}
-            >
+            <div className="w-full h-[100vh] sticky top-0 left-0 overflow-hidden flex items-center justify-center">
+
+                {/* The gradient sits on its own empty layer: its colours change on every scroll frame, and
+                    on the section itself that would restyle every element inside it each time */}
+                <div
+                    ref={bgRef}
+                    aria-hidden="true"
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                        "--color1": "#1B123D",
+                        "--color2": "#1B123D",
+                        background: "linear-gradient(135deg, var(--color1) 0%, var(--color2) 100%)",
+                    }}
+                />
 
                 {/* Camera Recording Overlay */}
-                <div ref={overlayRef} className="absolute inset-0 pointer-events-none z-[880] transition-transform duration-500 ease-out flex items-center justify-center scale-100">
-                    {/* Top Left - REC */}
+                {/* <div ref={overlayRef} className="absolute inset-0 pointer-events-none z-[880] transition-transform duration-500 ease-out flex items-center justify-center scale-100">
+                   
                     <div className="absolute top-6 left-4 md:top-28 md:left-16 flex items-center gap-2 md:gap-3">
                         <div className="w-2 h-2 md:w-4 md:h-4 bg-red-600 rounded-full animate-[pulse_1.5s_ease-in-out_infinite]"></div>
                         <span className="text-white font-mono text-xs md:text-base tracking-widest font-bold">REC</span>
                     </div>
 
-                    {/* Top Right - Specs */}
+                 
                     <div className="absolute top-6 right-4 md:top-28 md:right-16 flex items-center gap-2 md:gap-4">
                         <span className="text-white/80 font-mono text-[10px] md:text-sm">4K</span>
                         <span className="text-white/80 font-mono text-[10px] md:text-sm border border-white/40 px-1">60FPS</span>
@@ -282,32 +294,32 @@ const Elder = () => {
                         </div>
                     </div>
 
-                    {/* Bottom Left - Settings */}
+                    
                     <div className="absolute bottom-6 left-4 md:bottom-28 md:left-16 text-white/80 font-mono text-[10px] md:text-sm flex gap-2 md:gap-3">
                         <span>ISO 800</span>
                         <span>F/2.8</span>
                         <span>1/50</span>
                     </div>
 
-                    {/* Bottom Right - Timecode */}
+                    
                     <div className="absolute bottom-6 right-4 md:bottom-28 md:right-16 text-white/80 font-mono text-[10px] md:text-sm">
                         TC 01:23:45:12
                     </div>
 
-                    {/* Center Focus Area */}
+                   
                     <div className="opacity-40 w-[95%] h-[75%] absolute inset-0 m-auto pointer-events-none">
                         <div className="w-full h-full border border-white/20 relative">
-                            {/* Focus Corners */}
+                           
                             <div className="absolute -top-[1px] -left-[1px] w-6 h-6 border-t-[3px] border-l-[3px] border-white"></div>
                             <div className="absolute -top-[1px] -right-[1px] w-6 h-6 border-t-[3px] border-r-[3px] border-white"></div>
                             <div className="absolute -bottom-[1px] -left-[1px] w-6 h-6 border-b-[3px] border-l-[3px] border-white"></div>
                             <div className="absolute -bottom-[1px] -right-[1px] w-6 h-6 border-b-[3px] border-r-[3px] border-white"></div>
 
-                            {/* Center Dot */}
+                           
                             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-1 bg-white/60 rounded-full"></div>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
                 {/* List Container */}
                 <div className="absolute max-sm:top-1/2  left-4 md:left-12 lg:left-20 md:top-1/2 -translate-y-1/2 z-10 pointer-events-none w-full max-w-[85vw] md:max-w-[55vw]">
@@ -337,7 +349,7 @@ const Elder = () => {
                         style={{ willChange: "transform, opacity" }}
                     >
                         <div className="w-full aspect-video relative overflow-hidden shadow-2xl rounded-sm">
-                            <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                            <img src={item.image} alt={item.title} decoding="async" className="w-full h-full object-cover" />
                         </div>
                         <div>
                             <h3 className="text-white font-semibold text-sm md:text-lg lg:text-xl mb-1">{item.title}</h3>
@@ -354,7 +366,7 @@ const Elder = () => {
                                     <Link
                                         href={item.link}
                                         onClick={(e) => e.stopPropagation()}
-                                        className="inline-flex items-center gap-2 bg-[#0474BA] hover:bg-[#0666a1] text-white px-4 py-2 md:px-6 md:py-2.5 text-[10px] md:text-sm tracking-wider font-semibold rounded-[3px] transition-all duration-300 shadow-md hover:shadow-lg group cursor-pointer"
+                                        className="inline-flex items-center gap-2 bg-[#1B123D] hover:bg-[#2A1D5C] text-white px-4 py-2 md:px-6 md:py-2.5 text-[10px] md:text-sm tracking-wider font-semibold rounded-[3px] transition-all duration-300 shadow-md hover:shadow-lg group cursor-pointer"
                                     >
                                         <span>View More</span>
                                         <span className="transform group-hover:translate-x-1 transition-transform">→</span>
@@ -399,7 +411,7 @@ const Elder = () => {
                 {/* Sidebar for Full Description */}
                 <div
                     ref={panelRef}
-                    className={`fixed top-0 right-0 h-[100dvh] w-full md:w-[50vw] bg-[#0474BA] backdrop-blur-2xl border-l border-white/10 z-[888] transform transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] ${activeItem ? 'translate-x-0' : 'translate-x-full'} pointer-events-auto shadow-2xl flex flex-col`}
+                    className={`fixed top-0 right-0 h-[100dvh] w-full md:w-[50vw] bg-[#1B123D] border-l border-white/10 z-[888] transform transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] ${activeItem ? 'translate-x-0' : 'translate-x-full'} pointer-events-auto shadow-2xl flex flex-col`}
                 >
                     <button
                         onClick={() => setActiveItem(null)}

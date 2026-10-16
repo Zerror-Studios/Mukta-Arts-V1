@@ -1,25 +1,27 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import Link from "next/link";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useGLTF, Environment, ContactShadows, OrbitControls } from "@react-three/drei";
+import { useGLTF, Environment, ContactShadows } from "@react-three/drei";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import * as THREE from "three";
 import useAfterIntro from "@/hooks/useAfterIntro";
 import useInView from "@/hooks/useInView";
+import useGpuWarmup from "@/hooks/useGpuWarmup";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function FilmReel() {
+function FilmReel({ running }) {
     const marqueeRef = useRef();
+    const tweenRef = useRef(null);
 
     useGSAP(() => {
         if (marqueeRef.current) {
             // Infinite horizontal scrolling from left to right (or right to left)
-            gsap.to(marqueeRef.current, {
+            tweenRef.current = gsap.to(marqueeRef.current, {
                 x: "-50%", // Move half the width
                 duration: 25,
                 repeat: -1,
@@ -27,6 +29,11 @@ function FilmReel() {
             });
         }
     });
+
+    // Only runs while the section is near the screen
+    useEffect(() => {
+        tweenRef.current?.paused(!running);
+    }, [running]);
 
     // Section 9 of the home page content doc: five frames, one figure each
     const content = [
@@ -89,6 +96,8 @@ function FilmReel() {
 
 function CameraModel({ url }) {
     const { scene } = useGLTF(url);
+    // The camera is a heavy model: get it onto the GPU before the section is reached
+    useGpuWarmup();
     const modelRef = useRef();
 
     useGSAP(() => {
@@ -235,7 +244,7 @@ export default function OldCamera() {
                 </h2>
 
                 {/* Text Content */}
-                <div className="absolute top-[40%] md:top-[45%] -translate-y-1/2 left-[5%] md:left-[4%] w-[90%] md:max-w-lg z-[70] text-black pointer-events-none">
+                <div className="absolute  top-[45%] sm:top-[40%] md:top-[45%] -translate-y-1/2 left-[5%] md:left-[4%] w-[90%] md:max-w-lg z-[70] text-black pointer-events-none">
 
                     {/* Paragraph Slides Wrapper */}
                     <div className="relative min-h-[310px] sm:min-h-[270px] md:min-h-[230px]">
@@ -244,7 +253,7 @@ export default function OldCamera() {
                             <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight uppercase mb-1 md:mb-2">
                                 THE FILMMAKER
                             </h3>
-                            <h5 className="text-base sm:text-lg md:text-xl font-medium text-[#0474BA] mb-3 md:mb-4 leading-snug">
+                            <h5 className="text-base sm:text-lg md:text-xl font-medium text-[#1B123D] mb-3 md:mb-4 leading-snug">
                                 A Legacy in Indian Cinema
                             </h5>
                             <p className="text-sm md:text-base opacity-90 leading-relaxed mb-4 md:mb-5">
@@ -257,7 +266,7 @@ export default function OldCamera() {
                             <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight uppercase mb-1 md:mb-2">
                                 THE VISIONARY
                             </h3>
-                            <h5 className="text-base sm:text-lg md:text-xl font-medium text-[#0474BA] mb-3 md:mb-4 leading-snug">
+                            <h5 className="text-base sm:text-lg md:text-xl font-medium text-[#1B123D] mb-3 md:mb-4 leading-snug">
                                 Building the Business of Cinema
                             </h5>
                             <p className="text-sm md:text-base opacity-90 leading-relaxed mb-4 md:mb-5">
@@ -270,7 +279,7 @@ export default function OldCamera() {
                             <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight uppercase mb-1 md:mb-2">
                                 THE EDUCATOR
                             </h3>
-                            <h5 className="text-base sm:text-lg md:text-xl font-medium text-[#0474BA] mb-3 md:mb-4 leading-snug">
+                            <h5 className="text-base sm:text-lg md:text-xl font-medium text-[#1B123D] mb-3 md:mb-4 leading-snug">
                                 Shaping the Next Generation
                             </h5>
                             <p className="text-sm md:text-base opacity-90 leading-relaxed mb-4 md:mb-5">
@@ -288,7 +297,7 @@ export default function OldCamera() {
                 >
                     <Link
                         href="/subhash-ghai"
-                        className="inline-flex items-center gap-2 bg-[#0474BA] hover:bg-[#0666a1] text-white px-6 py-2.5 text-xs md:text-sm tracking-wider font-semibold rounded-[3px] transition-all duration-300 shadow-md hover:shadow-lg group cursor-pointer"
+                        className="inline-flex items-center gap-2 bg-[#1B123D] hover:bg-[#2A1D5C] text-white px-6 py-2.5 text-xs md:text-sm tracking-wider font-semibold rounded-[3px] transition-all duration-300 shadow-md hover:shadow-lg group cursor-pointer"
                     >
                         <span>View More</span>
                         <span className="transform group-hover:translate-x-1 transition-transform">→</span>
@@ -302,7 +311,8 @@ export default function OldCamera() {
                             frameloop={inView ? "always" : "never"}
                             camera={{ position: [0, 0, 5], fov: 45 }}
                             className="w-full h-full pointer-events-none"
-                            dpr={[1, 2]} // Support for high-res screens
+                            // Full-screen canvas: capped at 1.5x it still looks sharp and draws ~45% fewer pixels than 2x
+                            dpr={[1, 1.5]}
                         >
                             <ambientLight intensity={0.4} />
                             <directionalLight position={[5, 10, 5]} intensity={1.2} />
@@ -320,7 +330,7 @@ export default function OldCamera() {
                     )}
                 </div>
 
-                <FilmReel />
+                <FilmReel running={inView} />
 
             </section>
         </div>

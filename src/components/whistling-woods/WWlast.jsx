@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { Draggable } from "gsap/dist/Draggable";
+import { Draggable } from "gsap/Draggable";
 import Image from "next/image";
 import useScrollReveal from "@/hooks/useScrollReveal";
 

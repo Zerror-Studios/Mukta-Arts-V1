@@ -462,13 +462,13 @@ const SubmitScriptPage = ({ blobUploads = false }) => {
                 </div>
 
                 {/* Banner Image */}
-                <div data-entrance="fade" className="relative w-full h-[220px] sm:h-[320px] md:h-[420px] lg:h-[480px] overflow-hidden mb-12 sm:mb-16 md:mb-20">
+                {/* <div data-entrance="fade" className="relative w-full h-[220px] sm:h-[320px] md:h-[420px] lg:h-[480px] overflow-hidden mb-12 sm:mb-16 md:mb-20">
                     <img
                         src="https://images.unsplash.com/photo-1515634928627-2a4e0dae3ddf?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                         alt="Script writing placeholder"
                         className="object-cover w-full h-full object-center"
                     />
-                </div>
+                </div> */}
 
                 {/* Form */}
                 {submitted ? (

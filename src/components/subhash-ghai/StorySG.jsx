@@ -12,7 +12,7 @@ const StorySG = () => {
     useParallax(sectionRef);
 
     return (
-        <section ref={sectionRef} className="bg-[#0b6baa] relative px-6 py-16 md:px-12 md:py-24 lg:px-10 overflow-hidden font-['SwitzerR']">
+        <section ref={sectionRef} className="bg-[#1B123D] relative px-6 py-16 md:px-12 md:py-24 lg:px-10 overflow-hidden font-['SwitzerR']">
 
 
             {/* Background Graphic Placeholder */}
@@ -42,7 +42,7 @@ const StorySG = () => {
                 <div className="lg:col-span-8 relative overflow-hidden h-[300px] sm:h-[420px] lg:h-[600px]">
                     <img
                         data-parallax="0.12"
-                        src="/img/sg/2.jpg"
+                        src="/img/final/SG/S2/SG_0067_3_11zon.webp"
                         alt="Subhash Ghai"
                         className="absolute left-0 top-0 w-full h-full object-cover object-center will-change-transform"
                     />

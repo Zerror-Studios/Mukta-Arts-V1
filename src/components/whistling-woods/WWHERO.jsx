@@ -16,7 +16,7 @@ const WWHERO = () => {
             {/* Background Image */}
             <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
                 <img
-                    src="https://images.unsplash.com/photo-1714970940471-a2aa9c7e2029?q=80&w=1740&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                    src="/img/final/WW/W1/0R2A2411_1_11zon_2_11zon.webp"
                     alt=""
                     fetchPriority="high"
                     className="object-cover w-full h-full object-center"
@@ -54,7 +54,7 @@ const WWHERO = () => {
                                     href={WEBSITE}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2 bg-[#0474BA] hover:bg-[#0666a1] text-white px-6 py-2.5 text-xs md:text-sm tracking-wider font-semibold rounded-[3px] transition-colors duration-300 group"
+                                    className="inline-flex items-center gap-2 bg-[#1B123D] hover:bg-[#2A1D5C] text-white px-6 py-2.5 text-xs md:text-sm tracking-wider font-semibold rounded-[3px] transition-colors duration-300 group"
                                 >
                                     <span>Visit Our Website</span>
                                     <span aria-hidden="true" className="transform group-hover:translate-x-1 transition-transform">→</span>

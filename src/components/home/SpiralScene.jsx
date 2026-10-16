@@ -7,9 +7,9 @@ import * as THREE from "three";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import FilmsSection from "./FilmsSection";
 import useAfterIntro from "@/hooks/useAfterIntro";
 import useInView from "@/hooks/useInView";
+import useGpuWarmup from "@/hooks/useGpuWarmup";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -171,6 +171,8 @@ const SpiralCards = ({ progressRef }) => {
   const smoothP = useRef(0);
   const hoverStates = useRef(new Array(NUM_CARDS).fill(false));
   const hoverScales = useRef(new Array(NUM_CARDS).fill(1));
+  // The nine posters go up to the GPU now, not on the first frame the spiral is scrolled to
+  useGpuWarmup();
 
   // Create one PlaneGeometry per card (shared would cause conflicts)
   const geometries = useMemo(() => {
@@ -392,6 +394,8 @@ export default function SpiralScene() {
         <Canvas
           className="spiral-canvas relative z-[1]"
           frameloop={inView ? "always" : "never"}
+          // Full-screen canvas: capped at 1.5x it looks the same and draws ~45% fewer pixels than 2x
+          dpr={[1, 1.5]}
           camera={{ position: [0, 0, 22], fov: 52 }}
           gl={{ antialias: true, alpha: true }}
           style={{ background: "transparent" }}

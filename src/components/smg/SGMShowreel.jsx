@@ -20,7 +20,7 @@ const reelItems = [
 const pad = (n) => String(n).padStart(2, "0");
 
 const arrowClass =
-    "w-12 h-12 rounded-full border border-black/20 text-black flex items-center justify-center transition-colors cursor-pointer hover:bg-[#0474BA] hover:border-[#0474BA] hover:text-white disabled:opacity-30 disabled:pointer-events-none";
+    "w-12 h-12 rounded-full border border-black/20 text-black flex items-center justify-center transition-colors cursor-pointer hover:bg-[#1B123D] hover:border-[#1B123D] hover:text-white disabled:opacity-30 disabled:pointer-events-none";
 
 // The showreel is the main event of this short page: large frames the visitor moves through
 // at their own pace (drag, swipe or arrows), snapping to each, with the next one peeking in.

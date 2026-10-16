@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { RiAddLine } from "@remixicon/react";
 
@@ -74,7 +74,7 @@ const BoardOfDirectors = () => {
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} className="relative w-full py-24 md:py-32 bg-[#00609C]">
+    <section ref={containerRef} className="relative w-full py-24 md:py-32 bg-[#1B123D]">
       {/* Optional: Very faint noise overlay if you want to mimic the texture exactly, but standard solid bg is cleaner */}
 
       <div className="w-full mx-auto px-4 md:px-8 relative z-10">
@@ -104,7 +104,7 @@ const BoardOfDirectors = () => {
               <div className="flex gap-2">
                 <a
                   href="#"
-                  className="w-8 h-8 flex items-center justify-center border border-white/20 text-white hover:bg-white hover:text-[#00609C] transition-colors duration-300"
+                  className="w-8 h-8 flex items-center justify-center border border-white/20 text-white hover:bg-white hover:text-[#1B123D] transition-colors duration-300"
                   aria-label={`More about ${director.name}`}
                 >
                   <RiAddLine size={18} />

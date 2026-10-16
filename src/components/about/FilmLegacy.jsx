@@ -20,7 +20,7 @@ const slides = [
         label: "Blockbusters",
       },
     ],
-    bg: "/img/last/1.jpg",
+    bg: "/img/final/SG/S3/SG_0055_3_11zon.webp",
   },
   {
     title: "THE INDUSTRY PIONEER",
@@ -41,7 +41,7 @@ const slides = [
         desc: "A pioneer in bringing digital projection to smaller centres across India.",
       },
     ],
-    bg: "/img/last/2.avif",
+    bg: "/img/final/SG/S3/pioneer_2_11zon.webp",
   },
   {
     title: "THE HUMANITARIAN",
@@ -62,7 +62,7 @@ const slides = [
         desc: "Supporting disaster relief, organ donation, national campaigns and charitable initiatives.",
       },
     ],
-    bg: "/img/last/3.jpg",
+    bg: "/img/final/SG/S3/humanitarian_1_11zon.webp",
   },
   {
     title: "THE HONOURS",
@@ -83,7 +83,7 @@ const slides = [
         desc: "Star Screen Awards, Amar Ujala & other industry honours",
       },
     ],
-    bg: "/img/last/4.avif",
+    bg: "/img/final/SG/S3/SG_0059_4_11zon.webp",
   },
 ];
 

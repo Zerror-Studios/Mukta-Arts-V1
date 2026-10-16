@@ -160,7 +160,7 @@ const Hero = () => {
         </h3>
         <div data-hero="cta" data-entrance className="w-fit">
           <Link href={'/about'}>
-            <button className="bg-[#0474BA] hover:bg-[#0666a1] text-white px-5 py-2.5 text-xs md:text-sm tracking-wide font-medium rounded-[3px] flex items-center gap-3 transition-colors cursor-pointer group">
+            <button className="bg-[#1B123D] hover:bg-[#2A1D5C] text-white px-5 py-2.5 text-xs md:text-sm tracking-wide font-medium rounded-[3px] flex items-center gap-3 transition-colors cursor-pointer group">
               About Us
               <span className="text-lg leading-none transform group-hover:translate-x-1 transition-transform">→</span>
             </button>

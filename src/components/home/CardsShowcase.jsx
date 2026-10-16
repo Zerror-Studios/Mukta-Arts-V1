@@ -8,70 +8,70 @@ import gsap from "gsap";
 let arr = [
   {
     year: "2025",
-    clr: "#0470B1",
+    clr: "#1B123D",
     img: "/img/home/trophy_nb1.jpg",
     title: "Digital Studio M&E Award - Media & Entertainment Education Award for Cinema",
     desc: "Whistling Woods International in 2025"
   },
   {
     year: "2025",
-    clr: "#00A7E1",
+    clr: "#1F1056",
     img: "/img/home/trophy_nb2.jpg",
     title: "Big Cine Awards - Fastest Growing Cinema Chain of the Year",
     desc: "Mukta A2 Cinemas in 2025"
   },
   {
     year: "2024",
-    clr: "#0470B1",
+    clr: "#1B123D",
     img: "/img/home/trophy_nb3.jpg",
     title: "Navbharat Education Excellence Award - Filmmaking Institute of the Year",
     desc: "Whistling Woods International in 2024"
   },
   {
     year: "2019",
-    clr: "#00A7E1",
+    clr: "#1F1056",
     img: "/img/home/trophy_nb4.jpg",
     title: "FICCI Higher Education Excellence Award - Excellence in Creative & Performing Arts",
     desc: "Whistling Woods International in 2019"
   },
   {
     year: "2019",
-    clr: "#0470B1",
+    clr: "#1B123D",
     img: "/img/home/trophy_nb1.jpg",
     title: "Big Cine Awards - Best Single-Screen Theatre of the Year",
     desc: "New Excelsior Mukta A2 Cinemas in 2019"
   },
   {
     year: "2017",
-    clr: "#00A7E1",
+    clr: "#1F1056",
     img: "/img/home/trophy_nb2.jpg",
     title: "Screen Award - Lifetime Achievement",
     desc: "Subhash Ghai in 2017"
   },
   {
     year: "2015",
-    clr: "#0470B1",
+    clr: "#1B123D",
     img: "/img/home/trophy_nb3.jpg",
     title: "IIFA Award - Outstanding Contribution to Indian Cinema",
     desc: "Subhash Ghai in 2015"
   },
   {
     year: "2006",
-    clr: "#00A7E1",
+    clr: "#1F1056",
     img: "/img/home/trophy_nb4.jpg",
     title: "National Film Award - Best Film on Other Social Issues",
     desc: "Iqbal produced by Subhash Ghai / Mukta Arts in 2006"
   },
   {
     year: "1998",
-    clr: "#0470B1",
+    clr: "#1B123D",
     img: "/img/home/trophy_nb1.jpg",
     title: "Filmfare Award - Best Screenplay",
     desc: "Subhash Ghai for Pardes in 1998"
   },
   {
     year: "1992",
-    clr: "#00A7E1",
+    clr: "#1F1056",
     img: "/img/home/trophy_nb2.jpg",
     title: "Filmfare Award - Best Director",
     desc: "Subhash Ghai for Saudagar in 1992"
@@ -219,7 +219,7 @@ export default function CardsShowcase() {
       {/* Navigation Buttons */}
       <button
         onClick={handlePrev}
-        className="absolute left-[2%] md:left-[5%] top-1/2 -translate-y-1/2 z-[9999] w-10 h-10 md:w-12 md:h-12 rounded-full border border-black/20 text-black flex items-center justify-center hover:bg-[#0474BA] hover:text-white transition-colors cursor-pointer bg-white/50 backdrop-blur-md shadow-lg"
+        className="absolute left-[2%] md:left-[5%] top-1/2 -translate-y-1/2 z-[9999] w-10 h-10 md:w-12 md:h-12 rounded-full border border-black/20 text-black flex items-center justify-center hover:bg-[#1B123D] hover:text-white transition-colors cursor-pointer bg-white/50 backdrop-blur-md shadow-lg"
       >
         <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
@@ -227,7 +227,7 @@ export default function CardsShowcase() {
       </button>
       <button
         onClick={handleNext}
-        className="absolute right-[2%] md:right-[5%] top-1/2 -translate-y-1/2 z-[9999] w-10 h-10 md:w-12 md:h-12 rounded-full border border-black/20 text-black flex items-center justify-center hover:bg-[#0474BA] hover:text-white transition-colors cursor-pointer bg-white/50 backdrop-blur-md shadow-lg"
+        className="absolute right-[2%] md:right-[5%] top-1/2 -translate-y-1/2 z-[9999] w-10 h-10 md:w-12 md:h-12 rounded-full border border-black/20 text-black flex items-center justify-center hover:bg-[#1B123D] hover:text-white transition-colors cursor-pointer bg-white/50 backdrop-blur-md shadow-lg"
       >
         <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
