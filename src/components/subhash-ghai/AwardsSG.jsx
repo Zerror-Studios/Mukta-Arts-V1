@@ -40,9 +40,13 @@ export default function AwardsSG() {
         {/* Author Attribution */}
         <div className="flex flex-col items-center">
           {/* Cursive Signature */}
-          <div className="text-black text-3xl md:text-4xl mb-2 opacity-85 select-none">
-            <span style={{ fontFamily: "Brush Script MT, cursive" }}>Subhash Ghai</span>
-          </div>
+          {/* His own autograph (Autograph_1_11zon.webp with the paper made transparent) */}
+          <img
+            src="/img/final/SG/S2/Autograph_transparent.webp"
+            alt="Subhash Ghai's signature"
+            className="w-[150px] md:w-[180px] h-auto mb-3 opacity-90 select-none pointer-events-none"
+            draggable={false}
+          />
 
           <cite className="not-italic text-sm md:text-base font-semibold tracking-wider uppercase text-black font-['SwitzerSB']">
             Subhash Ghai

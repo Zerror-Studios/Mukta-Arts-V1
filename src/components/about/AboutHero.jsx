@@ -17,7 +17,7 @@ const carouselItems = [
     { src: "/img/final/about_Img/AB1/SG_0068_3_11zon_3_11zon.webp" },
     { src: "/img/final/about_Img/AB1/SG_0113_4_11zon_4_11zon.webp" },
     { src: "/img/final/about_Img/AB1/SG_0117_5_11zon_5_11zon.webp" },
-    // { src: "/img/final/about_Img/AB1/SG_0123_6_11zon_6_11zon.webpp" },
+    { src: "/img/final/about_Img/AB1/SG_0123_6_11zon_6_11zon.webp" },
     { src: "/img/final/about_Img/AB1/SG_0125_7_11zon_7_11zon.webp" },
     { src: "/img/final/about_Img/AB1/SG_0134_8_11zon_8_11zon.webp" },
     { src: "/img/final/about_Img/AB1/WHISTLING WOODS CAMPAIGN 09.04_2_9_11zon_9_11zon.webp" },

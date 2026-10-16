@@ -10,6 +10,11 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+// Film posters are the client's own, the compressed copies of /img/final/home/all (Gautam Govinda, Krodhi,
+// Vidhaata and Meri Jung have no client poster yet). Event photos are web-sized copies of /img/final/about_Img/AB2.
+const POSTERS = "/img/final/home/all/compressed/";
+const TL = "/img/final/timeline/";
+
 const milestonesData = [
   {
     id: "m-1",
@@ -17,8 +22,8 @@ const milestonesData = [
     title: "Mukta Arts Is Founded",
     tag: "Studio Inception",
     desc: "Founded by Subhash Ghai, marking the beginning of an enduring legacy in Indian entertainment.",
-    img: "/img/sg/1.jpg",
-    imgPos: "50% 20%",
+    img: `${TL}mal-is-founded.webp`,
+    imgPos: "50% 30%",
     isMilestone: true,
   },
   {
@@ -33,7 +38,7 @@ const milestonesData = [
     year: "1980",
     title: "Karz",
     tag: "Cult Classic",
-    img: "/img/films/karz.jpg",
+    img: `${POSTERS}04_KARZ_(1980).jpg`,
   },
   {
     id: "m-4",
@@ -54,7 +59,7 @@ const milestonesData = [
     year: "1983",
     title: "Hero",
     tag: "Breakthrough",
-    img: "/img/films/hero.jpg",
+    img: `${POSTERS}06_HERO_(1982).jpg`,
   },
   {
     id: "m-7",
@@ -68,7 +73,7 @@ const milestonesData = [
     year: "1986",
     title: "Karma",
     tag: "National Award",
-    img: "/img/films/karma.jpg",
+    img: `${POSTERS}08_KARMA_(1986).jpg`,
     isMilestone: true,
   },
   {
@@ -76,70 +81,70 @@ const milestonesData = [
     year: "1987",
     title: "Uttar Dakshin",
     tag: "Feature Film",
-    img: "/img/films/uttar-dakshin.jpg",
+    img: `${POSTERS}UTTAR DAKSHIN (HINDI).jpg`,
   },
   {
     id: "m-10",
     year: "1989",
     title: "Ram Lakhan",
     tag: "Mega Blockbuster",
-    img: "/img/films/ram-lakhan.jpg",
+    img: `${POSTERS}10_RAM_LAKHAN_(1987).jpg`,
   },
   {
     id: "m-11",
     year: "1991",
     title: "Saudagar",
     tag: "Best Director",
-    img: "/img/films/saudagar.jpg",
+    img: `${POSTERS}11_SAUDAGAR_(1991).jpg`,
   },
   {
     id: "m-12",
     year: "1992",
     title: "Prem Deewane",
     tag: "Romantic Adventure",
-    img: "/img/films/prem-deewane.jpg",
+    img: `${POSTERS}12_PREM_DEEWANE_(1992).jpg`,
   },
   {
     id: "m-13",
     year: "1993",
     title: "Khalnayak",
     tag: "Blockbuster",
-    img: "/img/films/khalnayak.jpg",
+    img: `${POSTERS}13_KHALNAYAK_(1993).jpg`,
   },
   {
     id: "m-14",
     year: "1995",
     title: "Trimurti",
     tag: "Grand Spectacle",
-    img: "/img/films/trimurti.jpg",
+    img: `${POSTERS}15_TRIMURTI_(1995).jpg`,
   },
   {
     id: "m-15",
     year: "1996",
     title: "Jaan",
     tag: "Action Romance",
-    img: "/img/films/jaan.jpg",
+    img: `${POSTERS}16_JAAN_(1996).jpg`,
   },
   {
     id: "m-16",
     year: "1997",
     title: "Pardes",
     tag: "Global Hit",
-    img: "/img/films/pardes.jpg",
+    img: `${POSTERS}17_PARDES_(1997).jpg`,
   },
   {
     id: "m-17",
     year: "1998",
     title: "Shyam Ghanshyam",
     tag: "Feature Film",
-    img: "/img/films/shyam-ghanshyam.jpg",
+    img: `${POSTERS}18_SHYAM_GHANSHYAM_(1998).jpg`,
   },
   {
     id: "m-18",
     year: "1999",
     title: "Taal",
     tag: "Global Milestone",
-    img: "/img/films/taal.jpg",
+    img: `${POSTERS}19_TAAL_(1999).jpg`,
     isMilestone: true,
   },
   {
@@ -148,8 +153,8 @@ const milestonesData = [
     title: "Mukta Arts IPO",
     tag: "First Studio IPO",
     desc: "Mukta Arts became India’s first film studio listed on major stock exchanges, pioneering corporatization.",
-    img: "/img/sg/2.jpg",
-    imgPos: "50% 25%",
+    img: `${TL}mal-ipo.webp`,
+    imgPos: "50% 30%",
     isMilestone: true,
   },
   {
@@ -157,28 +162,28 @@ const milestonesData = [
     year: "2001",
     title: "Yaadein",
     tag: "Family Drama",
-    img: "/img/films/yaadein.jpg",
+    img: `${POSTERS}20_YAADEIN_(2001).jpg`,
   },
   {
     id: "m-21",
     year: "2004",
     title: "Aitraaz",
     tag: "Courtroom Thriller",
-    img: "/img/films/aitraaz.jpg",
+    img: `${POSTERS}25_AITRAAZ_(2004).jpg`,
   },
   {
     id: "m-22",
     year: "2005",
     title: "Kisna",
     tag: "Period Epic",
-    img: "/img/films/kisna.jpg",
+    img: `${POSTERS}26_KISNA_(2005).jpg`,
   },
   {
     id: "m-23",
     year: "2005",
     title: "Iqbal",
     tag: "National Award",
-    img: "/img/films/iqbal.jpg",
+    img: `${POSTERS}27_IQBAL_(2005).jpg`,
     isMilestone: true,
   },
   {
@@ -187,7 +192,7 @@ const milestonesData = [
     title: "Whistling Woods International",
     tag: "Media Education",
     desc: "Asia’s premier film, television, and creative arts institute founded to nurture future media leaders.",
-    img: "/img/ma/WhistlingWoods.jpg",
+    img: `${TL}whistling-woods.webp`,
     isMilestone: true,
   },
   {
@@ -196,7 +201,7 @@ const milestonesData = [
     title: "Mukta A2 Cinemas",
     tag: "Exhibition Network",
     desc: "Mukta Arts enters theatrical exhibition, providing premium yet accessible moviegoing across India and the Middle East.",
-    img: "/img/ma/MuktaA2Cinemas.jpg",
+    img: `${TL}excelsior-ma2-36.webp`,
     isMilestone: true,
   },
   {
@@ -205,13 +210,14 @@ const milestonesData = [
     title: "SGM Studios Established",
     tag: "Animation Studio",
     desc: "SGM Studios is Mukta Arts' animation and visual storytelling arm.",
-    img: "https://muktaarts.com/Media/uploads/2026/SGM-ANIMATION-STUDIOS-MUKTA-ARTS-LTD-MOU.gif",
+    img: "/img/final/SGM/SGM_Studios_MOU.webp",
     isMilestone: true,
   },
 ];
 
 // Studio-level landmarks (not film releases) get a wide, landscape frame
-const isStudioEvent = (m) => m.isMilestone && !m.img.startsWith("/img/films/");
+const isFilm = (m) => m.img.startsWith("/img/films/") || m.img.startsWith(POSTERS);
+const isStudioEvent = (m) => m.isMilestone && !isFilm(m);
 
 // Years labelled on the timeline: the first entry of each decade, plus the last
 const decadeLabelIndexes = milestonesData.reduce((acc, m, i) => {

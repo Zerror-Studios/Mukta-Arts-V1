@@ -59,9 +59,13 @@ const StorySG = () => {
                     </p>
 
                     <div data-reveal="rise">
-                        <div className="text-white font-[cursive] text-4xl mb-4 opacity-90">
-                            <span style={{ fontFamily: 'Brush Script MT, cursive' }}>Subhash Ghai</span>
-                        </div>
+                        {/* His own autograph (Autograph_1_11zon.webp with the paper made transparent), inverted to white ink */}
+                        <img
+                            src="/img/final/SG/S2/Autograph_transparent.webp"
+                            alt="Subhash Ghai's signature"
+                            className="w-[170px] md:w-[200px] h-auto mb-3 invert opacity-90 select-none pointer-events-none"
+                            draggable={false}
+                        />
                         <p className="text-white text-lg font-['SwitzerM'] tracking-wide">Subhash Ghai</p>
                     </div>
                 </div>

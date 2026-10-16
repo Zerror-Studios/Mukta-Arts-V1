@@ -18,7 +18,7 @@ const data = [
             "IIM Mumbai x WWI: India's **first MBA in Media & Entertainment** from an IIM.",
             "**TISS degrees**, with a curriculum shaped by working industry professionals.",
             "Built for what's next, with tech labs alongside **Apple, NVIDIA, Epic Games, Sony and more.**",
-            "**4,000+ alumni** shaping Indian and global media and entertainment and **1,300** current students.",
+            "**4,500+ alumni** shaping Indian and global media and entertainment and **1,300** current students.",
         ],
         photo: "/img/ma/WhistlingWoods.jpg",
         website: "https://www.whistlingwoods.net/",
@@ -70,7 +70,8 @@ const data = [
     },
     {
         title: "SGM Studios",
-        image: "https://muktaarts.com/Media/uploads/2026/SGM-ANIMATION-STUDIOS-MUKTA-ARTS-LTD-MOU.gif",
+        // The SGM Studios signing frame of the old muktaarts.com GIF, now served locally
+        image: "/img/final/SGM/SGM_Studios_MOU.webp",
         shortDesc: "SGM Studios is Mukta Arts' animation and visual storytelling arm.",
         // No bullets for SGM: the panel carries the introduction, and SGM has no external site
         paragraphs: [

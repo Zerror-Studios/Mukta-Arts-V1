@@ -35,13 +35,14 @@ function FilmReel({ running }) {
         tweenRef.current?.paused(!running);
     }, [running]);
 
-    // Section 9 of the home page content doc: five frames, one figure each
+    // Section 9 of the home page content doc: five frames, one figure each, on the client's own photos
+    // (the behind-the-scenes stills, Whistling Woods and Topiwala; strip/ holds 800px copies of the big files)
     const content = [
-        { value: "45+", label: "Years of Legacy", image: "/img/final/home/all/04_KARZ_(1980).jpg" },
-        { value: "50+", label: "Films Produced", image: "/img/final/home/all/06_HERO_(1982).jpg" },
-        { value: "35", label: "Blockbusters", image: "/img/final/home/all/10_RAM_LAKHAN_(1987).jpg" },
-        { value: "4500+", label: "Alumni", image: "/img/final/home/all/17_PARDES_(1997).jpg" },
-        { value: "37", label: " Mukta A2 Cinemas", image: "/img/final/home/all/19_TAAL_(1999).jpg" },
+        { value: "45+", label: "Years of Legacy", image: "/img/final/home/home2/SG_0067.webp" },
+        { value: "50+", label: "Films Produced", image: "/img/final/home/home2/SG_0054.webp" },
+        { value: "35", label: "Blockbusters", image: "/img/final/home/home2/SG_0044.webp" },
+        { value: "4500+", label: "Alumni", image: "/img/final/home/strip/WWI_0R2A9902.webp" },
+        { value: "37", label: " Mukta A2 Cinemas", image: "/img/final/home/strip/TOPIWALA_MA2_28.webp" },
     ];
 
     // Duplicate multiple times for a seamless scroll effect
@@ -181,6 +182,7 @@ export default function OldCamera() {
     const text3Ref = useRef(null);
     const buttonRef = useRef(null);
     const bgImageRef = useRef(null);
+    const bgImage2Ref = useRef(null);
     // Far below the fold: load the camera only once the home intro has played,
     // and only draw it while the section is near the screen
     const sceneOn = useAfterIntro();
@@ -204,10 +206,18 @@ export default function OldCamera() {
         if (bgImageRef.current) {
             gsap.set(bgImageRef.current, { opacity: 0, scale: 0.95 });
         }
+        if (bgImage2Ref.current) {
+            gsap.set(bgImage2Ref.current, { opacity: 0 });
+        }
 
         // Reveal background image & button after 3D camera rotation finishes
         if (bgImageRef.current) {
             tl.to(bgImageRef.current, { opacity: 0.35, scale: 1, duration: 0.4 }, 0.8);
+        }
+        // The working still sits behind "The Filmmaker"; the portrait takes over from "The Visionary" on
+        if (bgImageRef.current && bgImage2Ref.current) {
+            tl.to(bgImageRef.current, { opacity: 0, duration: 0.4 }, 1.6)
+                .to(bgImage2Ref.current, { opacity: 0.35, duration: 0.4 }, 1.6);
         }
         if (buttonRef.current) {
             tl.to(buttonRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0.8);
@@ -227,10 +237,15 @@ export default function OldCamera() {
 
             <section className="sticky top-0 w-full h-[100vh] bg-white max-sm:overflow-hidden flex items-center justify-center">
 
-                {/* Background Image of Subhash Ghai - reveals after 3D camera rotation */}
+                {/* Background Images of Subhash Ghai - reveal after 3D camera rotation: the working still, then the portrait */}
                 <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
                     <div
                         ref={bgImageRef}
+                        className="absolute inset-0 bg-cover bg-center md:bg-[center_right_10%] opacity-0 filter contrast-110"
+                        style={{ backgroundImage: "url('/img/final/home/home2/WhatsApp1.webp')" }}
+                    />
+                    <div
+                        ref={bgImage2Ref}
                         className="absolute inset-0 bg-cover bg-center md:bg-[center_right_10%] opacity-0 filter contrast-110"
                         style={{ backgroundImage: "url('/img/final/home/home2/WhatsApp2.webp')" }}
                     />

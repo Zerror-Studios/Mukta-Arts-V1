@@ -5,74 +5,76 @@ import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import gsap from "gsap";
 
+// Each award shows the client's own photo of who won it: the Whistling Woods campus, the Mukta A2
+// halls (New Excelsior for its own award), Subhash Ghai's portraits and the winning films' posters
 let arr = [
   {
     year: "2025",
     clr: "#1B123D",
-    img: "/img/home/trophy_nb1.jpg",
+    img: "/img/final/WW/W1/0R2A2411_1_11zon_2_11zon.webp",
     title: "Digital Studio M&E Award - Media & Entertainment Education Award for Cinema",
     desc: "Whistling Woods International in 2025"
   },
   {
     year: "2025",
     clr: "#1F1056",
-    img: "/img/home/trophy_nb2.jpg",
+    img: "/img/final/MA-2-Cinima.webp",
     title: "Big Cine Awards - Fastest Growing Cinema Chain of the Year",
     desc: "Mukta A2 Cinemas in 2025"
   },
   {
     year: "2024",
     clr: "#1B123D",
-    img: "/img/home/trophy_nb3.jpg",
+    img: "/img/final/WW/W1/0R2A9947_2_11zon_3_11zon.webp",
     title: "Navbharat Education Excellence Award - Filmmaking Institute of the Year",
     desc: "Whistling Woods International in 2024"
   },
   {
     year: "2019",
     clr: "#1F1056",
-    img: "/img/home/trophy_nb4.jpg",
+    img: "/img/final/WW/W1/0R2A0174 (1)_3_11zon_1_11zon.webp",
     title: "FICCI Higher Education Excellence Award - Excellence in Creative & Performing Arts",
     desc: "Whistling Woods International in 2019"
   },
   {
     year: "2019",
     clr: "#1B123D",
-    img: "/img/home/trophy_nb1.jpg",
+    img: "/img/final/about_Img/AB2/EXCELSIOR_MA2_36_4_11zon_1_11zon.webp",
     title: "Big Cine Awards - Best Single-Screen Theatre of the Year",
     desc: "New Excelsior Mukta A2 Cinemas in 2019"
   },
   {
     year: "2017",
     clr: "#1F1056",
-    img: "/img/home/trophy_nb2.jpg",
+    img: "/img/final/SG/S1/DSC00988 2_2_11zon.webp",
     title: "Screen Award - Lifetime Achievement",
     desc: "Subhash Ghai in 2017"
   },
   {
     year: "2015",
     clr: "#1B123D",
-    img: "/img/home/trophy_nb3.jpg",
+    img: "/img/final/SG/S1/DSC00997 2_1_11zon.webp",
     title: "IIFA Award - Outstanding Contribution to Indian Cinema",
     desc: "Subhash Ghai in 2015"
   },
   {
     year: "2006",
     clr: "#1F1056",
-    img: "/img/home/trophy_nb4.jpg",
+    img: "/img/final/home/all/27_IQBAL_(2005).jpg",
     title: "National Film Award - Best Film on Other Social Issues",
     desc: "Iqbal produced by Subhash Ghai / Mukta Arts in 2006"
   },
   {
     year: "1998",
     clr: "#1B123D",
-    img: "/img/home/trophy_nb1.jpg",
+    img: "/img/final/home/all/17_PARDES_(1997).jpg",
     title: "Filmfare Award - Best Screenplay",
     desc: "Subhash Ghai for Pardes in 1998"
   },
   {
     year: "1992",
     clr: "#1F1056",
-    img: "/img/home/trophy_nb2.jpg",
+    img: "/img/final/home/all/11_SAUDAGAR_(1991).jpg",
     title: "Filmfare Award - Best Director",
     desc: "Subhash Ghai for Saudagar in 1992"
   }
@@ -181,7 +183,8 @@ export default function CardsShowcase() {
                           src={item.img}
                           alt={item.title}
                           fill
-                          className="object-contain drop-shadow-2xl mix-blend-screen"
+                          sizes="(max-width: 768px) 70vw, 20vw"
+                          className="object-cover rounded-sm shadow-2xl"
                         />
                       </div>
                     </div>

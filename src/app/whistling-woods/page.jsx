@@ -3,7 +3,7 @@ import WWHERO from "@/components/whistling-woods/WWHERO";
 import WWlast from "@/components/whistling-woods/WWlast";
 import WWStats from "@/components/whistling-woods/WWStatsOLD";
 import WWMilestones from "@/components/whistling-woods/WWMilestones";
-import WWAcademicPrograms from "@/components/whistling-woods/WWAcademicPrograms";
+import WWQuotes from "@/components/whistling-woods/WWQuotes";
 import WWSchools from "@/components/whistling-woods/WWSchools";
 import { createPageMetadata } from "@/lib/seo";
 
@@ -15,7 +15,8 @@ const page = () => {
             <WWStats />
             <WWMilestones />
             <WWSchools />
-            <WWAcademicPrograms />
+            {/* Industry quotes, in place of the old academic programs section */}
+            <WWQuotes />
             {/* Student photos first, then where the alumni work (content doc order) */}
             <WWlast />
             <PartnersSection />

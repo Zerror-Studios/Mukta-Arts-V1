@@ -54,7 +54,7 @@ const OFHero = () => {
                         {/* Left Side: Description */}
                         <div className="flex flex-col gap-8 max-w-[600px]">
                             <p data-entrance="lines" className="text-white text-[15px] md:text-[17px] leading-[1.6]">
-                                For nearly five decades, Mukta Arts has brought powerful stories to the screen, creating some of Hindi cinemaâ€™s most enduring films.
+                                For nearly five decades, Mukta Arts has brought powerful stories to the screen, creating some of Hindi cinema’s most enduring films.
                             </p>
                         </div>
 

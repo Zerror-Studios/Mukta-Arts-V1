@@ -3,8 +3,62 @@
 import React, { useState, useRef } from "react";
 import { gsap } from "gsap";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import useScrollReveal from "@/hooks/useScrollReveal";
 import { filmBriefs } from "./filmBriefs";
+
+// The client's posters from /img/final/home/all, compressed (max 900px wide, JPEG q78) into its compressed/
+// folder; the originals stay as they are. Kalicharan, Vishwanath, Gautam Govinda, Krodhi, Vidhaata
+// and Meri Jung have none there yet, so they keep their /img/films poster.
+const POSTERS = "/img/final/home/all/compressed/";
+const clientPosters = {
+  "karz": "04_KARZ_(1980).jpg",
+  "hero": "06_HERO_(1982).jpg",
+  "karma": "08_KARMA_(1986).jpg",
+  "uttar-dakshin": "UTTAR DAKSHIN (HINDI).jpg",
+  "ram-lakhan": "10_RAM_LAKHAN_(1987).jpg",
+  "saudagar": "11_SAUDAGAR_(1991).jpg",
+  "pyar-ki-ganga-bahe": "PYAR KI GANGA BAHE.jpg",
+  "prem-deewane": "12_PREM_DEEWANE_(1992).jpg",
+  "khalnayak": "13_KHALNAYAK_(1993).jpg",
+  "trimurti": "15_TRIMURTI_(1995).jpg",
+  "jaan": "16_JAAN_(1996).jpg",
+  "pardes": "17_PARDES_(1997).jpg",
+  "shyam-ghanshyam": "18_SHYAM_GHANSHYAM_(1998).jpg",
+  "taal": "19_TAAL_(1999).jpg",
+  "rahul": "21_RAHUL_(2001).jpg",
+  "yaadein": "20_YAADEIN_(2001).jpg",
+  "badhaai-ho-badhaai": "22_BADHAI_HO_BADHAI_(2002).jpg",
+  "ek-aur-ek-gyarah": "24_EK_AUR_EK_GYARAH_(2003).jpg",
+  "joggers-park": "23_JOGGERS_PARK_(2002).jpg",
+  "aitraaz": "25_AITRAAZ_(2004).jpg",
+  "kisna": "26_KISNA_(2005).jpg",
+  "iqbal": "27_IQBAL_(2005).jpg",
+  "shaadi-se-pehle": "29_SHAADI_SE_PEHLE_(2006).jpg",
+  "36-china-town": "30_36_CHINA_TOWN_(2006).jpg",
+  "apna-sapna-money-money": "31_APNA_SAPNA_MONEY_MONEY_(2006).jpg",
+  "good-boy-bad-boy": "33_GOOD_BOY_BAD_BOY_(2007).jpg",
+  "bombay-to-bangkok": "34_BOMBAY_TO_BANGKOK_(2008).jpg",
+  "valu": "35_VALU_(2008).jpg",
+  "black-and-white": "36_BLACK_AND_WHITE_(2008).jpg",
+  "sanai-choughade": "39_SANAI_CHOUGHADE_(2008).jpg",
+  "yuvvraaj": "40_YUVRAAJ_(2008).jpg",
+  "paying-guests": "41_PAYING_GUEST_(2009).jpg",
+  "right-yaaa-wrong": "44_RIGHT_YA_WRONG_(2010).jpg",
+  "hello-darling": "42_HELLO_DARLING_(2010).jpg",
+  "nouka-dubi": "45_NOUKADUBI__(2010).jpg",
+  "love-express": "47_LOVE_EXPRESS_(2011).jpg",
+  "cycle-kick": "46_CYCLE_KICK_(2011).jpg",
+  "samhita": "49_SAMHITA_(2013).jpg",
+  "nimbehuli": "NIMBEHULI (KANNADA).jpg",
+  "kaanchi": "48_KAANCHI_(2013).jpg",
+  "double-di-trouble": "50_DOUBLE_DI_TROUBLE_(2014).jpg",
+  "36-farmhouse": "52_36_FARMHOUSE_(2022).jpg",
+  "vijeta": "51_VIJETA_(2020).jpg",
+  "jaanki": "JAANKI (DD).jpg",
+  "gandhi-a-perspective": "GANDHI - A PERSPECTIVE - SHORT FILM.jpg",
+  "tu-me-ani-amaira": "TU ME ANI AMAIRA (MARATHI).jpg",
+};
 
 // The full catalogue, shown in release order (the client will confirm the years)
 const films = [
@@ -32,7 +86,7 @@ const films = [
   { slug: "yaadein", title: "Yaadein", year: 2001 },
   { slug: "badhaai-ho-badhaai", title: "Badhaai Ho Badhaai", year: 2002 },
   { slug: "ek-aur-ek-gyarah", title: "Ek Aur Ek Gyarah", year: 2003 },
-  { slug: "joggers-park", title: "Joggerâ€™s Park", year: 2003 },
+  { slug: "joggers-park", title: "Jogger’s Park", year: 2003 },
   { slug: "aitraaz", title: "Aitraaz", year: 2004 },
   { slug: "kisna", title: "Kisna", year: 2005 },
   { slug: "iqbal", title: "Iqbal", year: 2005 },
@@ -65,7 +119,7 @@ const films = [
   id: film.slug,
   description: `Released in ${film.year}`,
   brief: filmBriefs[film.slug] || "",
-  image: `/img/films/${film.slug}.jpg`,
+  image: clientPosters[film.slug] ? `${POSTERS}${clientPosters[film.slug]}` : `/img/films/${film.slug}.jpg`,
 }))
   // Release order; the sort is stable, so films from the same year keep the order above
   .sort((a, b) => a.year - b.year);
@@ -198,11 +252,13 @@ export default function FilmsComponent() {
             >
               {/* Image */}
               <div className="relative w-full aspect-[4/5] mb-6 overflow-hidden ">
-                <img
+                {/* next/image on top of the compressed posters: each card gets a copy sized to its width */}
+                <Image
                   src={film.image}
                   alt={film.title}
-                  loading="lazy"
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110 will-change-transform"
+                  fill
+                  sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-110 will-change-transform"
                 />
               </div>
 

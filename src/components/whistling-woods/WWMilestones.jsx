@@ -92,8 +92,6 @@ const STEP = 16.5;            // degrees between two years on the wheel
 const ARC_TOP = 170;          // y position (px, inside the stage) of the active dot
 const ACCENT = '#d1582b';
 
-const NOISE = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`;
-
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 
 // Makes every year "dwell" in the centre for a bit, then glide to the next one
@@ -258,12 +256,6 @@ const WWMilestones = () => {
                     <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-[#143d68]/80 to-transparent" />
                     <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#0a203a]/90 to-transparent" />
                 </div>
-
-                {/* Grain texture */}
-                <div
-                    className="absolute inset-0 pointer-events-none z-[1]"
-                    style={{ backgroundImage: NOISE, opacity: 0.12, mixBlendMode: 'overlay' }}
-                />
 
                 {/* Header */}
                 <div

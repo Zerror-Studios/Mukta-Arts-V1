@@ -5,17 +5,11 @@ import useEmblaCarousel from "embla-carousel-react";
 import { RiArrowLeftLine, RiArrowRightLine } from "@remixicon/react";
 import useScrollReveal from "@/hooks/useScrollReveal";
 
-// Placeholder images — swap for SGM Studios stills (e.g. /img/sgm/1.jpg) once available
-const unsplash = (id) => `https://images.unsplash.com/photo-${id}?q=80&w=2000&auto=format&fit=crop`;
-
-const reelItems = [
-    { src: unsplash("1639628735078-ed2f038a193e") },
-    { src: unsplash("1569766670290-f5581d3bb53f") },
-    { src: unsplash("1628494391268-c9935bc384d5") },
-    { src: unsplash("1631582053308-40f482e7ace5") },
-    { src: unsplash("1611241893603-3c359704e0ee") },
-    { src: unsplash("1624961151169-b3df5c0f06ab") },
-];
+// Stand-ins until the client's own SGM visuals arrive: the six Unsplash stills this reel used,
+// now served locally, cropped to the 16:9 frame and compressed (1800x1013 WebP)
+const reelItems = [1, 2, 3, 4, 5, 6].map((n) => ({
+    src: `/img/final/SGM/showreel/sgm-showreel-${String(n).padStart(2, "0")}.webp`,
+}));
 
 const pad = (n) => String(n).padStart(2, "0");
 
