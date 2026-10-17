@@ -159,12 +159,14 @@ const Header = () => {
     <header ref={containerRef} className="fixed top-0 left-0 w-full z-50 p-6 md:p-8 flex justify-between items-center pointer-events-none z-99999">
       <div className={`${pathname === '/' ? 'pointer-events-none' : 'pointer-events-auto'} relative z-[60]`}>
         {pathname !== '/' ? (
-          <Link href="/">
-            <img src="/img/logo/logo.png" alt="Logo" className="h-8 md:h-12 w-auto object-contain" />
+          // Own key so React remounts it: the home dock logo carries inline opacity/visibility from HeadphonesModel
+          <Link key="page-logo" href="/" aria-label="Mukta Arts home" className="block">
+            <img src="/img/sg/HeadLogo.png" alt="Mukta Arts" className="h-11 md:h-14 w-auto object-contain" draggable={false} />
           </Link>
         ) : (
           // Home only: the 3D logo docks here once it reaches the top left (HeadphonesModel drives the opacity)
           <Link
+            key="dock-logo"
             id="header-dock-logo"
             href="/"
             aria-label="Mukta Arts home"
