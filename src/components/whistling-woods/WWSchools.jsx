@@ -92,9 +92,9 @@ export default function WWSchools() {
             data-reveal="rise"
             className="grid grid-cols-12 gap-x-4 gap-y-5 md:gap-x-8 border-t border-black/10 py-8 md:py-10 lg:py-12"
           >
-            <span className="col-span-3 md:col-span-2 font-['SwitzerL'] text-[3rem] md:text-[4.5rem] leading-[0.9] tracking-tighter text-[#C0C0C0] tabular-nums">
+            <h2 className="col-span-3 md:col-span-2 font-['SwitzerL'] text-[3rem] md:text-[4.5rem] leading-[0.9] tracking-tighter text-black tabular-nums">
               {school.id}
-            </span>
+            </h2>
 
             <h4 className="col-span-9 md:col-span-10 lg:col-span-5 tracking-tight text-balance">
               {school.name}

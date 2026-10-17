@@ -131,7 +131,7 @@ const WWStats = () => {
                     {statsData.map((stat, index) => (
                         <div
                             key={index}
-                            className="stat-col flex flex-col justify-between gap-4 border-l border-[#D4D4D4] pl-4 md:pl-6 lg:pl-8 min-h-[130px] md:min-h-[180px] lg:min-h-[200px]"
+                            className="stat-col flex flex-col justify-between gap-4 border-l border-[#D4D4D4] pl-4 md:pl-6 lg:pl-8 "
                         >
                             <h4 className="text-4xl md:text-[42px] max-sm:text-[1.75rem]! max-sm:leading-[1.1]! font-normal text-black tracking-tight flex flex-wrap items-baseline">
                                 {stat.prefix && (

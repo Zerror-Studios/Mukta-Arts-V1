@@ -274,9 +274,9 @@ export default function FilmsComponent() {
                     <div className="absolute top-0 left-0 h-full bg-black w-0 transition-all duration-500 ease-out group-hover:w-full"></div>
                   </div>
 
-                  <h3 className=" tracking-tighter capitalize opacity-75 ">
+                  <p className=" tracking-tighter capitalize opacity-75 ">
                     {film.description}
-                  </h3>
+                  </p>
                 </div>
 
                 {/* Bottom animated line (draws right to left) */}

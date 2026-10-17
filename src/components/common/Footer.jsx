@@ -4,6 +4,16 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { siteConfig } from '@/config/site';
 
+// The same routes as the header menu; Mukta VN Films has no page of its own yet, so it stays plain text
+const FOOTER_LINKS = [
+  { label: "MUKTA PRODUCTIONS", href: "/our-films" },
+  { label: "WHISTLING WOODS INTERNATIONAL", href: "/whistling-woods" },
+  { label: "MUKTA A2 CINEMAS", href: "/mukta-a2-cinemas" },
+  // { label: "MUKTA VN FILMS", href: null },
+  { label: "SGM STUDIOS", href: "/sgm-studios" },
+  { label: "SUBHASH GHAI", href: "/subhash-ghai" },
+];
+
 export default function Footer() {
   const pathname = usePathname();
   const isHome = pathname === '/';
@@ -12,14 +22,21 @@ export default function Footer() {
     <div id="footer" className="min-h-screen bg-[#1B123D] text-white flex flex-col font-sans relative overflow-hidden">
 
       {/* Top Navigation / Stats Bar */}
-      <div className="w-full flex flex-wrap justify-between items-center px-4 md:px-8 py-4 text-[10px] md:text-xs font-semibold tracking-wider uppercase opacity-90">
-        <span className="flex items-center gap-2"><span className="text-sm">★</span> MUKTA PRODUCTIONS </span>
-        <span className="flex items-center gap-2"><span className="text-sm">★</span> WHISTLING WOODS INTERNATIONAL</span>
-        <span className="flex items-center gap-2"><span className="text-sm">★</span> MUKTA A2 CINEMAS </span>
-        <span className="flex items-center gap-2"><span className="text-sm">★</span> MUKTA VN FILMS </span>
-        <span className="flex items-center gap-2"><span className="text-sm">★</span> SGM STUDIOS </span>
-        <span className="flex items-center gap-2"><span className="text-sm">★</span> SUBHASH GHAI </span>
-      </div>
+      <nav aria-label="Footer" className="w-full flex flex-wrap justify-between items-center px-4 md:px-8 py-4 text-[10px] md:text-xs font-semibold tracking-wider uppercase z-999 opacity-90">
+        {FOOTER_LINKS.map(({ label, href }) =>
+          href ? (
+            <Link key={label} href={href} className="group flex items-center gap-2 cursor-pointer outline-none">
+              <span className="text-sm">★</span>
+              {/* The underline draws in from the left on hover and runs out to the right on leave */}
+              <span className="relative after:absolute after:left-0 after:-bottom-1 after:h-px after:w-full after:bg-current after:origin-right after:scale-x-0 after:transition-transform after:duration-500 after:ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:after:origin-left group-hover:after:scale-x-100 group-focus-visible:after:origin-left group-focus-visible:after:scale-x-100">
+                {label}
+              </span>
+            </Link>
+          ) : (
+            <span key={label} className="flex items-center gap-2"><span className="text-sm">★</span> {label}</span>
+          )
+        )}
+      </nav>
 
       {/* Main Content (a div: the page already has its <main>, and this sits inside <footer>) */}
       <div className="flex-1 flex flex-col lg:flex-row items-center justify-between px-6 md:px-20 lg:px-32 py-12 lg:py-20 ">

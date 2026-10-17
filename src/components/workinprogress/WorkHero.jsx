@@ -79,11 +79,11 @@ const WorkHero = () => {
         <div className="w-full min-h-screen bg-white text-black flex flex-col md:flex-row items-center justify-center px-10 gap-12 mx-auto overflow-hidden">
 
             {/* Left Column - Text Content */}
-            <div className="flex-1 w-full max-w-2xl flex flex-col justify-center work-hero-text opacity-0">
+            <div className="flex-1 w-full max-w-2xl flex flex-col justify-center work-hero-text opacity-0 max-sm:mt-[10vh]">
                 {/* Title Area */}
                 <div className="flex mb-12 ">
                     {/* Using tracking and scale to mimic the condensed font look without needing a custom font */}
-                    <h2 className=" uppercase font-bold! text-black"
+                    <h2 className=" uppercase font-bold! text-black "
                     >
                         {title}
                     </h2>
@@ -94,18 +94,11 @@ const WorkHero = () => {
                     )}
                 </div>
 
-                {/* Paragraphs */}
-                <div className="max-w-[90%] work-hero-text opacity-0">
-                    {description.split(/\n\s*\n/).filter(Boolean).map((para, i) => (
-                        <p key={i} className="mb-4">
-                            {para}
-                        </p>
-                    ))}
-                </div>
+               
             </div>
 
             {/* Right Column - Image */}
-            <div className="flex-1 w-full flex justify-center md:justify-end items-center mt-12 md:mt-0">
+            <div className="flex-1 w-full flex justify-center md:justify-end items-center max-sm:mt-0 sm:mt-12 md:mt-0">
                 <div className="relative w-full max-w-[600px] aspect-[4/5] bg-gray-100 shadow-2xl">
                     {/* Fallback image as standard img tag to avoid Next.js domain config issues for external URLs */}
                     <img

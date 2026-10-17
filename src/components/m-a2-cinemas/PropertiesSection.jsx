@@ -1,15 +1,16 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import { useGSAP } from "@gsap/react";
-import { MapPin } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import { Plus } from "lucide-react";
 import useScrollReveal from "@/hooks/useScrollReveal";
-import { gsap, EASE, DURATION, MOTION_OK } from "@/lib/motion";
+import { gsap, EASE, MOTION_REDUCED } from "@/lib/motion";
 
+// `about` explains each category in one line, so visitors know what it means
 export const propertiesCategories = [
   {
-    id: "01",
+    id: "operational",
     title: "Operational",
+    about: "Cinemas run by Mukta A2 Cinemas.",
     properties: [
       { name: "Jaihind", location: "Mumbai, Maharashtra" },
       { name: "Nakshatra Mall", location: "Banswara, Rajasthan" },
@@ -30,8 +31,9 @@ export const propertiesCategories = [
     ],
   },
   {
-    id: "02",
+    id: "management",
     title: "Management",
+    about: "Cinemas owned by partners and managed by Mukta A2 Cinemas.",
     properties: [
       { name: "Srinivasa", location: "Karimnagar, Telangana" },
       { name: "Giriraj Cinema", location: "Navsari, Gujarat" },
@@ -47,8 +49,9 @@ export const propertiesCategories = [
     ],
   },
   {
-    id: "03",
+    id: "joint-venture",
     title: "Joint Venture",
+    about: "Cinemas run together with a joint-venture partner.",
     properties: [
       { name: "Sri Sai Ram 70 MM", location: "Khammam, Telangana" },
       { name: "Konrak Theatre", location: "Hyderabad, Telangana" },
@@ -57,8 +60,9 @@ export const propertiesCategories = [
     ],
   },
   {
-    id: "04",
+    id: "international",
     title: "International",
+    about: "Mukta A2 Cinemas outside India.",
     properties: [
       { name: "Juffair Mall", location: "Manama, Bahrain" },
       { name: "Noir Cinemas", location: "Various Cities, Saudi Arabia" },
@@ -67,76 +71,144 @@ export const propertiesCategories = [
 ];
 
 const pad = (n) => String(n).padStart(2, "0");
+const total = propertiesCategories.reduce((n, c) => n + c.properties.length, 0);
+
+/* ---------- one category: a row that drops down to show its cinemas ---------- */
+
+const Category = ({ category, index, isOpen, onToggle }) => {
+  const panelRef = useRef(null);
+  const mounted = useRef(false);
+
+  // Opens and closes with the same height tween as the other dropdowns on the site
+  useEffect(() => {
+    const panel = panelRef.current;
+    const items = panel.querySelectorAll("[data-cinema]");
+    if (!mounted.current) {
+      mounted.current = true;
+      gsap.set(panel, { height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 });
+      return;
+    }
+    const instant = window.matchMedia(MOTION_REDUCED).matches;
+    gsap.to(panel, {
+      height: isOpen ? "auto" : 0,
+      opacity: isOpen ? 1 : 0,
+      duration: instant ? 0 : 0.6,
+      ease: isOpen ? "power3.out" : "power2.inOut",
+      overwrite: "auto",
+    });
+    if (isOpen && !instant) {
+      gsap.fromTo(items, { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: EASE, stagger: 0.025, delay: 0.1 });
+    }
+  }, [isOpen]);
+
+  const panelId = `a2-category-${category.id}`;
+
+  return (
+    <div className="border-b border-black/15">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        aria-controls={panelId}
+        className="group w-full grid grid-cols-[2rem_minmax(0,1fr)_auto] md:grid-cols-[4rem_minmax(0,1fr)_minmax(0,1fr)_auto] items-center gap-x-4 md:gap-x-8 py-7 md:py-10 text-left cursor-pointer outline-none focus-visible:bg-[#1B123D]/[0.04]"
+      >
+        <h4
+          className={`font-mono text-[11px] md:text-xs  tabular-nums transition-colors ${
+            isOpen ? "text-[#1B123D]" : "text-neutral-400"
+          }`}
+        >
+          {pad(index + 1)}
+        </h4>
+
+        <span className="min-w-0">
+          <span
+            className={`block font-['SwitzerB'] text-[30px] md:text-[48px] lg:text-[60px] leading-none tracking-tight transition-colors duration-300 ${
+              isOpen ? "text-black" : "text-neutral-400 group-hover:text-black"
+            }`}
+          >
+            {category.title}
+          </span>
+          {/* The meaning sits under the name on phones */}
+          <span className="md:hidden block mt-2 text-[14px] leading-snug text-[#555]">{category.about}</span>
+        </span>
+
+        <p className="hidden md:block text-[15px] lg:text-[16px] leading-relaxed text-[#555] max-w-[34ch]">
+          {category.about}
+        </p>
+
+        <span className="flex items-center gap-4 md:gap-6">
+          <span className="text-right">
+            <span className="block text-[26px] md:text-[36px] font-light leading-none tabular-nums text-black">
+              {pad(category.properties.length)}
+            </span>
+            <p className="hidden md:block mt-1 font-mono text-[10px] uppercase  text-neutral-500">
+              Cinemas
+            </p>
+          </span>
+          <span
+            className={`grid place-items-center w-10 h-10 md:w-12 md:h-12 rounded-full border transition-colors duration-300 ${
+              isOpen
+                ? "bg-[#1B123D] border-[#1B123D] text-white"
+                : "border-black/20 text-black group-hover:border-[#1B123D] group-hover:bg-[#1B123D] group-hover:text-white"
+            }`}
+          >
+            <Plus
+              strokeWidth={1.5}
+              className={`w-5 h-5 transition-transform duration-500 ease-out ${isOpen ? "rotate-45" : ""}`}
+            />
+          </span>
+        </span>
+      </button>
+
+      {/* The cinemas, in a lined grid lined up with the category name */}
+      <div ref={panelRef} id={panelId} role="region" aria-label={`${category.title} cinemas`} className="overflow-hidden">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 lg:gap-x-12 pb-10 md:pb-14 pl-[calc(2rem+1rem)] md:pl-[calc(4rem+2rem)]">
+          {category.properties.map((item) => {
+            const parts = item.location.split(",").map((s) => s.trim());
+            return (
+              <li
+                key={item.name}
+                data-cinema
+                className="group/item py-4 md:py-5 border-t border-[#D4D4D4] hover:border-[#1B123D] transition-colors duration-300"
+              >
+                {/* Hover only changes colour: the rule above and the name turn navy */}
+                <span className="block text-[18px] md:text-[20px] font-medium tracking-tight leading-tight text-black group-hover/item:text-[#1B123D] transition-colors duration-300">
+                  {item.name}
+                </span>
+                <span className="block mt-1.5 text-[13px] md:text-[14px] leading-snug text-[#666]">
+                  {parts.slice(0, -1).join(", ")}
+                  {parts.length > 1 && <span className="text-neutral-400"> · </span>}
+                  {parts.at(-1)}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+/* ---------- the section ---------- */
 
 export default function PropertiesSection() {
-  const [active, setActive] = useState(0);
   const sectionRef = useRef(null);
-  const listRef = useRef(null);
-  const tabRefs = useRef([]);
-  const tabChanged = useRef(false);
+  // One category open at a time; all start closed
+  const [openId, setOpenId] = useState(null);
 
-  // Heading, rule and category counters reveal once as the section enters
+  // Heading, intro and the category rows reveal once as the section enters
   useScrollReveal(sectionRef);
-
-  // Rows rise in one after another: on first view as the list scrolls in, then on every tab change
-  useGSAP(
-    () => {
-      const rows = listRef.current?.querySelectorAll("[data-row]");
-      if (!rows?.length) return;
-      const mm = gsap.matchMedia();
-      mm.add(MOTION_OK, () => {
-        gsap.fromTo(
-          rows,
-          { autoAlpha: 0, y: 24 },
-          {
-            autoAlpha: 1,
-            y: 0,
-            duration: DURATION,
-            ease: EASE,
-            stagger: 0.04,
-            scrollTrigger: tabChanged.current
-              ? undefined
-              : { trigger: listRef.current, start: "top 85%", once: true },
-          }
-        );
-      });
-    },
-    { scope: listRef, dependencies: [active] }
-  );
-
-  const selectTab = (i) => {
-    tabChanged.current = true;
-    setActive(i);
-  };
-
-  // Arrow keys move between tabs (WAI-ARIA tabs pattern)
-  const onTabKeyDown = (e) => {
-    const last = propertiesCategories.length - 1;
-    let next = null;
-    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = active === last ? 0 : active + 1;
-    if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = active === 0 ? last : active - 1;
-    if (e.key === "Home") next = 0;
-    if (e.key === "End") next = last;
-    if (next === null) return;
-    e.preventDefault();
-    selectTab(next);
-    tabRefs.current[next]?.focus();
-  };
-
-  const category = propertiesCategories[active];
 
   return (
     <section
       ref={sectionRef}
       aria-labelledby="a2-properties-heading"
-      className="relative w-full bg-white text-black py-24 md:py-32 lg:py-40 px-4 md:px-8 lg:px-10 overflow-hidden"
+      className="relative w-full bg-white text-black py-24 md:py-32 lg:py-40 px-4 md:px-8 lg:px-10"
     >
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14 md:mb-20">
         <div>
-          <p data-reveal="rise" className="font-mono text-[11px]! md:text-xs! uppercase tracking-[0.25em] text-[#1B123D] mb-5">
-            Exhibition Network
-          </p>
+         
           <h2
             id="a2-properties-heading"
             data-reveal="words"
@@ -145,116 +217,23 @@ export default function PropertiesSection() {
             Cinema Properties
           </h2>
         </div>
-        <p data-reveal="rise" className="text-[#555] text-sm! md:text-base! max-w-[360px] leading-relaxed">
-          Choose a category to see its cinemas.
+        <p data-reveal="rise" className="text-[#555] text-[15px]! md:text-[16px]! max-w-[380px] leading-relaxed!">
+          {total} cinemas in {propertiesCategories.length} categories. Open a category to see its cinemas and
+          where they are.
         </p>
       </div>
 
-      {/* Category tabs: number, count and name, the active one underlined in the accent blue */}
-      <div
-        role="tablist"
-        aria-label="Property categories"
-        className="grid grid-cols-2 lg:grid-cols-4 border-t border-[#D4D4D4]"
-      >
-        {propertiesCategories.map((cat, i) => {
-          const selected = i === active;
-          return (
-            <button
-              key={cat.id}
-              ref={(el) => (tabRefs.current[i] = el)}
-              type="button"
-              role="tab"
-              id={`a2-tab-${cat.id}`}
-              aria-selected={selected}
-              aria-controls="a2-properties-panel"
-              tabIndex={selected ? 0 : -1}
-              onClick={() => selectTab(i)}
-              onKeyDown={onTabKeyDown}
-              className={`group relative text-left pt-6 pb-7 md:pt-8 md:pb-10 pr-4 cursor-pointer transition-colors duration-300 outline-none focus-visible:bg-[#1B123D]/[0.06] border-b border-[#D4D4D4] ${
-                i % 2 === 1 ? "border-l pl-4 md:pl-8" : ""
-              } ${i === 2 ? "lg:border-l lg:pl-8" : ""}`}
-            >
-              {/* Active indicator */}
-              <span
-                aria-hidden="true"
-                className={`absolute left-0 right-0 -top-px h-[2px] bg-[#1B123D] origin-left transition-transform duration-500 ease-out ${
-                  selected ? "scale-x-100" : "scale-x-0 group-hover:scale-x-[0.25]"
-                }`}
-              />
-              <span
-                className={`block font-mono text-[11px] tracking-[0.2em] mb-4 md:mb-6 transition-colors ${
-                  selected ? "text-[#1B123D]" : "text-neutral-400"
-                }`}
-              >
-                {cat.id}
-              </span>
-              <span
-                data-reveal="count"
-                data-count-to={cat.properties.length}
-                className={`block font-['SwitzerB'] text-5xl md:text-7xl leading-none tracking-tight tabular-nums transition-colors duration-300 ${
-                  selected ? "text-black" : "text-neutral-300 group-hover:text-neutral-500"
-                }`}
-              >
-                {cat.properties.length}
-              </span>
-              <span
-                className={`mt-3 md:mt-4 block text-sm md:text-base transition-colors duration-300 ${
-                  selected ? "text-black" : "text-neutral-500 group-hover:text-black"
-                }`}
-              >
-                {cat.title} <span className="text-neutral-400">properties</span>
-              </span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Directory for the selected category */}
-      <div
-        id="a2-properties-panel"
-        role="tabpanel"
-        aria-labelledby={`a2-tab-${category.id}`}
-        tabIndex={0}
-        className="pt-12 md:pt-16 outline-none"
-      >
-        <div className="flex items-baseline justify-between gap-4 mb-6 md:mb-8">
-          <h3 className="font-['SwitzerB'] text-2xl md:text-4xl tracking-tight">
-            {category.title}
-          </h3>
-          <span className="font-mono text-[11px] md:text-xs uppercase tracking-[0.2em] text-neutral-500 tabular-nums">
-            {pad(category.properties.length)} {category.properties.length === 1 ? "property" : "properties"}
-          </span>
-        </div>
-
-        <ol
-          key={category.id}
-          ref={listRef}
-          className="grid grid-cols-1 md:grid-cols-2 md:gap-x-12 lg:gap-x-20 border-t border-[#D4D4D4] md:border-t-0"
-        >
-          {category.properties.map((item, i) => (
-            <li
-              key={item.name}
-              data-row
-              className="group relative flex flex-col sm:flex-row sm:items-baseline gap-1.5 sm:gap-6 py-5 md:py-6 border-b border-[#D4D4D4] md:first:border-t md:[&:nth-child(2)]:border-t"
-            >
-              {/* Hover rule draws in along the bottom edge */}
-              <span
-                aria-hidden="true"
-                className="absolute left-0 right-0 -bottom-px h-px bg-[#1B123D] origin-left scale-x-0 transition-transform duration-500 ease-out group-hover:scale-x-100"
-              />
-              <span className="font-mono text-[11px] tracking-[0.2em] text-neutral-400 group-hover:text-[#1B123D] transition-colors w-8 shrink-0 tabular-nums">
-                {pad(i + 1)}
-              </span>
-              <span className="font-['SwitzerB'] text-xl md:text-2xl tracking-tight leading-tight transition-transform duration-500 ease-out group-hover:translate-x-1.5 min-w-0">
-                {item.name}
-              </span>
-              <span className="sm:ml-auto flex items-center gap-1.5 text-[13px] md:text-sm text-neutral-500 sm:text-right">
-                <MapPin aria-hidden="true" className="w-3.5 h-3.5 shrink-0 text-neutral-400 group-hover:text-[#1B123D] transition-colors" />
-                {item.location}
-              </span>
-            </li>
-          ))}
-        </ol>
+      {/* Categories */}
+      <div data-reveal="rise" className="border-t border-black/15">
+        {propertiesCategories.map((category, index) => (
+          <Category
+            key={category.id}
+            category={category}
+            index={index}
+            isOpen={openId === category.id}
+            onToggle={() => setOpenId(openId === category.id ? null : category.id)}
+          />
+        ))}
       </div>
     </section>
   );

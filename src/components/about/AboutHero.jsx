@@ -2,14 +2,8 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { useGSAP } from "@gsap/react";
-import { Draggable } from "gsap/Draggable";
-import { gsap, MOTION_OK, MOTION_REDUCED } from "@/lib/motion";
 import useEntrance from "@/hooks/useEntrance";
-
-if (typeof window !== "undefined") {
-    gsap.registerPlugin(Draggable);
-}
+import useInfiniteDragSlider from "@/hooks/useInfiniteDragSlider";
 
 const carouselItems = [
     { src: "/img/final/about_Img/AB1/SG_0024_1_11zon_1_11zon.webp" },
@@ -23,6 +17,9 @@ const carouselItems = [
     { src: "/img/final/about_Img/AB1/WHISTLING WOODS CAMPAIGN 09.04_2_9_11zon_9_11zon.webp" },
 ];
 
+// Seconds for the strip to scroll one full set on its own
+const LOOP_SECONDS = 35;
+
 const AboutHero = () => {
     const heroRef = useRef(null);
     const containerRef = useRef(null);
@@ -31,54 +28,8 @@ const AboutHero = () => {
     // Headline line by line, then the founding line, then the image strip
     useEntrance(heroRef, { gap: 0.25 });
 
-    // Auto-scrolling strip that can be dragged; with reduced motion it only moves when dragged
-    useGSAP(
-        () => {
-            const track = trackRef.current;
-            if (!track) return;
-
-            const mm = gsap.matchMedia();
-            mm.add({ motion: MOTION_OK, reduced: MOTION_REDUCED }, (context) => {
-                const { reduced } = context.conditions;
-
-                // We animate from 0 to -50% because the track contains two identical sets of items.
-                const tl = gsap.timeline({ repeat: -1, paused: reduced, defaults: { ease: "none" } });
-                tl.to(track, {
-                    xPercent: -50,
-                    duration: 35, // Smooth slow scrolling
-                });
-
-                let dragStartProgress = 0;
-                let dragStartX = 0;
-
-                const [drag] = Draggable.create(document.createElement("div"), {
-                    trigger: containerRef.current,
-                    type: "x",
-                    onPress() {
-                        tl.pause();
-                        dragStartProgress = tl.progress();
-                        dragStartX = this.x;
-                    },
-                    onDrag() {
-                        const movementWidth = track.scrollWidth / 2;
-                        const progressDelta = -((this.x - dragStartX) / movementWidth);
-
-                        // Wrap progress between 0 and 1
-                        let newProgress = (dragStartProgress + progressDelta) % 1;
-                        if (newProgress < 0) newProgress += 1;
-
-                        tl.progress(newProgress);
-                    },
-                    onRelease() {
-                        if (!reduced) tl.play();
-                    },
-                });
-
-                return () => drag?.kill();
-            });
-        },
-        { scope: containerRef }
-    );
+    // Auto-scrolling strip that glides after a drag and eases back into its own speed
+    useInfiniteDragSlider(containerRef, trackRef, { itemCount: carouselItems.length, loopSeconds: LOOP_SECONDS });
 
     return (
         <section ref={heroRef} className="relative w-full pt-32 pb-16 overflow-hidden bg-[#FAFAFA]">

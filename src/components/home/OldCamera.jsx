@@ -175,14 +175,42 @@ function AnimatedCameraGroup() {
     );
 }
 
+// One slide per role: the role sits under the name, the subheading and copy at the bottom,
+// and each has its own background (the working still, the portrait, Whistling Woods)
+const SLIDES = [
+    {
+        role: "THE FILMMAKER",
+        subheading: "A Legacy in Indian Cinema",
+        text: "From his directorial debut Kalicharan in 1976 to films including Karma, Ram Lakhan, Saudagar, Pardes and Taal, Subhash Ghai has shaped mainstream Hindi cinema through stories, music and characters that have endured across generations. He has written and directed 19 motion pictures, with 14 achieving hit or blockbuster status.",
+        image: "/img/final/SG/S2/SG_0067_3_11zon.webp",
+    },
+    {
+        role: "THE VISIONARY",
+        subheading: "Building the Business of Cinema",
+        text: "Ghai went beyond filmmaking to help shape the infrastructure of the Indian film industry. He founded Mukta Films in 1978, took Mukta Arts public, and pioneered initiatives in film financing, insurance, exhibition and digital projection. Mukta Arts became the first Indian film studio to undertake an IPO and list on the major stock exchanges, and pioneered film insurance with Taal as the first Indian film to be insured.",
+        image: "/img/final/home/home2/WhatsApp2.webp",
+    },
+    {
+        role: "THE EDUCATOR",
+        subheading: "Shaping the Next Generation",
+        text: "In 2006, Ghai founded Whistling Woods International, transforming his experience in cinema into a platform for film and media education. His vision was to create a world-class institution that could equip the next generation of filmmakers, technicians and storytellers for a global industry.",
+        image: "/img/final/home/home2/WhatsApp1.webp",
+    },
+];
+
+// Points on the 4.0-long scroll timeline: when each slide comes in and goes out,
+// and when the background crossfades to the next slide's image (between the two)
+const SLIDE_IN = [0.8, 2.0, 3.2];
+const SLIDE_OUT = [1.5, 2.7];
+const BG_SWAP = [1.6, 2.8];
+const BG_OPACITY = 0.35;
+
 export default function OldCamera() {
     const containerRef = useRef(null);
-    const text1Ref = useRef(null);
-    const text2Ref = useRef(null);
-    const text3Ref = useRef(null);
+    const roleRefs = useRef([]);
+    const bodyRefs = useRef([]);
+    const bgRefs = useRef([]);
     const buttonRef = useRef(null);
-    const bgImageRef = useRef(null);
-    const bgImage2Ref = useRef(null);
     // Far below the fold: load the camera only once the home intro has played,
     // and only draw it while the section is near the screen
     const sceneOn = useAfterIntro();
@@ -199,36 +227,35 @@ export default function OldCamera() {
             }
         });
 
-        gsap.set([text1Ref.current, text2Ref.current, text3Ref.current], { opacity: 0, y: 30 });
-        if (buttonRef.current) {
-            gsap.set(buttonRef.current, { opacity: 0, y: 20 });
-        }
-        if (bgImageRef.current) {
-            gsap.set(bgImageRef.current, { opacity: 0, scale: 0.95 });
-        }
-        if (bgImage2Ref.current) {
-            gsap.set(bgImage2Ref.current, { opacity: 0 });
-        }
+        const roles = roleRefs.current;
+        const bodies = bodyRefs.current;
+        const bgs = bgRefs.current;
 
-        // Reveal background image & button after 3D camera rotation finishes
-        if (bgImageRef.current) {
-            tl.to(bgImageRef.current, { opacity: 0.35, scale: 1, duration: 0.4 }, 0.8);
-        }
-        // The working still sits behind "The Filmmaker"; the portrait takes over from "The Visionary" on
-        if (bgImageRef.current && bgImage2Ref.current) {
-            tl.to(bgImageRef.current, { opacity: 0, duration: 0.4 }, 1.6)
-                .to(bgImage2Ref.current, { opacity: 0.35, duration: 0.4 }, 1.6);
-        }
-        if (buttonRef.current) {
-            tl.to(buttonRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0.8);
-        }
+        gsap.set([...roles, ...bodies], { opacity: 0, y: 30 });
+        gsap.set(buttonRef.current, { opacity: 0, y: 20 });
+        gsap.set(bgs, { opacity: 0 });
+        gsap.set(bgs[0], { scale: 0.95 });
 
-        tl.to(text1Ref.current, { opacity: 1, y: 0, duration: 0.2 }, 0.8)
-            .to(text1Ref.current, { opacity: 0, y: -20, duration: 0.2 }, 1.5)
-            .to(text2Ref.current, { opacity: 1, y: 0, duration: 0.2 }, 2.0)
-            .to(text2Ref.current, { opacity: 0, y: -20, duration: 0.2 }, 2.7)
-            .to(text3Ref.current, { opacity: 1, y: 0, duration: 0.2 }, 3.2)
-            .to({}, { duration: 0.6 }); // pad to 4.0
+        // Reveal the first background image & button after 3D camera rotation finishes
+        tl.to(bgs[0], { opacity: BG_OPACITY, scale: 1, duration: 0.4 }, 0.8);
+        tl.to(buttonRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0.8);
+
+        // Each slide's image takes over as its role and copy come in
+        BG_SWAP.forEach((at, i) => {
+            tl.to(bgs[i], { opacity: 0, duration: 0.4 }, at)
+                .to(bgs[i + 1], { opacity: BG_OPACITY, duration: 0.4 }, at);
+        });
+
+        // The role under the name and the copy at the bottom change together
+        SLIDES.forEach((_, i) => {
+            const els = [roles[i], bodies[i]];
+            tl.to(els, { opacity: 1, y: 0, duration: 0.2 }, SLIDE_IN[i]);
+            if (SLIDE_OUT[i] !== undefined) {
+                tl.to(els, { opacity: 0, y: -20, duration: 0.2 }, SLIDE_OUT[i]);
+            }
+        });
+
+        tl.to({}, { duration: 0.6 }); // pad to 4.0
     }, { scope: containerRef });
 
     return (
@@ -237,86 +264,69 @@ export default function OldCamera() {
 
             <section className="sticky top-0 w-full h-[100vh] bg-white max-sm:overflow-hidden flex items-center justify-center">
 
-                {/* Background Images of Subhash Ghai - reveal after 3D camera rotation: the working still, then the portrait */}
+                {/* Background Images - reveal after 3D camera rotation, one per slide */}
                 <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
-                    <div
-                        ref={bgImageRef}
-                        className="absolute inset-0 bg-cover bg-center md:bg-[center_right_10%] opacity-0 filter contrast-110"
-                        style={{ backgroundImage: "url('/img/final/home/home2/WhatsApp1.webp')" }}
-                    />
-                    <div
-                        ref={bgImage2Ref}
-                        className="absolute inset-0 bg-cover bg-center md:bg-[center_right_10%] opacity-0 filter contrast-110"
-                        style={{ backgroundImage: "url('/img/final/home/home2/WhatsApp2.webp')" }}
-                    />
+                    {SLIDES.map((slide, i) => (
+                        <div
+                            key={slide.image}
+                            ref={(el) => { bgRefs.current[i] = el; }}
+                            className="absolute inset-0 bg-cover bg-center md:bg-[center_right_10%] opacity-0 filter contrast-110"
+                            style={{ backgroundImage: `url('${slide.image}')` }}
+                        />
+                    ))}
                     <div className="absolute inset-0 bg-gradient-to-r from-white via-white/70 to-transparent" />
                     <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-white/30" />
                 </div>
 
-                {/* Title */}
-                <h2 className="absolute top-[10%] tracking-tighter left-[5%] md:left-[4%] z-40 text-black leading-none pointer-events-none">
-                    Subhash Ghai.
-                </h2>
-
-                {/* Text Content */}
-                <div className="absolute  top-[45%] sm:top-[40%] md:top-[45%] -translate-y-1/2 left-[5%] md:left-[4%] w-[90%] md:max-w-lg z-[70] text-black pointer-events-none">
-
-                    {/* Paragraph Slides Wrapper */}
-                    <div className="relative min-h-[310px] sm:min-h-[270px] md:min-h-[230px]">
-                        {/* Text Content 1 */}
-                        <div ref={text1Ref} className="absolute top-0 left-0 w-full pointer-events-none">
-                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight uppercase mb-1 md:mb-2">
-                                THE FILMMAKER
-                            </h3>
-                            <h5 className="text-base sm:text-lg md:text-xl font-medium text-[#1B123D] mb-3 md:mb-4 leading-snug">
-                                A Legacy in Indian Cinema
-                            </h5>
-                            <p className="text-sm md:text-base opacity-90 leading-relaxed mb-4 md:mb-5">
-                                From his directorial debut Kalicharan in 1976 to films including Karma, Ram Lakhan, Saudagar, Pardes and Taal, Subhash Ghai has shaped mainstream Hindi cinema through stories, music and characters that have endured across generations. He has written and directed 19 motion pictures, with 14 achieving hit or blockbuster status.
-                            </p>
-                        </div>
-
-                        {/* Text Content 2 */}
-                        <div ref={text2Ref} className="absolute top-0 left-0 w-full pointer-events-none">
-                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight uppercase mb-1 md:mb-2">
-                                THE VISIONARY
-                            </h3>
-                            <h5 className="text-base sm:text-lg md:text-xl font-medium text-[#1B123D] mb-3 md:mb-4 leading-snug">
-                                Building the Business of Cinema
-                            </h5>
-                            <p className="text-sm md:text-base opacity-90 leading-relaxed mb-4 md:mb-5">
-                                Ghai went beyond filmmaking to help shape the infrastructure of the Indian film industry. He founded Mukta Films in 1978, took Mukta Arts public, and pioneered initiatives in film financing, insurance, exhibition and digital projection. Mukta Arts became the first Indian film studio to undertake an IPO and list on the major stock exchanges, and pioneered film insurance with Taal as the first Indian film to be insured.
-                            </p>
-                        </div>
-
-                        {/* Text Content 3 */}
-                        <div ref={text3Ref} className="absolute top-0 left-0 w-full pointer-events-none">
-                            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight uppercase mb-1 md:mb-2">
-                                THE EDUCATOR
-                            </h3>
-                            <h5 className="text-base sm:text-lg md:text-xl font-medium text-[#1B123D] mb-3 md:mb-4 leading-snug">
-                                Shaping the Next Generation
-                            </h5>
-                            <p className="text-sm md:text-base opacity-90 leading-relaxed mb-4 md:mb-5">
-                                In 2006, Ghai founded Whistling Woods International, transforming his experience in cinema into a platform for film and media education. His vision was to create a world-class institution that could equip the next generation of filmmakers, technicians and storytellers for a global industry.
-                            </p>
-                        </div>
+                {/* Title, with the role that changes on scroll right below it */}
+                <div className="absolute top-[10%] left-[5%] md:left-[4%] z-40 text-black pointer-events-none">
+                    <h2 className="tracking-tighter leading-none">
+                        Subhash Ghai.
+                    </h2>
+                    {/* The roles share one grid cell, so they swap in place */}
+                    <div className="grid ">
+                        {SLIDES.map((slide, i) => (
+                            <h4
+                                key={slide.role}
+                                ref={(el) => { roleRefs.current[i] = el; }}
+                                className="[grid-area:1/1] text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight uppercase"
+                            >
+                                {slide.role}
+                            </h4>
+                        ))}
                     </div>
-
-
                 </div>
-                {/* Single View More Button placed directly after the text paragraph */}
-                <div
-                    ref={buttonRef}
-                    className="pt-2 pointer-events-auto absolute  bottom-10 left-15 z-[80]"
-                >
-                    <Link
-                        href="/subhash-ghai"
-                        className="inline-flex items-center gap-2 bg-[#1B123D] hover:bg-[#2A1D5C] text-white px-6 py-2.5 text-xs md:text-sm tracking-wider font-semibold rounded-[3px] transition-all duration-300 shadow-md hover:shadow-lg group cursor-pointer"
-                    >
-                        <span>View More</span>
-                        <span className="transform group-hover:translate-x-1 transition-transform">→</span>
-                    </Link>
+
+                {/* Subheading, copy and button at the bottom */}
+                <div className="absolute bottom-[190px] sm:bottom-16 left-[5%] md:left-[4%] w-[90%] md:max-w-lg z-[80] text-black">
+                    {/* Stacked in one grid cell and pinned to its bottom, so the button never moves */}
+                    <div className="grid pointer-events-none">
+                        {SLIDES.map((slide, i) => (
+                            <div
+                                key={slide.subheading}
+                                ref={(el) => { bodyRefs.current[i] = el; }}
+                                className="[grid-area:1/1] self-end"
+                            >
+                                {/* SUBHEADING */}
+                                <h5 className="text-base uppercase sm:text-lg md:text-xl font-medium text-[#1B123D] mb-3 md:mb-4 leading-snug">
+                                    {slide.subheading}
+                                </h5>
+                                <p className="text-sm md:text-base opacity-90 leading-relaxed mb-4 md:mb-5">
+                                    {slide.text}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                    {/* Single View More Button placed directly after the text paragraph */}
+                    <div ref={buttonRef} className="pt-2 pointer-events-auto w-fit">
+                        <Link
+                            href="/subhash-ghai"
+                            className="inline-flex items-center gap-2 bg-[#1B123D] hover:bg-[#2A1D5C] text-white px-6 py-2.5 text-xs md:text-sm tracking-wider font-semibold rounded-[3px] transition-all duration-300 shadow-md hover:shadow-lg group cursor-pointer"
+                        >
+                            <span>View More</span>
+                            <span className="transform group-hover:translate-x-1 transition-transform">→</span>
+                        </Link>
+                    </div>
                 </div>
 
                 {/* 3D Canvas */}

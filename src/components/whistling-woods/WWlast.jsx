@@ -1,14 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { Draggable } from "gsap/Draggable";
+import { useRef } from "react";
 import Image from "next/image";
 import useScrollReveal from "@/hooks/useScrollReveal";
-
-if (typeof window !== "undefined") {
-    gsap.registerPlugin(Draggable);
-}
+import useInfiniteDragSlider from "@/hooks/useInfiniteDragSlider";
 
 const W2 = "/img/final/WW/W2/";
 
@@ -46,7 +41,9 @@ const carouselItems = [
     "WHISTLING WOODS CAMPAIGN 09.04_18.jpg",
 ].map((file) => ({ src: encodeURI(W2 + file) }));
 
-const itemSize = "w-[260px] h-[195px] sm:w-[320px] sm:h-[240px] md:w-[420px] md:h-[300px]";
+// Same widths as before, taller frames (capped by the screen height on short laptops)
+const itemSize =
+    "w-[260px] h-[320px] sm:w-[320px] sm:h-[400px] md:w-[420px] md:h-[min(520px,65svh)]";
 
 const WWlast = () => {
     const containerRef = useRef(null);
@@ -56,54 +53,12 @@ const WWlast = () => {
     // Heading reveal as the section enters
     useScrollReveal(sectionRef);
 
-    useEffect(() => {
-        const track = trackRef.current;
-        if (!track) return;
-
-        // We animate from 0 to -50% because the track contains two identical sets of items.
-        let tl = gsap.timeline({ repeat: -1, defaults: { ease: "none" } });
-
-        tl.to(track, {
-            xPercent: -50,
-            duration: carouselItems.length * 7, // Smooth slow scrolling, same speed regardless of item count
-        });
-
-        let dragStartProgress = 0;
-        let dragStartX = 0;
-
-        const dragInstance = Draggable.create(document.createElement("div"), {
-            trigger: containerRef.current,
-            type: "x",
-            onPress: function () {
-                tl.pause();
-                dragStartProgress = tl.progress();
-                dragStartX = this.x;
-            },
-            onDrag: function () {
-                const trackWidth = track.scrollWidth;
-                const movementWidth = trackWidth / 2;
-
-                const deltaX = this.x - dragStartX;
-                const progressDelta = -(deltaX / movementWidth);
-
-                let newProgress = dragStartProgress + progressDelta;
-
-                // Wrap progress between 0 and 1
-                newProgress = newProgress % 1;
-                if (newProgress < 0) newProgress += 1;
-
-                tl.progress(newProgress);
-            },
-            onRelease: function () {
-                tl.play();
-            },
-        });
-
-        return () => {
-            tl.kill();
-            dragInstance[0]?.kill();
-        };
-    }, []);
+    // Auto-scrolling strip that glides after a drag and eases back into its own speed
+    // (same speed as before: 7 seconds per image, whatever the image count)
+    useInfiniteDragSlider(containerRef, trackRef, {
+        itemCount: carouselItems.length,
+        loopSeconds: carouselItems.length * 7,
+    });
 
     return (
         <section ref={sectionRef} className="relative w-full pt-20 md:pt-32 pb-12 md:pb-16 overflow-hidden bg-[#FAFAFA]">
@@ -134,7 +89,7 @@ const WWlast = () => {
                                 src={item.src}
                                 alt={`Hero image ${index}`}
                                 fill
-                                sizes="(max-width: 768px) 80vw, 33vw"
+                                sizes="(max-width: 768px) 80vw, 40vw"
                                 className="object-cover"
                                 quality={90}
                                 priority={index < 4}

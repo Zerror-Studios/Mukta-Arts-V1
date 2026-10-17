@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import useScrollReveal from "@/hooks/useScrollReveal";
+import { smoothScrollTo } from "@/lib/smoothScroll";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -248,12 +249,14 @@ export default function CareerMilestones() {
   const cardsRef = useRef([]);
   const dotsRef = useRef([]);
   const yearsRef = useRef([]);
+  // Set up with the scroll timeline: takes the timeline to one milestone when its dot is clicked
+  const jumpToRef = useRef(null);
 
   // Section heading reveals as it enters
   useScrollReveal(containerRef);
 
   useGSAP(
-    () => {
+    (context, contextSafe) => {
       const track = scrollTrackRef.current;
       const cards = cardsRef.current.filter(Boolean);
       const n = cards.length;
@@ -310,7 +313,7 @@ export default function CareerMilestones() {
       setActive(0);
 
       // Scroll from the first card centred in the viewport to the last one centred
-      gsap.fromTo(
+      const trackTween = gsap.fromTo(
         track,
         { x: () => window.innerWidth / 2 - centers[0] },
         {
@@ -339,6 +342,31 @@ export default function CareerMilestones() {
           },
         }
       );
+
+      // A dot click glides the track to that milestone. The page scrolls to the matching point
+      // with an ease in and out, taking a little longer the further it goes, and the scrub
+      // smooths the track on top of that.
+      jumpToRef.current = contextSafe((index) => {
+        const st = trackTween.scrollTrigger;
+        if (!st) return;
+        const span = centers[n - 1] - centers[0] || 1;
+        const y = st.start + ((centers[index] - centers[0]) / span) * (st.end - st.start);
+
+        if (!window.lenis) {
+          smoothScrollTo(y);
+          return;
+        }
+        const steps = Math.abs(index - Math.max(activeIndex, 0));
+        window.lenis.scrollTo(y, {
+          duration: gsap.utils.clamp(0.9, 2.4, 0.8 + steps * 0.08),
+          easing: (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2),
+          force: true,
+        });
+      });
+
+      return () => {
+        jumpToRef.current = null;
+      };
     },
     { scope: containerRef }
   );
@@ -403,7 +431,7 @@ export default function CareerMilestones() {
                 key={m.id}
                 ref={(el) => (cardsRef.current[index] = el)}
                 data-active={index === 0}
-                className={`group shrink-0 flex flex-col transition-opacity duration-700 opacity-40 md:opacity-45 data-[active=true]:opacity-100 ${
+                className={`group shrink-0 flex flex-col ${
                   studio
                     ? "w-[min(calc(var(--ph)*1.35),84vw)]"
                     : "w-[min(calc(var(--ph)*0.68),64vw)]"
@@ -430,7 +458,7 @@ export default function CareerMilestones() {
                     loading="lazy"
                     draggable={false}
                     style={m.imgPos ? { objectPosition: m.imgPos } : undefined}
-                    className="w-full h-full object-cover grayscale scale-[1.06] transition-[filter,transform] duration-1000 ease-out group-data-[active=true]:grayscale-0 group-data-[active=true]:scale-100"
+                    className="w-full h-full object-cover grayscale contrast-125 opacity-70  transition-[filter,transform,opacity] duration-1000 ease-out group-data-[active=true]:grayscale-0 group-data-[active=true]:contrast-100 group-data-[active=true]:opacity-100 group-data-[active=true]:scale-100"
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-black/55 via-transparent to-transparent" />
                   {/* <span className="absolute left-2.5 bottom-2.5 md:left-4 md:bottom-4 max-w-[calc(100%-1.25rem)] truncate px-2 py-1 text-[9px] md:text-[10px] font-mono uppercase tracking-[0.15em] md:tracking-[0.2em] text-white border border-white/40 backdrop-blur-sm bg-black/20">
@@ -485,12 +513,16 @@ export default function CareerMilestones() {
             style={{ transform: "scaleX(0)" }}
           />
           {milestonesData.map((m, i) => (
-            <span
+            // The dots are tiny, so ::before gives each a larger invisible hit area
+            <button
               key={m.id}
+              type="button"
               ref={(el) => (dotsRef.current[i] = el)}
+              onClick={() => jumpToRef.current?.(i)}
+              aria-label={`${m.year}: ${m.title}`}
               data-passed={i === 0}
               data-active={i === 0}
-              className={`absolute top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#F8F9FA] border transition-all duration-300 border-black/25 data-[passed=true]:bg-black data-[passed=true]:border-black data-[active=true]:scale-[1.8] ${
+              className={`absolute top-1/2 -translate-x-1/2 -translate-y-1/2 p-0 rounded-full bg-[#F8F9FA] border transition-all duration-300 border-black/25 cursor-pointer outline-none before:absolute before:-inset-2.5 before:rounded-full before:content-[''] hover:border-black hover:scale-[1.5] focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 data-[passed=true]:bg-black data-[passed=true]:border-black data-[active=true]:scale-[1.8] ${
                 m.isMilestone ? "w-1.75 h-1.75 md:w-2.5 md:h-2.5" : "w-1.25 h-1.25 md:w-1.5 md:h-1.5"
               }`}
               style={{ left: `${(i / (milestonesData.length - 1)) * 100}%` }}
