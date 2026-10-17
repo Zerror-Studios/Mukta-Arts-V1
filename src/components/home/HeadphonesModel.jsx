@@ -6,14 +6,24 @@ import * as THREE from 'three';
 // The same GSAP + ScrollTrigger instance as the rest of the site, so these triggers update in
 // step with Lenis instead of on a second, separate copy listening to the scroll on its own
 import { gsap } from '@/lib/motion';
-import { modelIntro, setModelReady } from '@/lib/homeIntro';
+import { modelIntro, MODEL_FRONT_Y, setModelReady } from '@/lib/homeIntro';
 
 // Reused every frame while the model follows the header logo / footer, instead of allocating new vectors
 const _point = new THREE.Vector3();
 const _dir = new THREE.Vector3();
 const _dockPos = new THREE.Vector3();
 const _footerPos = new THREE.Vector3();
+const _size = new THREE.Vector3();
+const _worldScale = new THREE.Vector3();
 const TURN = Math.PI * 2;
+// Share of the header logo image's height that the headphones fill (the PNG has a little padding),
+// so the docked 3D logo ends the same size as the flat one it cross-fades into
+const DOCK_FILL = 0.86;
+// The dock runs from this much of a screen's scroll to this much (fractions of the viewport height)
+const DOCK_START = 0.1;
+const DOCK_END = 0.9;
+// Share of the dock after which the 3D logo cross-fades into the flat header logo
+const DOCK_FADE_FROM = 0.88;
 
 // Where the centre of a DOM element lands on the z = 0 plane the model moves in
 function elementToWorld(el, size, camera, out) {
@@ -26,7 +36,7 @@ function elementToWorld(el, size, camera, out) {
   return out.copy(camera.position).add(_dir.multiplyScalar(distance));
 }
 
-export function Model({ onDrawingChange, ...props }) {
+export function Model({ onDrawingChange, scale: baseScale = 1, ...props }) {
   const { scene } = useGLTF('/model/headphones.glb');
   const introRef = useRef();
   const groupRef = useRef();
@@ -35,6 +45,8 @@ export function Model({ onDrawingChange, ...props }) {
 
   // dockP: 0 in the hero, 1 once shrunk into the header's top-left corner
   const stateRef = useRef({ footerProgress: 0, dockP: 0, minimised: false });
+  // The model's own height (before any scaling), measured once it is upright
+  const modelHeightRef = useRef(0);
   const heroTlRef = useRef(null);
   const dockRef = useRef({ canvas: null, logo: null, footer: null, last: -1, drawing: true });
   const isDragging = useRef(false);
@@ -112,16 +124,39 @@ export function Model({ onDrawingChange, ...props }) {
     if (groupRef.current) {
       const pos = groupRef.current.position;
 
-      // Docked spot (the centre of the header logo), blended in as the hero timeline scrolls
+      // Docked spot (the centre of the header logo) and docked size (the logo's height on screen),
+      // both blended in as the hero timeline scrolls
       _dockPos.set(0, 0, 0);
+      let dockScale = 1;
       if (dockP > 0) {
         if (!dock.logo || !dock.logo.isConnected) dock.logo = document.getElementById('header-dock-logo');
-        if (dock.logo) elementToWorld(dock.logo, size, camera, _dockPos).multiplyScalar(dockP);
-        else _dockPos.set(0, 3 * dockP, 0);
+        if (dock.logo) {
+          elementToWorld(dock.logo, size, camera, _dockPos).multiplyScalar(dockP);
+
+          // Measured once, upright (no intro tilt): the model's height in its own units
+          if (!modelHeightRef.current && modelIntro.tilt === 0) {
+            new THREE.Box3().setFromObject(scene).getSize(_size);
+            scene.getWorldScale(_worldScale);
+            modelHeightRef.current = _size.y / _worldScale.y;
+          }
+          // World units per screen pixel on the plane the model moves in (z = 0)
+          const worldPerPx = (2 * camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2))) / size.height;
+          const logoHeight = dock.logo.getBoundingClientRect().height;
+          if (modelHeightRef.current && logoHeight) {
+            dockScale = (logoHeight * worldPerPx * DOCK_FILL) / modelHeightRef.current;
+          }
+        } else {
+          _dockPos.set(0, 3 * dockP, 0);
+        }
       }
       pos.copy(_dockPos);
 
-      if (footerProgress > 0) {
+      // Shrink from the hero size to the header logo's size, evenly (by ratio, not by amount,
+      // so it doesn't collapse at the start and crawl at the end). The footer timeline owns the
+      // scale while it plays (it zooms the model up into the footer).
+      if (footerProgress === 0) {
+        groupRef.current.scale.setScalar(baseScale * Math.pow(dockScale / baseScale, dockP));
+      }      if (footerProgress > 0) {
         if (!dock.footer || !dock.footer.isConnected) dock.footer = document.getElementById('footer-headphone');
         if (dock.footer) {
           const targetPos = elementToWorld(dock.footer, size, camera, _footerPos);
@@ -150,10 +185,11 @@ export function Model({ onDrawingChange, ...props }) {
       // Smoothly interpolate current rotation to target drag rotation
       spinRef.current.rotation.y = THREE.MathUtils.lerp(spinRef.current.rotation.y, targetRotation.current.y, 0.1);
 
-      // Auto rotate locally when in hero and not dragging
+      // Auto rotate locally when in hero and not dragging. The hero intro holds this at 0
+      // (modelIntro.idle) so the logo lands and stays facing front, then eases it back in.
       if (!minimised && footerProgress === 0 && !isDragging.current) {
         // Capped so a long frame (or the first one after drawing resumes) never jumps the spin
-        targetRotation.current.y += Math.min(delta, 0.1) * 0.5;
+        targetRotation.current.y += Math.min(delta, 0.1) * 0.5 * modelIntro.idle;
       }
     }
   });
@@ -172,7 +208,16 @@ export function Model({ onDrawingChange, ...props }) {
       if (!dock.canvas) return;
 
       const heroP = heroTlRef.current ? heroTlRef.current.progress() : 0;
-      const t = THREE.MathUtils.clamp((heroP - 0.75) / 0.25, 0, 1);
+
+      // While it travels to the corner the logo must pass over the page, not behind it: the hero's
+      // tagline and button (z-20) scroll through the top-left right as it arrives. Lifted above the
+      // content but under the header (z-50); back to its usual layer in the hero and the footer.
+      const docking = heroP > 0.001 && stateRef.current.footerProgress === 0;
+      const zIndex = docking ? '45' : '';
+      if (dock.canvas.style.zIndex !== zIndex) dock.canvas.style.zIndex = zIndex;
+
+      // Cross-fade only at the very end, once the 3D logo has reached the flat logo's size and spot
+      const t = THREE.MathUtils.clamp((heroP - DOCK_FADE_FROM) / (1 - DOCK_FADE_FROM), 0, 1);
       const docked = t * t * (3 - 2 * t);
       const back = THREE.MathUtils.clamp(stateRef.current.footerProgress * 5, 0, 1);
       const logoOpacity = docked * (1 - back);
@@ -199,10 +244,12 @@ export function Model({ onDrawingChange, ...props }) {
       // Hero to Navbar timeline
       const tl = gsap.timeline({
         onUpdate: updateDock,
+        // Spread over most of the hero's scroll, so the logo visibly travels up to the corner
         scrollTrigger: {
           trigger: document.body,
-          start: "top -49%",
-          end: "100vh top",
+          start: () => window.innerHeight * DOCK_START,
+          end: () => window.innerHeight * DOCK_END,
+          invalidateOnRefresh: true,
           scrub: 1,
           onUpdate: (self) => {
             const canvasContainer = document.getElementById('3d-canvas-container');
@@ -218,8 +265,8 @@ export function Model({ onDrawingChange, ...props }) {
       });
 
       heroTlRef.current = tl;
-      tl.to(groupRef.current.scale, { x: 1, y: 1, z: 1, ease: "power2.inOut" }, 0);
-      // The move itself happens every frame (useFrame), towards wherever the header logo is
+      // The move and the shrink happen every frame (useFrame), towards wherever the header logo is
+      // and down to its size on screen
       tl.to(stateRef.current, { dockP: 1, ease: "power2.inOut" }, 0);
 
       // Footer timeline setup
@@ -239,7 +286,7 @@ export function Model({ onDrawingChange, ...props }) {
             }
           }
         });
-        footerTl.to(groupRef.current.scale, { x: 20, y: 20, z: 20, ease: "power2.inOut" }, 0);
+        footerTl.to(groupRef.current.scale, { x: 25, y: 25, z: 25, ease: "power2.inOut" }, 0);
       });
 
       mm.add("(min-width: 768px) and (max-width: 1023px)", () => {
@@ -292,9 +339,14 @@ export function Model({ onDrawingChange, ...props }) {
     <group ref={introRef}>
       <group ref={groupRef} {...props}>
         <group ref={spinRef}>
-          <Center>
-            <primitive object={scene} />
-          </Center>
+          {/* The front turn wraps only the model, innermost: on an outer group it would also turn
+              the dock movement (groupRef's position) and send the logo away from the camera instead
+              of to the corner. Every whole turn of the spins above still ends with the Om in front. */}
+          <group rotation={[0, MODEL_FRONT_Y, 0]}>
+            <Center>
+              <primitive object={scene} />
+            </Center>
+          </group>
         </group>
       </group>
     </group>

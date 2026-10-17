@@ -4,8 +4,13 @@
 // World units below the resting spot: far enough that the model starts out of view
 export const MODEL_OFFSCREEN_Y = -8;
 
-// Written by the hero's timeline, read by the model every frame
-export const modelIntro = { y: MODEL_OFFSCREEN_Y, spin: 0, scale: 1, tilt: 0 };
+// Written by the hero's timeline, read by the model every frame.
+// `idle` (0–1) scales the model's own slow rotation: 0 holds it facing front during the intro.
+export const modelIntro = { y: MODEL_OFFSCREEN_Y, spin: 0, scale: 1, tilt: 0, idle: 1 };
+
+// The turn that shows the logo's front (the Om) to the camera. In headphones.glb the Om plate faces
+// the model's +x side and the ear cups sit at ±z, so with no turn the camera (on +z) sees an ear cup.
+export const MODEL_FRONT_Y = -Math.PI / 2;
 
 let modelReady = false;
 const waiting = new Set();

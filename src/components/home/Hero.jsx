@@ -4,32 +4,57 @@ import React, { useRef } from 'react';
 import HeadphonesCanvas from './HeadphonesModel';
 import Link from 'next/link';
 import { useGSAP } from '@gsap/react';
-import { gsap, MOTION_OK, MOTION_REDUCED } from '@/lib/motion';
+import { gsap, SplitText, EASE, DURATION, STAGGER, RISE, MOTION_OK, MOTION_REDUCED } from '@/lib/motion';
 import { whenRevealsReleased } from '@/lib/revealGate';
 import { lockScroll, unlockScroll } from '@/lib/scrollLock';
 import { modelIntro, MODEL_OFFSCREEN_Y, whenModelReady, setIntroDone } from '@/lib/homeIntro';
 
 // Seconds the intro waits for the 3D model before it plays without it
 const MODEL_WAIT = 2.2;
-// When the text starts fading in: once the model has landed and its spin is winding down
+// When the text starts coming in: once the model has landed and its spin is winding down
 const TEXT_AFTER_MODEL = 1.5;
+// The fast full turn as the model rises
+const SPIN = 2.2;
+// Seconds the logo stays still, facing front, once the spin has settled, before it starts turning
+const FRONT_HOLD = 0.5;
+// Seconds the idle rotation takes to ease back up to its normal speed afterwards
+const IDLE_EASE_IN = 1.6;
 
-// The model rises from below the fold to the centre, spinning a fast full turn that slows
-// into its idle rotation (same direction, so the hand-off has no visible change of speed)
+// The model rises from below the fold to the centre, spinning one fast full turn that starts and
+// ends facing front. Its own slow rotation is held off until the front has been seen for a while,
+// then eases in, so the turn towards the back begins gently.
 function spinIn(tl, at) {
+  modelIntro.idle = 0;
   tl.fromTo(
     modelIntro,
     { y: MODEL_OFFSCREEN_Y, scale: 0.85, tilt: 0.3 },
     { y: 0, scale: 1, tilt: 0, duration: 1.7, ease: 'power4.out' },
     at
   );
-  tl.fromTo(modelIntro, { spin: -Math.PI * 2 }, { spin: 0, duration: 2.2, ease: 'power4.out' }, at);
+  tl.fromTo(modelIntro, { spin: -Math.PI * 2 }, { spin: 0, duration: SPIN, ease: 'power4.out' }, at);
+  // Its own tween, so the hold doesn't keep the page locked longer than the intro needs
+  tl.call(
+    () => gsap.to(modelIntro, { idle: 1, duration: IDLE_EASE_IN, ease: 'power1.in', delay: FRONT_HOLD }),
+    null,
+    at + SPIN
+  );
 }
 
-// The title and tagline fade in together, then the button
-function fadeIn(tl, text, cta, at) {
-  tl.to(text, { autoAlpha: 1, duration: 1, ease: 'power1.out' }, at);
-  tl.to(cta, { autoAlpha: 1, duration: 0.8, ease: 'power1.out' }, at + 0.45);
+// The wordmark and tagline rise in gently, then the button: the same entrance as the other pages'
+// heroes (useEntrance), with half the rise, so it stays quiet next to the 3D logo
+const SOFT_RISE = RISE / 2;
+function textIn(tl, { title, tagline, cta }, at, splits) {
+  const words = SplitText.create(title, { type: 'words' });
+  const lines = SplitText.create(tagline, { type: 'lines' });
+  splits.push(words, lines);
+  gsap.set([title, tagline], { autoAlpha: 1 });
+
+  // Fresh objects for every tween: GSAP writes into the vars it is given, so they can't be shared
+  const from = () => ({ autoAlpha: 0, y: SOFT_RISE });
+  const to = (stagger) => ({ autoAlpha: 1, y: 0, duration: DURATION, ease: EASE, stagger });
+  tl.fromTo(words.words, from(), to(STAGGER), at);
+  tl.fromTo(lines.lines, from(), to(STAGGER), at + 0.2);
+  tl.fromTo(cta, from(), to(0), at + 0.45);
 }
 
 const Hero = () => {
@@ -51,12 +76,13 @@ const Hero = () => {
         // [data-entrance] keeps them hidden (globals.css) until this takes over
         parts.forEach((el) => el.setAttribute('data-entrance-ready', ''));
         if (ctx.conditions.reduced) {
-          Object.assign(modelIntro, { y: 0, spin: 0, scale: 1, tilt: 0 });
+          Object.assign(modelIntro, { y: 0, spin: 0, scale: 1, tilt: 0, idle: 1 });
           return;
         }
 
         gsap.set(parts, { autoAlpha: 0 });
-        Object.assign(modelIntro, { y: MODEL_OFFSCREEN_Y, spin: 0, scale: 1, tilt: 0 });
+        // Facing front and still until the intro lets it turn
+        Object.assign(modelIntro, { y: MODEL_OFFSCREEN_Y, spin: 0, scale: 1, tilt: 0, idle: 0 });
         lockScroll();
         setIntroDone(false);
 
@@ -82,13 +108,22 @@ const Hero = () => {
             started = true;
             clearTimeout(waitTimer);
             ctx.add(() => {
-              tl = gsap.timeline({ paused: true, onComplete: release });
+              const splits = [];
+              tl = gsap.timeline({
+                paused: true,
+                onComplete: () => {
+                  // Hand the text back to normal layout so it reflows on resize
+                  splits.forEach((split) => split.revert());
+                  release();
+                },
+              });
+              const text = { title, tagline, cta };
               if (withModel) {
                 spinIn(tl, 0);
-                fadeIn(tl, [title, tagline], cta, TEXT_AFTER_MODEL);
+                textIn(tl, text, TEXT_AFTER_MODEL, splits);
               } else {
                 // Too slow to wait for: the text goes ahead, and the model rises in whenever it arrives
-                fadeIn(tl, [title, tagline], cta, 0);
+                textIn(tl, text, 0, splits);
                 cancels.push(whenModelReady(() => !cancelled && ctx.add(() => spinIn(gsap.timeline(), 0))));
               }
             });
@@ -111,6 +146,9 @@ const Hero = () => {
           cancelled = true;
           clearTimeout(waitTimer);
           cancels.forEach((cancel) => cancel());
+          // The idle ease-in runs outside the intro timeline: stop it, and leave the model turning
+          gsap.killTweensOf(modelIntro);
+          modelIntro.idle = 1;
           release();
         };
       });
