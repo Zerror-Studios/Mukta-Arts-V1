@@ -348,7 +348,7 @@ const Elder = () => {
                         style={{ willChange: "transform, opacity" }}
                     >
                         <div className="w-full aspect-video relative overflow-hidden shadow-2xl rounded-sm">
-                            <img src={item.image} alt={item.title} decoding="async" className="w-full h-full object-cover" />
+                            <img loading="lazy" src={item.image} alt={item.title} decoding="async" className="w-full h-full object-cover" />
                         </div>
                         <div>
                             <h3 className="text-white font-semibold text-sm md:text-lg lg:text-xl mb-1">{item.title}</h3>
@@ -433,6 +433,8 @@ const Elder = () => {
                                             src={activeItem.photo}
                                             alt={activeItem.title}
                                             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                                            loading="lazy"
+                                            decoding="async"
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
                                     </div>

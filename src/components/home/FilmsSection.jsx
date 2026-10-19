@@ -126,6 +126,8 @@ const FilmsSection = () => {
                     src={film.image}
                     alt={film.title}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110 will-change-transform"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
 

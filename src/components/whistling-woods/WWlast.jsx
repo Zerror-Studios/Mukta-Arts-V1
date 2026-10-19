@@ -92,7 +92,6 @@ const WWlast = () => {
                                 sizes="(max-width: 768px) 80vw, 40vw"
                                 className="object-cover"
                                 quality={90}
-                                priority={index < 4}
                             />
                         </div>
                     ))}

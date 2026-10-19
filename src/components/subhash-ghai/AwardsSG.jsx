@@ -9,6 +9,8 @@ export default function AwardsSG() {
           src="/img/sg/HeadLogo.png"
           alt=""
           className="w-[500px] h-[500px] md:w-[680px] md:h-[680px] object-contain grayscale"
+          loading="lazy"
+          decoding="async"
         />
       </div>
 
@@ -46,6 +48,8 @@ export default function AwardsSG() {
             alt="Subhash Ghai's signature"
             className="w-[150px] md:w-[180px] h-auto mb-3 opacity-90 select-none pointer-events-none"
             draggable={false}
+            loading="lazy"
+            decoding="async"
           />
 
           <cite className="not-italic text-sm md:text-base font-semibold tracking-wider uppercase text-black font-['SwitzerSB']">

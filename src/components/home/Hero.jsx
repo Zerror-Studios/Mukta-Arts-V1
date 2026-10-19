@@ -12,31 +12,32 @@ import { modelIntro, MODEL_OFFSCREEN_Y, whenModelReady, setIntroDone } from '@/l
 // Seconds the intro waits for the 3D model before it plays without it
 const MODEL_WAIT = 2.2;
 // When the text starts coming in: once the model has landed and its spin is winding down
-const TEXT_AFTER_MODEL = 1.5;
-// The fast full turn as the model rises
-const SPIN = 2.2;
-// Seconds the logo stays still, facing front, once the spin has settled, before it starts turning
-const FRONT_HOLD = 0.5;
-// Seconds the idle rotation takes to ease back up to its normal speed afterwards
-const IDLE_EASE_IN = 1.6;
+const TEXT_AFTER_MODEL = 1.9;
+// The two full turns as the model rises
+const SPIN = 2.6;
+// The idle rotation starts this many seconds before the two turns finish and reaches full speed
+// as they settle, so the model never stops at the centre: it flows straight into its own rotation
+const IDLE_OVERLAP = 0.5;
+const IDLE_EASE_IN = 0.8;
 
-// The model rises from below the fold to the centre, spinning one fast full turn that starts and
-// ends facing front. Its own slow rotation is held off until the front has been seen for a while,
-// then eases in, so the turn towards the back begins gently.
+// The model rises from below the fold to the centre, spinning two full turns that start and end
+// facing front. The rise and the spin share one ease and duration, so it is already turning as it
+// comes up from the bottom of the screen, and the turns land just as it reaches the centre. Then it
+// carries on turning the same way at its idle speed, with no pause.
 function spinIn(tl, at) {
   modelIntro.idle = 0;
   tl.fromTo(
     modelIntro,
     { y: MODEL_OFFSCREEN_Y, scale: 0.85, tilt: 0.3 },
-    { y: 0, scale: 1, tilt: 0, duration: 1.7, ease: 'power4.out' },
+    { y: 0, scale: 1, tilt: 0, duration: SPIN, ease: 'power3.inOut' },
     at
   );
-  tl.fromTo(modelIntro, { spin: -Math.PI * 2 }, { spin: 0, duration: SPIN, ease: 'power4.out' }, at);
-  // Its own tween, so the hold doesn't keep the page locked longer than the intro needs
+  tl.fromTo(modelIntro, { spin: -Math.PI * 4 }, { spin: 0, duration: SPIN, ease: 'power3.inOut' }, at);
+  // Its own tween, so the idle ease-in doesn't keep the page locked longer than the intro needs
   tl.call(
-    () => gsap.to(modelIntro, { idle: 1, duration: IDLE_EASE_IN, ease: 'power1.in', delay: FRONT_HOLD }),
+    () => gsap.to(modelIntro, { idle: 1, duration: IDLE_EASE_IN, ease: 'sine.inOut' }),
     null,
-    at + SPIN
+    at + SPIN - IDLE_OVERLAP
   );
 }
 

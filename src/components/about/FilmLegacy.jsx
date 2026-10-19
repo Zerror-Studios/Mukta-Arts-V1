@@ -3,6 +3,7 @@
 import React, { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger, SplitText, EASE, DURATION_LONG, STAGGER, RISE, MOTION_OK } from "@/lib/motion";
+import useInView from "@/hooks/useInView";
 
 const slides = [
   {
@@ -91,6 +92,8 @@ const FilmLegacy = () => {
   const containerRef = useRef(null);
   const titlesContainerRef = useRef(null);
   const bgRefs = useRef([]);
+  // Background images are only fetched once the section is a screen or so away
+  const bgReady = useInView(containerRef, "100%", true);
   const titleRefs = useRef([]);
   const indexRefs = useRef([]);
   const tagRefs = useRef([]);
@@ -225,7 +228,7 @@ const FilmLegacy = () => {
             ref={(el) => (bgRefs.current[i] = el)}
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{
-              backgroundImage: `url(${slide.bg})`,
+              backgroundImage: bgReady ? `url(${slide.bg})` : undefined,
               opacity: i === 0 ? 1 : 0,
             }}
           >

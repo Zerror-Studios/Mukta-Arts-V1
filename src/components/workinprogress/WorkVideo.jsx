@@ -13,6 +13,8 @@ const WorkVideo = () => {
             alt="Video Thumbnail"
             className="w-full h-full object-cover object-top transition-transform duration-1000 group-hover:scale-105"
 
+            loading="lazy"
+            decoding="async"
           />
         </div>
 

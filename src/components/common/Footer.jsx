@@ -51,6 +51,8 @@ export default function Footer() {
               src="/img/sg/HeadLogo.png"
               alt="Mukta Arts Logo"
               className="object-contain opacity-100"
+              loading="lazy"
+              decoding="async"
             />
           </div>
         )}

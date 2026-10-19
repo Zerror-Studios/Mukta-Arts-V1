@@ -175,7 +175,6 @@ const TeamMembers = () => {
                 fill
                 sizes="(min-width: 1024px) 40vw, 90vw"
                 className="object-cover object-[50%_20%]"
-                priority
               />
             </div>
           </div>

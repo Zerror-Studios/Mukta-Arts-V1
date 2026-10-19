@@ -19,7 +19,7 @@ const StorySG = () => {
             <div className="absolute -top-20 left-0 w-full h-[60%] flex items-center justify-center opacity-30 pointer-events-none">
                 {/* Assuming this might be the film reel or a circular graphic */}
                 <div className="w-[600px] h-[600px]  ">
-                    <img src="/img/sg/HeadLogo.png" alt="" className='w-full h-full object-cover object-center' />
+                    <img loading="lazy" decoding="async" src="/img/sg/HeadLogo.png" alt="" className='w-full h-full object-cover object-center' />
                 </div>
             </div>
 
@@ -45,6 +45,8 @@ const StorySG = () => {
                         src="/img/final/SG/S2/SG_0067_3_11zon.webp"
                         alt="Subhash Ghai"
                         className="absolute left-0 top-0 w-full h-full object-cover object-center will-change-transform"
+                        loading="lazy"
+                        decoding="async"
                     />
                 </div>
 
@@ -65,6 +67,8 @@ const StorySG = () => {
                             alt="Subhash Ghai's signature"
                             className="w-[170px] md:w-[200px] h-auto mb-3 invert opacity-90 select-none pointer-events-none"
                             draggable={false}
+                            loading="lazy"
+                            decoding="async"
                         />
                         <p className="text-white text-lg font-['SwitzerM'] tracking-wide">Subhash Ghai</p>
                     </div>

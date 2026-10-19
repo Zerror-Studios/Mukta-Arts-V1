@@ -16,6 +16,8 @@ const _footerPos = new THREE.Vector3();
 const _size = new THREE.Vector3();
 const _worldScale = new THREE.Vector3();
 const TURN = Math.PI * 2;
+// Radians per second the model turns on its own in the hero
+const IDLE_SPEED = 0.8;
 // Share of the header logo image's height that the headphones fill (the PNG has a little padding),
 // so the docked 3D logo ends the same size as the flat one it cross-fades into
 const DOCK_FILL = 0.86;
@@ -186,10 +188,10 @@ export function Model({ onDrawingChange, scale: baseScale = 1, ...props }) {
       spinRef.current.rotation.y = THREE.MathUtils.lerp(spinRef.current.rotation.y, targetRotation.current.y, 0.1);
 
       // Auto rotate locally when in hero and not dragging. The hero intro holds this at 0
-      // (modelIntro.idle) so the logo lands and stays facing front, then eases it back in.
+      // (modelIntro.idle) during its two turns, then eases it in as they settle.
       if (!minimised && footerProgress === 0 && !isDragging.current) {
         // Capped so a long frame (or the first one after drawing resumes) never jumps the spin
-        targetRotation.current.y += Math.min(delta, 0.1) * 0.5 * modelIntro.idle;
+        targetRotation.current.y += Math.min(delta, 0.1) * IDLE_SPEED * modelIntro.idle;
       }
     }
   });

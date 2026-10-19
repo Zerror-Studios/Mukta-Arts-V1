@@ -14,7 +14,7 @@ import useGpuWarmup from "@/hooks/useGpuWarmup";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function FilmReel({ running }) {
+function FilmReel({ running, loadImages }) {
     const marqueeRef = useRef();
     const tweenRef = useRef(null);
 
@@ -69,7 +69,7 @@ function FilmReel({ running }) {
                             {/* Background Image for each frame */}
                             <div
                                 className="absolute inset-0 bg-cover bg-center z-0 opacity-100"
-                                style={{ backgroundImage: `url("${encodeURI(item.image)}")` }}
+                                style={loadImages ? { backgroundImage: `url("${encodeURI(item.image)}")` } : undefined}
                             ></div>
                             {/* Overlay for text readability */}
                             <div className="absolute inset-0 bg-black/50 z-0"></div>
@@ -215,6 +215,8 @@ export default function OldCamera() {
     // and only draw it while the section is near the screen
     const sceneOn = useAfterIntro();
     const inView = useInView(containerRef);
+    // Its background images are only fetched once the section is a screen or so away
+    const bgReady = useInView(containerRef, "100%", true);
 
     useGSAP(() => {
         const tl = gsap.timeline({
@@ -271,7 +273,7 @@ export default function OldCamera() {
                             key={slide.image}
                             ref={(el) => { bgRefs.current[i] = el; }}
                             className="absolute inset-0 bg-cover bg-center md:bg-[center_right_10%] opacity-0 filter contrast-110"
-                            style={{ backgroundImage: `url('${slide.image}')` }}
+                            style={bgReady ? { backgroundImage: `url('${slide.image}')` } : undefined}
                         />
                     ))}
                     <div className="absolute inset-0 bg-gradient-to-r from-white via-white/70 to-transparent" />
@@ -355,7 +357,7 @@ export default function OldCamera() {
                     )}
                 </div>
 
-                <FilmReel running={inView} />
+                <FilmReel running={inView} loadImages={bgReady} />
 
             </section>
         </div>

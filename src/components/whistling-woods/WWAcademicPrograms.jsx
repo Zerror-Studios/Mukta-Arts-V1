@@ -1112,6 +1112,8 @@ export default function WWAcademicPrograms({
                   src={item.thumbImage}
                   alt=""
                   className="h-full w-full object-cover"
+                  loading="lazy"
+                  decoding="async"
                 />
               </span>
             </button>
