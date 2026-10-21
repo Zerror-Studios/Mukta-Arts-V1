@@ -281,7 +281,7 @@ export default function OldCamera() {
                 </div> */}
 
                 {/* Title, with the role that changes on scroll right below it */}
-                <div className="absolute top-[10%] left-[5%] md:left-[4%] z-40 text-black pointer-events-none">
+                <div className="absolute top-[15%] left-[5%] md:left-[4%] z-40 text-black pointer-events-none">
                     <h2 className="tracking-tighter leading-none uppercase">
                         Subhash Ghai.
                     </h2>

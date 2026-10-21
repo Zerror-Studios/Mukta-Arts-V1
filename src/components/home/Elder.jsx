@@ -395,12 +395,12 @@ const Elder = () => {
                     </div>
                 ))}
 
-                {/* Final Text */}
+                {/* Final Text
                 <div
                     ref={finalRef}
                     className="absolute z-30 w-full max-w-7xl px-4 md:px-12 opacity-0 invisible pointer-events-none flex flex-col items-center justify-center text-center"
                 >
-                    {/* Wide and set smaller, so it reads in four or five lines on a 15" laptop */}
+                    
                     <h4 className="text-[1.6rem]! leading-[1.25]! md:text-[2.4rem]! md:leading-[1.25]! font-normal text-white/90 flex flex-wrap justify-center text-center gap-x-1.5 md:gap-x-[0.28em] gap-y-1 md:gap-y-1.5">
                         {finalCopy.flatMap((run, r) =>
                             run.text.split(/\s+/).map((word, i) => (
@@ -413,7 +413,7 @@ const Elder = () => {
                             ))
                         )}
                     </h4>
-                </div>
+                </div> */}
 
                 {/* Sidebar for Full Description */}
                 <div
