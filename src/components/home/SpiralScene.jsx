@@ -24,12 +24,13 @@ const RISE_RATE = 28 / TOTAL_ANGLE; // b ≈ 2.228 — vertical rise per radian
 const ARC_PER_RAD = Math.sqrt(RADIUS * RADIUS + RISE_RATE * RISE_RATE); // x ≈ 12.205
 const TOTAL_ARC = TOTAL_ANGLE * ARC_PER_RAD; // y ≈ 153.3 — total spiral arc length
 
-const NUM_CARDS = 9;
-const CARD_ARC_LENGTH = 5.8 * 1.15; // arc length each card spans — 15% bigger
-const CARD_SPACING = 6 * 1.18; // arc length between successive card starts — scaled to match
-const CARD_ASPECT = 5 / 7.5; // 16:9 aspect-video (height/width)
-const CARD_HEIGHT = CARD_ARC_LENGTH * CARD_ASPECT; // ≈ 3.75
-const TOTAL_CARDS_LENGTH = (NUM_CARDS - 1) * CARD_SPACING + CARD_ARC_LENGTH; // 55.4
+const NUM_CARDS = 12;
+const CARD_SLOT_LENGTH = 5.8 * 1.15; // arc length each card's slot spans (the old landscape card width) — keeps spacing and timing
+const CARD_SPACING = 6 * 1; // arc length between successive card starts — scaled to match
+const CARD_ARC_LENGTH = 5; // portrait card width, centred in its slot
+const CARD_ASPECT = 843 / 629; // poster ratio (height/width) of the 629×843 film posters
+const CARD_HEIGHT = CARD_ARC_LENGTH * CARD_ASPECT; // ≈ 6.7
+const TOTAL_CARDS_LENGTH = (NUM_CARDS - 1) * CARD_SPACING + CARD_SLOT_LENGTH; // 63.3
 const SEGMENTS_X = 116; // horizontal subdivisions per card mesh
 
 // Placeholder images (9 cards)
@@ -43,6 +44,9 @@ const images = [
   "/img/final/home/all/13_KHALNAYAK_(1993).jpg",
   "/img/final/home/all/15_TRIMURTI_(1995).jpg",
   "/img/final/home/all/16_JAAN_(1996).jpg",
+  "/img/final/home/all/22_BADHAI_HO_BADHAI_(2002).jpg",
+  "/img/final/home/all/25_AITRAAZ_(2004).jpg",
+  "/img/final/home/all/45_NOUKADUBI__(2010).jpg"
 ];
 
 // =============================================
@@ -53,6 +57,7 @@ const CardShaderMaterial = shaderMaterial(
   {
     uTexture: new THREE.Texture(),
     uSize: new THREE.Vector2(CARD_ARC_LENGTH, CARD_HEIGHT),
+    uImageAspect: 629 / 843, // texture width/height, set per card
     uRadius: 0.0,
   },
   // Vertex Shader
@@ -66,6 +71,8 @@ const CardShaderMaterial = shaderMaterial(
   // Fragment Shader
   /* glsl */ `
     uniform sampler2D uTexture;
+    uniform vec2 uSize;
+    uniform float uImageAspect;
     varying vec2 vUv;
 
     void main() {
@@ -77,6 +84,14 @@ const CardShaderMaterial = shaderMaterial(
       // Flip UV horizontally on backface so the image isn't mirrored
       if (!gl_FrontFacing) {
         uv.x = 1.0 - uv.x;
+      }
+
+      // Cover-fit: crop the image to the card's shape instead of stretching it
+      float cardAspect = uSize.x / uSize.y;
+      if (uImageAspect > cardAspect) {
+        uv.x = (uv.x - 0.5) * (cardAspect / uImageAspect) + 0.5;
+      } else {
+        uv.y = (uv.y - 0.5) * (uImageAspect / cardAspect) + 0.5;
       }
 
       vec4 tex = texture2D(uTexture, uv);
@@ -97,8 +112,8 @@ function placeCardOnSpiral(geometry, arcPos, uvWrittenMap, cardIdx, scale = 1) {
   const scaledArc = CARD_ARC_LENGTH * scale;
   const scaledHeight = CARD_HEIGHT * scale;
   const halfH = scaledHeight * 0.5;
-  // Center the scale: offset so the card grows equally from its center
-  const startArc = arcPos - (scaledArc - CARD_ARC_LENGTH) * 0.5;
+  // Center the card (and its hover scale) in its slot
+  const startArc = arcPos + (CARD_SLOT_LENGTH - scaledArc) * 0.5;
 
   for (let col = 0; col <= SEGMENTS_X; col++) {
     const u = col / SEGMENTS_X; // 0 → 1 across card width
@@ -259,6 +274,7 @@ const SpiralCards = ({ progressRef }) => {
           <primitive object={geometries[i]} attach="geometry" />
           <cardShaderMaterial
             uTexture={textures[i]}
+            uImageAspect={textures[i].image.width / textures[i].image.height}
             side={THREE.DoubleSide}
           />
         </mesh>

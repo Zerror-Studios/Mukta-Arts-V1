@@ -94,7 +94,14 @@ const WorkHero = () => {
                     )}
                 </div>
 
-               
+                {/* Paragraphs */}
+                <div className="max-w-[90%] work-hero-text opacity-0">
+                    {description.split(/\n\s*\n/).filter(Boolean).map((para, i) => (
+                        <p key={i} className="mb-4">
+                            {para}
+                        </p>
+                    ))}
+                </div>
             </div>
 
             {/* Right Column - Image */}

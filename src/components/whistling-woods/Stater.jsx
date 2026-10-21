@@ -79,8 +79,8 @@ const Stater = () => {
                 val: target,
                 scrollTrigger: {
                     trigger: col,
-                    start: "top 90%",
-                    end: "top 50%",
+                    start: "top 100%",
+                    end: "top 90%",
                     scrub: true,
                 },
                 onUpdate: () => {

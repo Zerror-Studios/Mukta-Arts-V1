@@ -18,9 +18,9 @@ const StorySG = () => {
             {/* Background Graphic Placeholder */}
             <div className="absolute -top-20 left-0 w-full h-[60%] flex items-center justify-center opacity-30 pointer-events-none">
                 {/* Assuming this might be the film reel or a circular graphic */}
-                <div className="w-[600px] h-[600px]  ">
-                    <img loading="lazy" decoding="async" src="/img/sg/HeadLogo.png" alt="" className='w-full h-full object-cover object-center' />
-                </div>
+                {/* <div className="w-[600px] h-[600px]  ">
+                    <img loading="lazy" decoding="async" src="/img/logo/logo-4k.png" alt="" className='w-full h-full object-cover object-center' />
+                </div> */}
             </div>
 
             {/* Top Text Section */}

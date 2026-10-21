@@ -22,35 +22,38 @@ export default function Footer() {
     <div id="footer" className="min-h-screen bg-[#1B123D] text-white flex flex-col font-sans relative overflow-hidden">
 
       {/* Top Navigation / Stats Bar */}
-      <nav aria-label="Footer" className="w-full flex flex-wrap justify-between items-center px-4 md:px-8 py-4 text-[10px] md:text-xs font-semibold tracking-wider uppercase z-999 opacity-90">
+      {/* <nav aria-label="Footer" className="w-full flex flex-wrap justify-between items-center px-4 md:px-8 py-4 text-[10px] md:text-xs font-semibold tracking-wider uppercase z-999 opacity-90">
         {FOOTER_LINKS.map(({ label, href }) =>
           href ? (
-            <Link key={label} href={href} className="group flex items-center gap-2 cursor-pointer outline-none">
+           
+            <div className=' flex justify-center items-center gap-2'>
               <span className="text-sm">★</span>
-              {/* The underline draws in from the left on hover and runs out to the right on leave */}
+              
               <span className="relative after:absolute after:left-0 after:-bottom-1 after:h-px after:w-full after:bg-current after:origin-right after:scale-x-0 after:transition-transform after:duration-500 after:ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:after:origin-left group-hover:after:scale-x-100 group-focus-visible:after:origin-left group-focus-visible:after:scale-x-100">
                 {label}
               </span>
-            </Link>
+            </div>
           ) : (
             <span key={label} className="flex items-center gap-2"><span className="text-sm">★</span> {label}</span>
           )
         )}
-      </nav>
+      </nav> */}
 
       {/* Main Content (a div: the page already has its <main>, and this sits inside <footer>) */}
-      <div className="flex-1 flex flex-col lg:flex-row items-center justify-between px-6 md:px-20 lg:px-32 py-12 lg:py-20 ">
+      <div className="flex-1 flex flex-col lg:flex-row items-center justify-between px-6 md:px-20 lg:px-32 py-12   lg:py-2 ">
 
         {/* HEADPHONE or Fallback Image */}
         {isHome ? (
-          <div id="footer-headphone" className="w-full bg- lg:w-2/3 flex justify-center lg:justify-center mb-12 lg:mb-0 min-h-[300px]">
+          // The 3D logo (HeadphonesModel) settles over this spot and can be turned by dragging it;
+          // touch-pan-y keeps vertical swipes scrolling the page while sideways ones turn the model
+          <div id="footer-headphone" className="w-full bg- lg:w-2/3 flex justify-center lg:justify-center mb-12 lg:mb-0 min-h-[300px] cursor-grab active:cursor-grabbing touch-pan-y select-none">
           </div>
         ) : (
-          <div className="w-full lg:w-2/3 flex justify-center lg:justify-center mb-12 lg:mb-0 min-h-[300px] items-center">
+          <div className="w-full lg:w-2/3 flex justify-center scale-[0.5] lg:justify-center mb-12 lg:mb-0 min-h-[300px] items-center">
             <img
-              src="/img/sg/HeadLogo.png"
+              src="/img/logo/logo-4k.png"
               alt="Mukta Arts Logo"
-              className="object-contain opacity-100"
+              className="object-contain opacity-100 "
               loading="lazy"
               decoding="async"
             />
@@ -60,9 +63,9 @@ export default function Footer() {
         {/* Right Column - Text & Call to Action */}
         <div className="w-full lg:w-1/3 flex flex-col items-start max-w-xl relative z-20">
           <h4 className="text-4xl md:text-5xl lg:text-[54px] font-medium leading-tight mb-6">
-            Have a story<br />
-            worth telling?<br />
-            We want to<br />
+            Have a story
+            worth telling?
+            We want to
             hear it.
           </h4>
 

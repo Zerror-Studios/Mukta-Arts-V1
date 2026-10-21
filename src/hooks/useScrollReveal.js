@@ -22,7 +22,7 @@ import {
  * Each element reveals once, when its top reaches `start`. With reduced motion nothing
  * is hidden. Only split static text.
  */
-export default function useScrollReveal(scopeRef, { start = "top 85%" } = {}) {
+export default function useScrollReveal(scopeRef, { start = "top 100%" } = {}) {
   useGSAP(
     () => {
       const scope = scopeRef.current;

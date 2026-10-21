@@ -1,6 +1,7 @@
 import HeroSMG from "@/components/smg/HeroSMG";
 import SGMIntro from "@/components/smg/SGMIntro";
 import SGMShowreel from "@/components/smg/SGMShowreel";
+import WWAcademicPrograms from "@/components/whistling-woods/WWAcademicPrograms";
 import { createPageMetadata } from "@/lib/seo";
 
 const page = () => {
@@ -8,7 +9,8 @@ const page = () => {
         <>
             <HeroSMG />
             <SGMIntro />
-            <SGMShowreel />
+            {/* <SGMShowreel /> */}
+            <WWAcademicPrograms/>
         </>
     );
 };

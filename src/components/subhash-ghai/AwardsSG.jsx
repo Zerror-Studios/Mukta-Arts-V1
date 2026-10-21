@@ -6,7 +6,7 @@ export default function AwardsSG() {
       {/* Background Graphic Watermark */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.035] select-none">
         <img
-          src="/img/sg/HeadLogo.png"
+          src="/img/logo/logo-4k.png"
           alt=""
           className="w-[500px] h-[500px] md:w-[680px] md:h-[680px] object-contain grayscale"
           loading="lazy"

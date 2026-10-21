@@ -123,9 +123,9 @@ const TeamMembers = () => {
         {/* Left Column: Heading */}
         <div className="lg:w-3/12 flex flex-col shrink-0">
           <p className="text-[#555] text-[12px]! lg:text-[13px]! leading-none! tracking-wide uppercase mb-2 lg:mb-4">Board of Directors</p>
-          <h5 data-reveal="words" className="text-[28px]! lg:text-[clamp(32px,2.6vw,44px)]! leading-[1.1]! font-semibold text-black tracking-tight">
+          <h4 data-reveal="words" className="text-[28px]! lg:text-[clamp(32px,2.6vw,44px)]! leading-[1.1]! font-semibold text-black tracking-tight">
             People Behind<br className="hidden lg:block" /> The Vision
-          </h5>
+          </h4>
         </div>
 
         {/* Middle Column: Names List (a three-name scrolling window on phones, the full list from lg) */}
@@ -134,13 +134,13 @@ const TeamMembers = () => {
           <div className="relative w-full h-full overflow-hidden">
             <div ref={namesInnerRef} className="w-full relative flex flex-col">
               {team.map((person, i) => (
-                <div
+                <h5
                   key={person.name}
                   className={`h-[44px] lg:h-[46px] flex items-center transition-all duration-300 ${activeIndex === i ? "text-black text-[17px] lg:text-[20px] font-medium" : "text-black/40 text-[15px] lg:text-[16px] font-light"
                     }`}
                 >
                   {person.name}
-                </div>
+                </h5>
               ))}
             </div>
           </div>

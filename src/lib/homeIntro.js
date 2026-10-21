@@ -1,11 +1,16 @@
 // The hand-off between the home hero's intro timeline (components/home/Hero.jsx) and the
 // 3D headphones (components/home/HeadphonesModel.jsx), which live in different React trees.
 
-// World units below the resting spot: far enough that the model starts out of view
-export const MODEL_OFFSCREEN_Y = -8;
+// World units below the resting spot: just past the bottom of the screen, so it comes into view
+// straight away as it starts to rise
+export const MODEL_OFFSCREEN_Y = -6;
+
+// Radians per second the model turns on its own (in the hero and in the footer). The intro's spin
+// ends at exactly this speed, so the turn it lands with carries straight on into this one.
+export const IDLE_SPEED = 0.8;
 
 // Written by the hero's timeline, read by the model every frame.
-// `idle` (0–1) scales the model's own slow rotation: 0 holds it facing front during the intro.
+// `idle` (0–1) scales the model's own rotation: 0 holds it still during the intro's own turn.
 export const modelIntro = { y: MODEL_OFFSCREEN_Y, spin: 0, scale: 1, tilt: 0, idle: 1 };
 
 // The turn that shows the logo's front (the Om) to the camera. In headphones.glb the Om plate faces

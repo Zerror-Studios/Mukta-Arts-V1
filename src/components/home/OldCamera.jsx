@@ -181,7 +181,7 @@ const SLIDES = [
     {
         role: "THE FILMMAKER",
         subheading: "A Legacy in Indian Cinema",
-        text: "From his directorial debut Kalicharan in 1976 to films including Karma, Ram Lakhan, Saudagar, Pardes and Taal, Subhash Ghai has shaped mainstream Hindi cinema through stories, music and characters that have endured across generations. He has written and directed 19 motion pictures, with 14 achieving hit or blockbuster status.",
+        text: "From his directorial debut Kalicharan in 1976 to films including Karma, Ram Lakhan, Saudagar, Pardes and Taal, Subhash Ghai has shaped mainstream Hindi cinema through stories, music and characters that have endured across generations. He has written and directed 19 motion pictures, with 14 achieving blockbuster status.",
         image: "/img/final/SG/S2/SG_0067_3_11zon.webp",
     },
     {
@@ -267,7 +267,7 @@ export default function OldCamera() {
             <section className="sticky top-0 w-full h-[100vh] bg-white max-sm:overflow-hidden flex items-center justify-center">
 
                 {/* Background Images - reveal after 3D camera rotation, one per slide */}
-                <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
+                {/* <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
                     {SLIDES.map((slide, i) => (
                         <div
                             key={slide.image}
@@ -278,13 +278,14 @@ export default function OldCamera() {
                     ))}
                     <div className="absolute inset-0 bg-gradient-to-r from-white via-white/70 to-transparent" />
                     <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-white/30" />
-                </div>
+                </div> */}
 
                 {/* Title, with the role that changes on scroll right below it */}
                 <div className="absolute top-[10%] left-[5%] md:left-[4%] z-40 text-black pointer-events-none">
-                    <h2 className="tracking-tighter leading-none">
+                    <h2 className="tracking-tighter leading-none uppercase">
                         Subhash Ghai.
                     </h2>
+                    <h5 className=" uppercase">Founder and Chairman.</h5>
                     {/* The roles share one grid cell, so they swap in place */}
                     <div className="grid ">
                         {SLIDES.map((slide, i) => (
@@ -293,7 +294,7 @@ export default function OldCamera() {
                                 ref={(el) => { roleRefs.current[i] = el; }}
                                 className="[grid-area:1/1] text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight uppercase"
                             >
-                                {slide.role}
+                                {/* {slide.role} */}
                             </h4>
                         ))}
                     </div>
@@ -310,9 +311,9 @@ export default function OldCamera() {
                                 className="[grid-area:1/1] self-end"
                             >
                                 {/* SUBHEADING */}
-                                <h5 className="text-base uppercase sm:text-lg md:text-xl font-medium text-[#1B123D] mb-3 md:mb-4 leading-snug">
-                                    {slide.subheading}
-                                </h5>
+                                <h4 className="text-base uppercase sm:text-lg md:text-xl font-medium text-[#1B123D] mb-3 md:mb-4 leading-snug">
+                                    {/* {slide.subheading} */} {slide.role}
+                                </h4>
                                 <p className="text-sm md:text-base opacity-90 leading-relaxed mb-4 md:mb-5">
                                     {slide.text}
                                 </p>

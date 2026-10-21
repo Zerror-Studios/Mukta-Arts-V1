@@ -325,7 +325,7 @@ const InvestorRelations = () => {
 
 
   return (
-    <section ref={sectionRef} id="investor-relations" className="w-full bg-[#FAFAFA] py-24 md:py-32 px-4 md:px-8">
+    <section  ref={sectionRef} id="investor-relations" className="w-full bg-[#FAFAFA] py-24 md:py-32 px-4 md:px-8">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
         {/* Left: heading and contact for investor grievances */}
         <div className="lg:col-span-4">

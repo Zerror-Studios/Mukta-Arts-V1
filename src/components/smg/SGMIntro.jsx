@@ -36,7 +36,7 @@ const SGMIntro = () => {
     }, { scope: containerRef });
 
     return (
-        <section ref={containerRef} className="bg-[#FAFAFA] pt-24 md:pt-32 lg:pt-40 px-4 md:px-8 lg:px-10 overflow-hidden">
+        <section ref={containerRef} className="relative bg-[#FAFAFA] pt-24 md:pt-32 lg:pt-40 px-4 md:px-8 lg:px-10 overflow-hidden pb-30">
             {/* Scroll Reveal Text */}
             <div className="flex justify-center max-w-[1400px] mx-auto">
                 <h5
@@ -50,6 +50,8 @@ const SGMIntro = () => {
                     ))}
                 </h5>
             </div>
+
+           
         </section>
     );
 };

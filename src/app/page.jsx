@@ -17,13 +17,9 @@ const HomePage = () => {
     <>
       <Hero />
       <VideoSection />
-
       <SpiralScene />
-
       <Elder />
-
       <OldCamera />
-
       <CardsShowcase />
 
 

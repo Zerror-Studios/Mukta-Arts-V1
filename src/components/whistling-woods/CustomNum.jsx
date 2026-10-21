@@ -83,7 +83,7 @@ const CustomNum = () => {
                 scrollTrigger: {
                     trigger: col,
                     start: "top 90%",
-                    end: "top 50%",
+                   end: "top 90%",
                     scrub: true,
                 },
                 onUpdate: () => {

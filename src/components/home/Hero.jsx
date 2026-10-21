@@ -7,38 +7,41 @@ import { useGSAP } from '@gsap/react';
 import { gsap, SplitText, EASE, DURATION, STAGGER, RISE, MOTION_OK, MOTION_REDUCED } from '@/lib/motion';
 import { whenRevealsReleased } from '@/lib/revealGate';
 import { lockScroll, unlockScroll } from '@/lib/scrollLock';
-import { modelIntro, MODEL_OFFSCREEN_Y, whenModelReady, setIntroDone } from '@/lib/homeIntro';
+import { modelIntro, MODEL_OFFSCREEN_Y, IDLE_SPEED, whenModelReady, setIntroDone } from '@/lib/homeIntro';
 
 // Seconds the intro waits for the 3D model before it plays without it
 const MODEL_WAIT = 2.2;
-// When the text starts coming in: once the model has landed and its spin is winding down
-const TEXT_AFTER_MODEL = 1.9;
-// The two full turns as the model rises
-const SPIN = 2.6;
-// The idle rotation starts this many seconds before the two turns finish and reaches full speed
-// as they settle, so the model never stops at the centre: it flows straight into its own rotation
-const IDLE_OVERLAP = 0.5;
-const IDLE_EASE_IN = 0.8;
+// When the text starts coming in: as the model is landing
+const TEXT_AFTER_MODEL = 1.7;
+// The rise from the bottom of the screen, and the one full turn the model makes on the way up
+const SPIN = 2.4;
+const TURN = Math.PI * 2;
 
-// The model rises from below the fold to the centre, spinning two full turns that start and end
-// facing front. The rise and the spin share one ease and duration, so it is already turning as it
-// comes up from the bottom of the screen, and the turns land just as it reaches the centre. Then it
-// carries on turning the same way at its idle speed, with no pause.
+// The turn's ease: it sets off quickly (the model is already turning as it comes into view), slows
+// as it reaches the centre, and lands facing front still turning at exactly the idle speed. The idle
+// rotation takes over from that moment, so the model never stops: the two are one continuous turn.
+// A cubic Hermite curve from 0 to 1, leaving at slope START and arriving at slope END.
+const SPIN_START = 1.6;
+const SPIN_END = (IDLE_SPEED * SPIN) / TURN;
+function spinEase(u) {
+  const u2 = u * u;
+  const u3 = u2 * u;
+  return SPIN_START * (u3 - 2 * u2 + u) + (3 * u2 - 2 * u3) + SPIN_END * (u3 - u2);
+}
+
+// The model rises from below the fold to the centre of the screen, making one full turn that starts
+// and ends facing front, and carries straight on into its own endless rotation
 function spinIn(tl, at) {
   modelIntro.idle = 0;
   tl.fromTo(
     modelIntro,
-    { y: MODEL_OFFSCREEN_Y, scale: 0.85, tilt: 0.3 },
-    { y: 0, scale: 1, tilt: 0, duration: SPIN, ease: 'power3.inOut' },
+    { y: MODEL_OFFSCREEN_Y, scale: 0.85, tilt: 0.25 },
+    { y: 0, scale: 1, tilt: 0, duration: SPIN, ease: 'power3.out' },
     at
   );
-  tl.fromTo(modelIntro, { spin: -Math.PI * 4 }, { spin: 0, duration: SPIN, ease: 'power3.inOut' }, at);
-  // Its own tween, so the idle ease-in doesn't keep the page locked longer than the intro needs
-  tl.call(
-    () => gsap.to(modelIntro, { idle: 1, duration: IDLE_EASE_IN, ease: 'sine.inOut' }),
-    null,
-    at + SPIN - IDLE_OVERLAP
-  );
+  tl.fromTo(modelIntro, { spin: -TURN }, { spin: 0, duration: SPIN, ease: spinEase }, at);
+  // The hand-off: the turn above arrives at the idle speed, so the idle rotation picks up from it
+  tl.set(modelIntro, { idle: 1 }, at + SPIN);
 }
 
 // The wordmark and tagline rise in gently, then the button: the same entrance as the other pages'
@@ -61,7 +64,7 @@ function textIn(tl, { title, tagline, cta }, at, splits) {
 const Hero = () => {
   const heroRef = useRef(null);
 
-  // Home intro: the model rises from below and spins into the centre, then the wordmark and tagline
+  // Home intro: the model rises from below and turns into the centre, then the wordmark and tagline
   // fade in, then the button. It starts once the model is ready, so no loading work runs while it
   // plays, and the page cannot scroll until it has finished.
   useGSAP(
@@ -147,7 +150,8 @@ const Hero = () => {
           cancelled = true;
           clearTimeout(waitTimer);
           cancels.forEach((cancel) => cancel());
-          // The idle ease-in runs outside the intro timeline: stop it, and leave the model turning
+          // A late intro (the model arrived after the text) runs outside the timeline: stop it, and
+          // leave the model turning
           gsap.killTweensOf(modelIntro);
           modelIntro.idle = 1;
           release();
@@ -177,7 +181,7 @@ const Hero = () => {
       {/* Bottom Left Content */}
       <div className=" z-20  w-full md:w-[34vw] mr-auto ">
         <h3 data-hero="tagline" data-entrance className="mb-6 text-balance text-[1.6rem] md:text-[2.1rem] leading-[1.15] tracking-tight font-['SwitzerM'] font-normal max-w-[30ch]">
-          Telling stories across screens, classrooms and theatres.
+          Telling stories across cinema, screens and classrooms.
         </h3>
         <div data-hero="cta" data-entrance className="w-fit">
           <Link href={'/about'}>

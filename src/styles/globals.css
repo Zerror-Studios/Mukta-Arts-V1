@@ -51,6 +51,16 @@ html.scroll-locked body {
   }
 }
 
+/* The line that runs down a "scroll to explore" hint (About > FilmLegacy) */
+@keyframes scroll-hint {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(200%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   [data-entrance]:not([data-entrance-ready]) {
     opacity: 1;

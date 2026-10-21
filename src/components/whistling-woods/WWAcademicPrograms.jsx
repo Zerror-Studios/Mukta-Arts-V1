@@ -534,28 +534,57 @@ const programsData = [
     id: "01",
     title: "University Affiliation",
     description: "01",
-    mainImage:
-      "https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&q=80&w=1200",
-    thumbImage:
-      "https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&q=80&w=200",
+    mainImage: "/img/final/sgm_Last/1.webp",
+    thumbImage: "/img/final/sgm_Last/1.webp",
   },
   {
     id: "02",
     title: "Global Partnerships",
     description: "02",
-    mainImage:
-      "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=1200",
-    thumbImage:
-      "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80&w=200",
+    mainImage: "/img/final/sgm_Last/2.webp",
+    thumbImage: "/img/final/sgm_Last/2.webp",
   },
   {
     id: "03",
     title: "Industry Integration",
     description: "03",
-    mainImage:
-      "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=1200",
-    thumbImage:
-      "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&q=80&w=200",
+    mainImage: "/img/final/sgm_Last/3.webp",
+    thumbImage: "/img/final/sgm_Last/3.webp",
+  },
+  {
+    id: "04",
+    title: "SGM Studios 04",
+    description: "04",
+    mainImage: "/img/final/sgm_Last/4.webp",
+    thumbImage: "/img/final/sgm_Last/4.webp",
+  },
+  {
+    id: "05",
+    title: "SGM Studios 05",
+    description: "05",
+    mainImage: "/img/final/sgm_Last/5.webp",
+    thumbImage: "/img/final/sgm_Last/5.webp",
+  },
+  {
+    id: "06",
+    title: "SGM Studios 06",
+    description: "06",
+    mainImage: "/img/final/sgm_Last/6.webp",
+    thumbImage: "/img/final/sgm_Last/6.webp",
+  },
+  {
+    id: "07",
+    title: "SGM Studios 07",
+    description: "07",
+    mainImage: "/img/final/sgm_Last/7.webp",
+    thumbImage: "/img/final/sgm_Last/7.webp",
+  },
+  {
+    id: "08",
+    title: "SGM Studios 08",
+    description: "08",
+    mainImage: "/img/final/sgm_Last/8.webp",
+    thumbImage: "/img/final/sgm_Last/8.webp",
   },
 ];
 
@@ -998,8 +1027,8 @@ export default function WWAcademicPrograms({
       style={{ backgroundColor: BG }}
     >
       {/* ---------------- Center: WebGL image ---------------- */}
-      {/* mobile: in-flow card between header + text | md+: absolutely centered */}
-      <div className="relative order-2 z-10 aspect-4/5 max-h-[52svh] w-full shrink-0 overflow-hidden shadow-2xl sm:aspect-[1.28/1] md:absolute md:left-1/2 md:top-1/2 md:max-h-[76vh] md:w-[41vw] md:-translate-x-1/2 md:-translate-y-1/2">
+      {/* full-bleed: fills the whole pinned section on every breakpoint */}
+      <div className="absolute inset-0 z-10 h-full w-full overflow-hidden">
         <Canvas
           dpr={[1, 2]}
           frameloop={inView ? "always" : "never"}
@@ -1016,6 +1045,11 @@ export default function WWAcademicPrograms({
           </Suspense>
         </Canvas>
       </div>
+
+      {/* ---------------- Scroll hint ---------------- */}
+      <span className="pointer-events-none absolute bottom-5 left-1/2 z-20 -translate-x-1/2 text-xs uppercase tracking-[0.2em] text-white">
+        SCROLL
+      </span>
 
       {/* ---------------- Ripple intensity control ---------------- */}
       {/* {showControls && (
@@ -1040,7 +1074,7 @@ export default function WWAcademicPrograms({
       )} */}
 
       {/* ---------------- Left: text block ---------------- */}
-      <div className="relative order-3 z-20 h-fit w-full md:absolute md:bottom-20 md:left-10 md:w-[24%] lg:w-[20%]">
+      {/* <div className="relative order-3 z-20 h-fit w-full md:absolute md:bottom-20 md:left-10 md:w-[24%] lg:w-[20%]">
         <h6 className="text-2xl leading-tight sm:text-3xl md:text-[max(1.25rem,2.1vw)]">
           University Affiliation
         </h6>
@@ -1050,7 +1084,7 @@ export default function WWAcademicPrograms({
           University) to offer accredited Bachelor&apos;s and Master&apos;s degrees across
           1 to 4-year programs
         </p>
-      </div>
+      </div> */}
 
       {/* ---------------- Right: description ---------------- */}
       {/* mobile: header row above the image (progress + number) | md+: right of image */}

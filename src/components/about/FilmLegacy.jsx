@@ -4,6 +4,7 @@ import React, { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger, SplitText, EASE, DURATION_LONG, STAGGER, RISE, MOTION_OK } from "@/lib/motion";
 import useInView from "@/hooks/useInView";
+import { smoothScrollTo } from "@/lib/smoothScroll";
 
 const slides = [
   {
@@ -100,8 +101,11 @@ const FilmLegacy = () => {
   const descRefs = useRef([]);
   const titlesWrapRef = useRef(null);
   const subtitleRefs = useRef([]);
+  const progressRef = useRef(null);
+  const hintRef = useRef(null);
+  const jumpToRef = useRef(null);
 
-  useGSAP(() => {
+  useGSAP((context, contextSafe) => {
     // Heading reveal, the home page's rise: the titles row and the first panel's heading
     // as the section enters, then each panel's heading as that panel takes over
     let revealHeading = () => {};
@@ -144,6 +148,15 @@ const FilmLegacy = () => {
         anticipatePin: 1,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
+          gsap.set(progressRef.current, { scaleX: self.progress });
+
+          // The scroll hint shows until the reader starts moving through the slides
+          const hintOn = self.progress < 0.02;
+          if (hintOn !== hintShown) {
+            hintShown = hintOn;
+            gsap.to(hintRef.current, { autoAlpha: hintOn ? 1 : 0, duration: 0.4, overwrite: true });
+          }
+
           const current = Math.min(slides.length - 1, Math.round(self.progress * (slides.length - 1) + 0.15));
           if (current !== shown) {
             shown = current;
@@ -151,6 +164,26 @@ const FilmLegacy = () => {
           }
         },
       },
+    });
+    let hintShown = true;
+
+    // A title click glides the page to the point where that slide is fully in, so the
+    // scrubbed timeline plays the same transition the wheel would. Slide i lands at i / (n - 1).
+    jumpToRef.current = contextSafe((index) => {
+      const st = tl.scrollTrigger;
+      if (!st) return;
+      const y = st.start + (index / (slides.length - 1)) * (st.end - st.start);
+
+      if (!window.lenis) {
+        smoothScrollTo(y);
+        return;
+      }
+      const steps = Math.abs(index - shown);
+      window.lenis.scrollTo(y, {
+        duration: gsap.utils.clamp(1, 2.2, 0.8 + steps * 0.45),
+        easing: (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2),
+        force: true,
+      });
     });
 
     slides.forEach((slide, i) => {
@@ -216,6 +249,10 @@ const FilmLegacy = () => {
           `slide${i}+=0.6`
         );
     });
+
+    return () => {
+      jumpToRef.current = null;
+    };
   }, { scope: containerRef });
 
   return (
@@ -253,7 +290,15 @@ const FilmLegacy = () => {
                   className="text-4xl sm:text-6xl md:text-7xl lg:text-[6.5rem] font-bold tracking-tight text-white uppercase font-['SwitzerB'] leading-none select-none transition-opacity"
                   style={{ opacity: i === 0 ? 1 : 0.25 }}
                 >
-                  {slide.title}
+                  <button
+                    type="button"
+                    onClick={() => jumpToRef.current?.(i)}
+                    className="group relative cursor-pointer uppercase focus-visible:outline-none"
+                  >
+                    {slide.title}
+                    {/* Hover underline: shows the titles can be clicked */}
+                    <span className="absolute left-0 -bottom-2 md:-bottom-3 h-[2px] w-full origin-left scale-x-0 bg-white transition-transform duration-500 ease-out group-hover:scale-x-100 group-focus-visible:scale-x-100" />
+                  </button>
                 </h2>
               ))}
             </div>
@@ -279,7 +324,14 @@ const FilmLegacy = () => {
             ))}
           </div>
 
-          <div className="flex-1 h-[1px] bg-white/20 mx-4 md:mx-8"></div>
+          {/* Progress through the slides, filled by the scroll */}
+          <div className="relative flex-1 h-[1px] bg-white/20 mx-4 md:mx-8">
+            <div
+              ref={progressRef}
+              className="absolute inset-0 bg-white origin-left"
+              style={{ transform: "scaleX(0)" }}
+            />
+          </div>
 
           {/* Slide Tag / Category */}
           <div className="relative h-6 overflow-hidden text-right min-w-[130px]">
@@ -378,6 +430,17 @@ const FilmLegacy = () => {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* Scroll guide */}
+      <div
+        ref={hintRef}
+        className="pointer-events-none absolute bottom-5 md:bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2 text-[10px] md:text-xs font-['SwitzerM'] tracking-[0.25em] uppercase text-white/60 whitespace-nowrap"
+      >
+        <span>Scroll to explore · or click a title</span>
+        <span className="relative h-8 w-[1px] overflow-hidden bg-white/20">
+          <span className="absolute inset-x-0 top-0 h-1/2 bg-white motion-safe:animate-[scroll-hint_1.6s_ease-in-out_infinite]" />
+        </span>
       </div>
     </section>
   );

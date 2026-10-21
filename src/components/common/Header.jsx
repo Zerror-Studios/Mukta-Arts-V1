@@ -161,7 +161,7 @@ const Header = () => {
         {pathname !== '/' ? (
           // Own key so React remounts it: the home dock logo carries inline opacity/visibility from HeadphonesModel
           <Link key="page-logo" href="/" aria-label="Mukta Arts home" className="block">
-            <img src="/img/sg/HeadLogo.png" alt="Mukta Arts" className="h-11 md:h-14 w-auto object-contain" draggable={false} />
+            <img src="/img/logo/logo-4k.png" alt="Mukta Arts" className="h-11 md:h-14 w-auto object-contain" draggable={false} />
           </Link>
         ) : (
           // Home only: the 3D logo docks here once it reaches the top left (HeadphonesModel drives the opacity)
@@ -172,7 +172,7 @@ const Header = () => {
             aria-label="Mukta Arts home"
             className="block opacity-0 invisible pointer-events-none"
           >
-            <img src="/img/sg/HeadLogo.png" alt="Mukta Arts" className="h-11 md:h-14 w-auto object-contain" draggable={false} />
+            <img src="/img/logo/logo-4k.png" alt="Mukta Arts" className="h-11 md:h-14 w-auto object-contain" draggable={false} />
           </Link>
         )}
       </div>
@@ -213,7 +213,7 @@ const Header = () => {
         className="fixed top-0 right-0 w-full md:w-[50vw] h-[100svh] bg-[#1B123D] translate-x-full pointer-events-auto flex flex-col justify-center px-8 md:px-20 z-50 shadow-2xl"
       >
 
-        <div className="flex flex-col w-full relative mt-[20vh] mb-auto">
+        <div className="flex flex-col w-full relative mt-[20vh] mb-auto  gap-2">
           <div className="w-0 h-[1px] bg-white/80 menu-line"></div>
           {[
             { name: "Home", url: '/' },
@@ -225,10 +225,10 @@ const Header = () => {
             {
               name: "The Ecosystem",
               dropdown: [
-                { name: "Mukta Arts Productions", url: "/our-films" },
-                { name: "Whistling Woods", url: "/whistling-woods" },
                 { name: "Mukta A2 Cinemas", url: "/mukta-a2-cinemas" },
                 { name: "SGM Studios", url: "/sgm-studios" },
+                { name: "Mukta Arts Productions", url: "/our-films" },
+                { name: "Whistling Woods", url: "/whistling-woods" },
               ]
             },
             { name: "Submit Script", url: "/submit-script" }

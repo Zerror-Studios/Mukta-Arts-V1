@@ -13,7 +13,7 @@ export default async function Image() {
   const [switzerSemibold, switzerRegular, logo] = await Promise.all([
     readFile(join(process.cwd(), "public/fonts/Switzer-Semibold.woff")),
     readFile(join(process.cwd(), "public/fonts/Switzer-Regular.woff")),
-    readFile(join(process.cwd(), "public/img/sg/HeadLogo.png"), "base64"),
+    readFile(join(process.cwd(), "public/img/logo/logo-4k.png"), "base64"),
   ]);
 
   return new ImageResponse(

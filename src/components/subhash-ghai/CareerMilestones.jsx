@@ -251,6 +251,8 @@ export default function CareerMilestones() {
   const yearsRef = useRef([]);
   // Set up with the scroll timeline: takes the timeline to one milestone when its dot is clicked
   const jumpToRef = useRef(null);
+  // Set up with the scroll timeline: scrolls past the pinned timeline to the next section
+  const skipRef = useRef(null);
 
   // Section heading reveals as it enters
   useScrollReveal(containerRef);
@@ -364,8 +366,30 @@ export default function CareerMilestones() {
         });
       });
 
+      // Glides to the top of the Investor Relations section. The pin ends with this section still
+      // filling the screen, so fall back to a screen past the pin end if the section is missing.
+      skipRef.current = contextSafe(() => {
+        const st = trackTween.scrollTrigger;
+        if (!st) return;
+        const target = document.getElementById("investor-relations");
+        const y = target
+          ? target.getBoundingClientRect().top + window.scrollY
+          : st.end + containerRef.current.offsetHeight;
+
+        if (!window.lenis) {
+          smoothScrollTo(y);
+          return;
+        }
+        window.lenis.scrollTo(y, {
+          duration: 1.6,
+          easing: (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2),
+          force: true,
+        });
+      });
+
       return () => {
         jumpToRef.current = null;
+        skipRef.current = null;
       };
     },
     { scope: containerRef }
@@ -528,6 +552,26 @@ export default function CareerMilestones() {
               style={{ left: `${(i / (milestonesData.length - 1)) * 100}%` }}
             />
           ))}
+        </div>
+
+        <div className="mt-[14px] short:mt-[8px] flex justify-end">
+          <button
+            type="button"
+            onClick={() => skipRef.current?.()}
+            className="group flex items-center gap-2 text-[10px] md:text-[11px] font-['SwitzerM'] uppercase   text-gray-500 hover:text-black transition-colors duration-300 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-4"
+          >
+            Skip to Investor Relations
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 12 12"
+              className="w-2.5 h-2.5 transition-transform duration-300 group-hover:translate-y-0.5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            >
+              <path d="M6 1v10M2 7l4 4 4-4" />
+            </svg>
+          </button>
         </div>
 
         {/* <div className="mt-[14px] flex items-center gap-3 text-[12px] md:text-[13px] short:hidden">

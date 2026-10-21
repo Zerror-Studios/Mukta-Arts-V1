@@ -38,7 +38,7 @@ const statsData = [
     },
     {
         target: 1,
-        prefix: "USD ",
+        prefix: "$ ",
         suffix: "M+",
         text: "Scholarships and fee waivers provided in the past 18 years.",
     },
@@ -98,7 +98,7 @@ const WWStats = () => {
                 scrollTrigger: {
                     trigger: col,
                     start: "top 90%",
-                    end: "top 50%",
+                    end: "top 85%",
                     scrub: true,
                 },
                 onUpdate: () => {

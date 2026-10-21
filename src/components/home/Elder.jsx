@@ -8,38 +8,7 @@ import { gsap, EASE, DURATION, STAGGER, RISE, MOTION_OK } from '@/lib/motion';
 // Copy is word for word from the home page content doc; **double asterisks** mark the
 // phrases that are bold there. `link` is an internal page, `website` an external one.
 const data = [
-    {
-        title: "Whistling Woods International",
-        image: "/img/final/home/home2/2O5A3438.webp",
-        shortDesc: "Whistling Woods International (WWI) is India’s premier institute for Film, Communication, and Creative Arts.",
-        bullets: [
-            "Among the **world's ten best film schools**, as rated by The Hollywood Reporter, more than once.",
-            "**7 specialised schools** under one roof, spanning filmmaking, acting, animation, design, fashion, media and music.",
-            "IIM Mumbai x WWI: India's **first MBA in Media & Entertainment** from an IIM.",
-            "**TISS degrees**, with a curriculum shaped by working industry professionals.",
-            "Built for what's next, with tech labs alongside **Apple, NVIDIA, Epic Games, Sony and more.**",
-            "**4,500+ alumni** shaping Indian and global media and entertainment and **1,300** current students.",
-        ],
-        photo: "/img/ma/WhistlingWoods.jpg",
-        website: "https://www.whistlingwoods.net/",
-        color1: "#c02690",
-        color2: "#2d346b"
-    },
-    {
-        title: "Mukta Arts Productions",
-        image: "/img/final/home/home2/2O5A4368.webp",
-        shortDesc: "The house behind Karz, Hero, Ram Lakhan, Pardes and Taal, producing 50+ stories that have stayed with Indian audiences since 1978.",
-        bullets: [
-            "**50+ films** produced and co-produced since 1978, in Hindi and regional languages.",
-            "**35 blockbusters,** many of which remain among the most loved films in Indian cinema.",
-            "**8 regional films** across Marathi, Bengali, Punjabi and Kannada, including Valu, Samhita, Noukadubi and Vijeta.",
-            "**National Award winner for Iqbal, named Best Film on Other Social Issues.**",
-            "**India's first listed Hindi film company**, the first to go public on the stock exchanges, in 2000.",
-        ],
-        link: "/our-films",
-        color1: "#a52288",
-        color2: "#272a63"
-    },
+   ,
     // {
     //     title: "Mukta VN Films",
     //     image: "/img/ma/MuktaVNFilms.jpg",
@@ -65,8 +34,9 @@ const data = [
             "**International presence** through a 6-screen multiplex in the Kingdom of Bahrain.",
         ],
         website: "https://muktaa2cinemas.in/",
-        color1: "#5d186c",
-        color2: "#191a4b"
+        // Each company has its own palette colour, flat so it reads as that colour
+        color1: "#1F1056",
+        color2: "#1F1056"
     },
     {
         title: "SGM Studios",
@@ -78,9 +48,45 @@ const data = [
             "SGM Studios is Mukta Arts' animation and visual storytelling arm, built to carry the company's cinematic legacy into the world of animation and new-age entertainment. The studio develops original, culturally rooted IP, bringing together creative talent and emerging technology to craft visually distinctive worlds and character-driven narratives for audiences across India and beyond.",
             "Its work spans animation, digital formats and franchise development, with the ambition of building properties that can travel across film, series and other forms of entertainment, pairing decades of experience in cinema with the creative range of animation.",
         ],
-        color1: "#5d186c",
-        color2: "#191a4b"
-    }
+        color1: "#DF4819",
+        color2: "#DF4819"
+    },
+   
+    {
+        title: "Mukta Arts Productions",
+        image: "/img/final/home/home2/2O5A4368.webp",
+        shortDesc: "The house behind Karz, Hero, Ram Lakhan, Pardes and Taal, producing 50+ stories that have stayed with Indian audiences since 1978.",
+        bullets: [
+            "**50+ films** produced and co-produced since 1978, in Hindi and regional languages.",
+            "**35 blockbusters,** many of which remain among the most loved films in Indian cinema.",
+            "**8 regional films** across Marathi, Bengali, Punjabi and Kannada, including Valu, Samhita, Noukadubi and Vijeta.",
+            "**National Award winner for Iqbal, named Best Film on Other Social Issues.**",
+            "**India's first listed Hindi film company**, the first to go public on the stock exchanges, in 2000.",
+        ],
+        link: "/our-films",
+        // The palette's steel blue rather than its light blue (#9EB9E6), which white text can't sit on
+        color1: "#597D9B",
+        color2: "#597D9B"
+    },
+      {
+        title: "Whistling Woods International",
+        image: "/img/final/home/home2/2O5A3438.webp",
+        shortDesc: "Whistling Woods International (WWI) is India’s premier institute for Film, Communication, and Creative Arts.",
+        bullets: [
+            "Among the **world's ten best film schools**, as rated by The Hollywood Reporter, more than once.",
+            "**7 specialised schools** under one roof, spanning filmmaking, acting, animation, design, fashion, media and music.",
+            "IIM Mumbai x WWI: India's **first MBA in Media & Entertainment** from an IIM.",
+            "**TISS degrees**, with a curriculum shaped by working industry professionals.",
+            "Built for what's next, with tech labs alongside **Apple, NVIDIA, Epic Games, Sony and more.**",
+            "**4,500+ alumni** shaping Indian and global media and entertainment and **1,300** current students.",
+        ],
+        photo: "/img/ma/WhistlingWoods.jpg",
+        website: "https://www.whistlingwoods.net/",
+        color1: "#c02690",
+        color2: "#2d346b",
+
+        BOTTOMIMG:"/img/final/home/WWI_Philosophy_Lockup_Transparent.png"
+    },
 ];
 
 // "**bold** rest" -> text with <strong> runs
@@ -110,6 +116,8 @@ const finalColors = {
 const ITEM_SPAN = 8;
 const SCROLL_PER_UNIT = 18; // vh of scroll per second of timeline
 // The intro and the closing words take ~10 more timeline seconds; the last 100vh is the sticky screen
+// Names other than the active one: translucent white, which reads on every company colour
+const DIM = 0.35;
 const SECTION_HEIGHT = `${(data.length * ITEM_SPAN + 10) * SCROLL_PER_UNIT + 100}vh`;
 
 const Elder = () => {
@@ -184,7 +192,7 @@ const Elder = () => {
         // 1. Text animates from bottom
         tl.fromTo(titlesRef.current,
             { y: 120, opacity: 0 },
-            { y: 0, opacity: 0.5, stagger: 0.2, duration: 0.5, ease: "power3.out" }
+            { y: 0, opacity: DIM, stagger: 0.2, duration: 0.5, ease: "power3.out" }
         );
 
         // Hold a little bit before continuing
@@ -192,7 +200,7 @@ const Elder = () => {
 
         data.forEach((item, i) => {
             // Fade in the title
-            tl.to(titlesRef.current[i], { color: "#ffffff", opacity: 1, duration: 1 }, `step${i}`);
+            tl.to(titlesRef.current[i], { opacity: 1, duration: 1 }, `step${i}`);
 
             // Change background gradient smoothly over the entire scroll of this item
             tl.to(bgRef.current, {
@@ -222,7 +230,7 @@ const Elder = () => {
 
             // Fade them out if not the last item
             if (i !== data.length - 1) {
-                tl.to(titlesRef.current[i], { color: "#5c6d86", opacity: 0.5, duration: 1 }, `end${i}`);
+                tl.to(titlesRef.current[i], { opacity: DIM, duration: 1 }, `end${i}`);
                 tl.to(popupsRef.current[i], { autoAlpha: 0, duration: 1 }, `end${i}`);
             } else {
                 // Last item: fade out the whole list and the popup
@@ -330,8 +338,8 @@ const Elder = () => {
                                 // Sized to the column so the longest name sits on one line at every width (on phones a
                                 // break would leave a word alone); text-balance is the fallback on very narrow screens.
                                 // `!` because the global h2 size in fonts.css is unlayered and would win over the utilities.
-                                className="text-[6.3vw]! leading-[1.1]! md:text-[3.4rem]! lg:text-[3.9rem]! lg:whitespace-nowrap text-balance font-bold tracking-tight text-[#7889a1] opacity-50 text-left"
-                                style={{ willChange: "transform, opacity, color" }}
+                                className="text-[6.3vw]! leading-[1.1]! md:text-[3.4rem]! lg:text-[3.9rem]! lg:whitespace-nowrap text-balance font-bold tracking-tight text-white opacity-35 text-left"
+                                style={{ willChange: "transform, opacity" }}
                             >
                                 {item.title}
                             </h2>
@@ -460,6 +468,17 @@ const Elder = () => {
                                         <div key={i} className="panel-reveal">{para}</div>
                                     ))}
                                 </div>
+
+                                {activeItem.BOTTOMIMG && (
+                                    <img
+                                        src={activeItem.BOTTOMIMG}
+                                        alt=""
+                                        aria-hidden="true"
+                                        loading="lazy"
+                                        decoding="async"
+                                        className="panel-reveal mt-8 md:mt-12 w-full max-w-[80%] mx-auto h-auto object-contain object-left"
+                                    />
+                                )}
 
                                 {(activeItem.link || activeItem.website) && (
                                     <div className="panel-reveal mt-8 md:mt-12 mb-4 flex flex-wrap items-center gap-4">
