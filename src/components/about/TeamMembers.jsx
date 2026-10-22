@@ -129,10 +129,10 @@ const TeamMembers = () => {
         </div>
 
         {/* Middle Column: Names List (a three-name scrolling window on phones, the full list from lg) */}
-        <div className="lg:w-4/12 relative h-[132px] lg:h-auto lg:self-start flex items-start shrink-0">
+        <div className="lg:w-4/12 relative h-[132px] lg:h-auto lg:self-start flex items-start shrink-0 sm:mt-8 ">
           {/* Scrollable Container (hidden overflow, controlled by GSAP) */}
           <div className="relative w-full h-full overflow-hidden">
-            <div ref={namesInnerRef} className="w-full relative flex flex-col">
+            <div ref={namesInnerRef} className="w-full relative flex flex-col gap-2">
               {team.map((person, i) => (
                 <h5
                   key={person.name}

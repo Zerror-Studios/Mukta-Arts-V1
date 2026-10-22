@@ -39,7 +39,7 @@ const AboutHero = () => {
                         data-entrance="lines"
                         className="text-5xl md:text-7xl lg:text-[5.5rem] font-bold tracking-tighter text-black max-w-4xl leading-[1.05]"
                     >
-                        Telling stories across screens, theatres and classrooms.
+                        Telling stories across cinema, screens and classrooms.
                     </h1>
                     <p
                         data-entrance="rise"

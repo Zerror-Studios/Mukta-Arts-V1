@@ -13,12 +13,13 @@ const page = () => {
             <WWHERO />
             {/* WWI intro and its six stats */}
             <WWStats />
-            <WWMilestones />
+            <WWQuotes />
+            
             <WWSchools />
             {/* Industry quotes, in place of the old academic programs section */}
-            <WWQuotes />
             {/* Student photos first, then where the alumni work (content doc order) */}
             <WWlast />
+            <WWMilestones />
             <PartnersSection />
         </>
     );

@@ -10,70 +10,80 @@ import gsap from "gsap";
 let arr = [
   {
     year: "2025",
-    clr: "#1B123D",
+    // clr: "#1B123D",
+    clr: "#0474BA",
     img: "/img/final/WW/W1/0R2A2411_1_11zon_2_11zon.webp",
     title: "Digital Studio M&E Award - Media & Entertainment Education Award for Cinema",
     desc: "Whistling Woods International in 2025"
   },
   {
     year: "2025",
-    clr: "#1F1056",
+    // clr: "#1F1056",
+    clr: "#00A7E1",
     img: "/img/final/MA-2-Cinima.webp",
     title: "Big Cine Awards - Fastest Growing Cinema Chain of the Year",
     desc: "Mukta A2 Cinemas in 2025"
   },
   {
     year: "2024",
-    clr: "#1B123D",
+    // clr: "#1B123D",
+    clr: "#0474BA",
     img: "/img/final/WW/W1/0R2A9947_2_11zon_3_11zon.webp",
     title: "Navbharat Education Excellence Award - Filmmaking Institute of the Year",
     desc: "Whistling Woods International in 2024"
   },
   {
     year: "2019",
-    clr: "#1F1056",
+    // clr: "#1F1056",
+    clr: "#00A7E1",
     img: "/img/final/WW/W1/0R2A0174 (1)_3_11zon_1_11zon.webp",
     title: "FICCI Higher Education Excellence Award - Excellence in Creative & Performing Arts",
     desc: "Whistling Woods International in 2019"
   },
   {
     year: "2019",
-    clr: "#1B123D",
+    // clr: "#1B123D",
+    clr: "#0474BA",
     img: "/img/final/about_Img/AB2/EXCELSIOR_MA2_36_4_11zon_1_11zon.webp",
     title: "Big Cine Awards - Best Single-Screen Theatre of the Year",
     desc: "New Excelsior Mukta A2 Cinemas in 2019"
   },
   {
     year: "2017",
-    clr: "#1F1056",
+    // clr: "#1F1056",
+    clr: "#00A7E1",
     img: "/img/final/SG/S1/DSC00988 2_2_11zon.webp",
     title: "Screen Award - Lifetime Achievement",
     desc: "Subhash Ghai in 2017"
   },
   {
     year: "2015",
-    clr: "#1B123D",
+    clr: "#0474BA",
+    // clr: "#1B123D",
     img: "/img/final/SG/S1/DSC00997 2_1_11zon.webp",
     title: "IIFA Award - Outstanding Contribution to Indian Cinema",
     desc: "Subhash Ghai in 2015"
   },
   {
     year: "2006",
-    clr: "#1F1056",
+    // clr: "#1F1056",
+    clr: "#00A7E1",
     img: "/img/final/home/all/27_IQBAL_(2005).jpg",
     title: "National Film Award - Best Film on Other Social Issues",
     desc: "Iqbal produced by Subhash Ghai / Mukta Arts in 2006"
   },
   {
     year: "1998",
-    clr: "#1B123D",
+    // clr: "#1B123D",
+    clr: "#0474BA",
     img: "/img/final/home/all/17_PARDES_(1997).jpg",
     title: "Filmfare Award - Best Screenplay",
     desc: "Subhash Ghai for Pardes in 1998"
   },
   {
     year: "1992",
-    clr: "#1F1056",
+    // clr: "#1F1056",
+    clr: "#00A7E1",
     img: "/img/final/home/all/11_SAUDAGAR_(1991).jpg",
     title: "Filmfare Award - Best Director",
     desc: "Subhash Ghai for Saudagar in 1992"
@@ -138,19 +148,19 @@ export default function CardsShowcase() {
   const centerOffset = (arr.length - 1) / 2;
 
   return (
-    <div className="w-full h-[100vh] relative z-[10] mt-[10vh] md:mt-[30vh] overflow-hidden">
+    <div className="w-full relative z-[10] mt-[5vh] md:mt-[35vh] pb-[4vh] overflow-hidden">
       {/* Title */}
-      <div className="w-full absolute top-[-5%] md:top-[-10%] left-2 px-4 md:px-10 pt-10 md:pt-20 z-50 pointer-events-none">
+      <div className="w-full px-6 md:px-12 relative z-50 pointer-events-none max-sm:mb-10">
         <h2 className="text-[12vw] md:text-[8vw] font-semibold tracking-tighter text-black">Honours.</h2>
       </div>
 
-      {/* 3D Container */}
+      {/* 3D Container: on phones the stack is scaled down, so its box is shorter to match */}
       <div
-        className="absolute inset-0 flex flex-col items-center max-sm:scale-[0.6] justify-center pt-[10vh] md:pt-[15vh] translate-y-20 md:translate-y-30"
+        className="relative w-full h-[45vh] md:h-[65vh] flex items-center justify-center"
         style={{ perspective: "1500px" }}
       >
         <div
-          className="relative w-full max-w-6xl h-[70vh] md:h-[65vh] flex items-center justify-center"
+          className="relative w-full max-w-6xl h-[70vh] md:h-full shrink-0 max-sm:scale-[0.6] flex items-center justify-center"
           style={{ transformStyle: "preserve-3d" }}
         >
           {arr.map((item, originalIndex) => {
@@ -166,7 +176,7 @@ export default function CardsShowcase() {
                 style={{
                   zIndex: visualIndex,
                   // Center the 10 cards using centerOffset (4.5) with proportionate spacing for 3D depth and fan
-                  transform: `translateX(${(visualIndex - centerOffset) * 9}%) translateY(-80px) translateZ(${visualIndex * 28}px) rotateY(15deg)`,
+                  transform: `translateX(${(visualIndex - centerOffset) * 9}%) translateZ(${visualIndex * 28}px) rotateY(15deg)`,
                   transformOrigin: "center center",
                 }}
               >
@@ -216,26 +226,25 @@ export default function CardsShowcase() {
             );
           })}
         </div>
-        <div className="w-full h-[10vh] bg-white"></div>
-      </div>
 
-      {/* Navigation Buttons */}
-      <button
-        onClick={handlePrev}
-        className="absolute left-[2%] md:left-[5%] top-1/2 -translate-y-1/2 z-[9999] w-10 h-10 md:w-12 md:h-12 rounded-full border border-black/20 text-black flex items-center justify-center hover:bg-[#1B123D] hover:text-white transition-colors cursor-pointer bg-white/50 backdrop-blur-md shadow-lg"
-      >
-        <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
-      <button
-        onClick={handleNext}
-        className="absolute right-[2%] md:right-[5%] top-1/2 -translate-y-1/2 z-[9999] w-10 h-10 md:w-12 md:h-12 rounded-full border border-black/20 text-black flex items-center justify-center hover:bg-[#1B123D] hover:text-white transition-colors cursor-pointer bg-white/50 backdrop-blur-md shadow-lg"
-      >
-        <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
-        </svg>
-      </button>
+        {/* Navigation Buttons, centred on the cards */}
+        <button
+          onClick={handlePrev}
+          className="absolute left-[2%] md:left-[5%] top-1/2 -translate-y-1/2 z-[9999] w-10 h-10 md:w-12 md:h-12 rounded-full border border-black/20 text-black flex items-center justify-center hover:bg-[#1B123D] hover:text-white transition-colors cursor-pointer bg-white/50 backdrop-blur-md shadow-lg"
+        >
+          <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <button
+          onClick={handleNext}
+          className="absolute right-[2%] md:right-[5%] top-1/2 -translate-y-1/2 z-[9999] w-10 h-10 md:w-12 md:h-12 rounded-full border border-black/20 text-black flex items-center justify-center hover:bg-[#1B123D] hover:text-white transition-colors cursor-pointer bg-white/50 backdrop-blur-md shadow-lg"
+        >
+          <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
 
       {/* Custom Cursor */}
       <div

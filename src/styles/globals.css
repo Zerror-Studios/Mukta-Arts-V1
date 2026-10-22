@@ -7,6 +7,13 @@
 /* Short viewports, e.g. phones in landscape */
 @custom-variant short (@media (max-height: 500px));
 
+/* Phones, upright or on their side. Keep in step with PHONE in About > FilmLegacy. */
+@custom-variant phone {
+  @media (max-width: 767.98px), (max-height: 500px) {
+    @slot;
+  }
+}
+
 * {
   user-select: none;
 }

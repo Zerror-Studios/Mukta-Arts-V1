@@ -120,32 +120,32 @@ const Category = ({ category, index, isOpen, onToggle }) => {
           {pad(index + 1)}
         </h4>
 
-        <span className="min-w-0">
-          <span
+        <p className="min-w-0">
+          <h4
             className={`block font-['SwitzerB'] text-[30px] md:text-[48px] lg:text-[60px] leading-none tracking-tight transition-colors duration-300 ${
               isOpen ? "text-black" : "text-neutral-400 group-hover:text-black"
             }`}
           >
             {category.title}
-          </span>
+          </h4>
           {/* The meaning sits under the name on phones */}
-          <span className="md:hidden block mt-2 text-[14px] leading-snug text-[#555]">{category.about}</span>
-        </span>
+          <p className="md:hidden block mt-2 text-[14px] leading-snug text-[#555]">{category.about}</p>
+        </p>
 
         <p className="hidden md:block text-[15px] lg:text-[16px] leading-relaxed text-[#555] max-w-[34ch]">
           {category.about}
         </p>
 
-        <span className="flex items-center gap-4 md:gap-6">
-          <span className="text-right">
-            <span className="block text-[26px] md:text-[36px] font-light leading-none tabular-nums text-black">
+        <p className="flex items-center gap-4 md:gap-6">
+          <p className="text-right">
+            <p className="block text-[26px] md:text-[36px] font-light leading-none tabular-nums text-black">
               {pad(category.properties.length)}
-            </span>
+            </p>
             <p className="hidden md:block mt-1 font-mono text-[10px] uppercase  text-neutral-500">
               Cinemas
             </p>
-          </span>
-          <span
+          </p>
+          <p
             className={`grid place-items-center w-10 h-10 md:w-12 md:h-12 rounded-full border transition-colors duration-300 ${
               isOpen
                 ? "bg-[#1B123D] border-[#1B123D] text-white"
@@ -156,8 +156,8 @@ const Category = ({ category, index, isOpen, onToggle }) => {
               strokeWidth={1.5}
               className={`w-5 h-5 transition-transform duration-500 ease-out ${isOpen ? "rotate-45" : ""}`}
             />
-          </span>
-        </span>
+          </p>
+        </p>
       </button>
 
       {/* The cinemas, in a lined grid lined up with the category name */}
@@ -172,14 +172,14 @@ const Category = ({ category, index, isOpen, onToggle }) => {
                 className="group/item py-4 md:py-5 border-t border-[#D4D4D4] hover:border-[#1B123D] transition-colors duration-300"
               >
                 {/* Hover only changes colour: the rule above and the name turn navy */}
-                <span className="block text-[18px] md:text-[20px] font-medium tracking-tight leading-tight text-black group-hover/item:text-[#1B123D] transition-colors duration-300">
+                <p className="block text-[18px] md:text-[20px] font-medium tracking-tight leading-tight text-black group-hover/item:text-[#1B123D] transition-colors duration-300">
                   {item.name}
-                </span>
-                <span className="block mt-1.5 text-[13px] md:text-[14px] leading-snug text-[#666]">
+                </p>
+                <p className="block mt-1.5 text-[13px] md:text-[14px] leading-snug text-[#666]">
                   {parts.slice(0, -1).join(", ")}
-                  {parts.length > 1 && <span className="text-neutral-400"> · </span>}
+                  {parts.length > 1 && <p className="text-neutral-400"> · </p>}
                   {parts.at(-1)}
-                </span>
+                </p>
               </li>
             );
           })}
@@ -217,7 +217,7 @@ export default function PropertiesSection() {
             Cinema Properties
           </h2>
         </div>
-        <p data-reveal="rise" className="text-[#555] text-[15px]! md:text-[16px]! max-w-[380px] leading-relaxed!">
+        <p data-reveal="rise" className="text-[#555]  max-w-[380px] ">
           {total} cinemas in {propertiesCategories.length} categories. Open a category to see its cinemas and
           where they are.
         </p>

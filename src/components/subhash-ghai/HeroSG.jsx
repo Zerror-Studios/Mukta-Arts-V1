@@ -48,7 +48,7 @@ const HeroSG = () => {
                             }
                         >
                             {/* Rendered at the final value so it reads without JS; counts up on load */}
-                            <h3
+                            <h5
                                 data-entrance="count"
                                 data-entrance-at={0.2 + i * 0.1}
                                 data-count-to={stat.value}
@@ -57,7 +57,7 @@ const HeroSG = () => {
                                 className="text-[1.3rem] sm:text-[1.6rem] md:max-lg:text-[28px] lg:text-[1.75rem] leading-tight font-bold font-['SwitzerSB'] text-white mb-1 lg:mb-2 tabular-nums whitespace-nowrap"
                             >
                                 {`${stat.value}${stat.suffix}`}
-                            </h3>
+                            </h5>
                             <p
                                 data-entrance="rise"
                                 data-entrance-at={0.25 + i * 0.1}
@@ -83,7 +83,7 @@ const HeroSG = () => {
                 </div>
 
                 {/* Right Column - Intro */}
-                <div className="shrink-0 flex flex-col justify-between order-3 lg:order-3 lg:pt-4">
+                <div className="shrink-0 flex flex-col justify-end order-3 lg:order-3 lg:pt-4">
                     <p
                         data-entrance="lines"
                         data-entrance-at="0.5"

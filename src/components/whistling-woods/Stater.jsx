@@ -77,11 +77,12 @@ const Stater = () => {
             const proxy = { val: 0 };
             gsap.to(proxy, {
                 val: target,
+                duration: 2,
+                ease: "power2.out",
                 scrollTrigger: {
                     trigger: col,
-                    start: "top 100%",
-                    end: "top 90%",
-                    scrub: true,
+                    start: "top 90%",
+                    toggleActions: "play none none reverse",
                 },
                 onUpdate: () => {
                     num.innerText = Math.round(proxy.val).toLocaleString('en-US');
@@ -95,10 +96,10 @@ const Stater = () => {
             <div className=" mx-auto">
 
                 {/* Scroll Reveal Text */}
-                <div className="mb-24 md:mb-36 lg:mb-44 flex justify-center max-w-[1400px] mx-auto">
+                <div className="mb-24 md:mb-36 lg:mb-44 flex justify-center max-w-[80%]  mx-auto">
                     <h5
                         ref={textRef}
-                        className="text-[28px] md:text-4xl lg:text-[2.75rem] text-center w-full md:w-4/5 lg:w-2/3 leading-[1.3] font-medium tracking-tight"
+                        className="text-[28px] md:text-4xl lg:text-[2.75rem] text-center w-full   leading-[1.3] font-medium tracking-tight"
                     >
                         {textContent.split(" ").map((word, index) => (
                             <span key={index} className="word inline-block mr-[0.25em]">

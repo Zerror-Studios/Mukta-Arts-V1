@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF, Environment, ContactShadows } from "@react-three/drei";
@@ -283,9 +283,9 @@ export default function OldCamera() {
                 {/* Title, with the role that changes on scroll right below it */}
                 <div className="absolute top-[15%] left-[5%] md:left-[4%] z-40 text-black pointer-events-none">
                     <h2 className="tracking-tighter leading-none uppercase">
-                        Subhash Ghai.
+                        Subhash Ghai
                     </h2>
-                    <h5 className=" uppercase">Founder and Chairman.</h5>
+                    <h5 className=" uppercase">Founder and Chairman</h5>
                     {/* The roles share one grid cell, so they swap in place */}
                     <div className="grid ">
                         {SLIDES.map((slide, i) => (
@@ -344,9 +344,13 @@ export default function OldCamera() {
                         >
                             <ambientLight intensity={0.4} />
                             <directionalLight position={[5, 10, 5]} intensity={1.2} />
-                            <Environment preset="studio" />
-
-                            <AnimatedCameraGroup />
+                            {/* Its own boundary for the lighting and model loads: without one the Canvas suspends
+                                the whole page while they load, and no tap on it (Elder's dropdowns just above)
+                                does anything until they finish */}
+                            <Suspense fallback={null}>
+                                <Environment preset="studio" />
+                                <AnimatedCameraGroup />
+                            </Suspense>
 
                             {/* <OrbitControls
                             enableZoom={false}

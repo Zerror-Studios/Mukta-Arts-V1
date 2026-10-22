@@ -86,25 +86,24 @@ const WWStats = () => {
             }
         });
 
-        // Number Animation
-        const statCols = containerRef.current.querySelectorAll('.stat-col');
-        statCols.forEach((col) => {
-            const num = col.querySelector('.stat-num');
-            if (!num) return;
-            const target = parseInt(num.getAttribute('data-target'), 10);
-            const proxy = { val: 0 };
-            gsap.to(proxy, {
-                val: target,
-                scrollTrigger: {
-                    trigger: col,
-                    start: "top 90%",
-                    end: "top 85%",
-                    scrub: true,
-                },
-                onUpdate: () => {
-                    num.innerText = Math.round(proxy.val).toLocaleString('en-US');
-                }
-            });
+        // Number Animation (all numbers count up together)
+        const nums = Array.from(containerRef.current.querySelectorAll('.stat-num'));
+        const targets = nums.map((num) => parseInt(num.getAttribute('data-target'), 10));
+        const proxy = { progress: 0 };
+        gsap.to(proxy, {
+            progress: 1,
+            duration: 2,
+            ease: "power2.out",
+            scrollTrigger: {
+                trigger: ".stats-container",
+                start: "top 85%",
+                once: true,
+            },
+            onUpdate: () => {
+                nums.forEach((num, i) => {
+                    num.innerText = Math.round(targets[i] * proxy.progress).toLocaleString('en-US');
+                });
+            }
         });
     }, { scope: containerRef });
 
@@ -113,10 +112,10 @@ const WWStats = () => {
             <div className=" mx-auto">
 
                 {/* Scroll Reveal Text */}
-                <div className="mb-16 md:mb-36 lg:mb-44 flex justify-center max-w-[1400px] mx-auto">
+                <div className="mb-16 md:mb-36 lg:mb-44 flex justify-center max-w-[80%] mx-auto">
                     <h5
                         ref={textRef}
-                        className="text-[28px] md:text-4xl lg:text-[2.75rem] max-sm:text-[1.5rem]! max-sm:leading-[1.3]! text-center w-full md:w-4/5 lg:w-2/3 leading-[1.3] font-medium tracking-tight"
+                        className="text-[28px] md:text-4xl lg:text-[2.75rem] max-sm:text-[1.5rem]! max-sm:leading-[1.3]! text-center w-full  leading-[1.3] font-medium tracking-tight"
                     >
                         {textContent.split(" ").map((word, index) => (
                             <span key={index} className="word inline-block mr-[0.25em]">

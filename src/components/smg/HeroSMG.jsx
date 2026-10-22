@@ -1,6 +1,7 @@
 'use client'
 
-import React, { useRef } from 'react';
+import { useRef } from 'react';
+import Image from 'next/image';
 import useEntrance from '@/hooks/useEntrance';
 
 const HeroSMG = () => {
@@ -13,10 +14,15 @@ const HeroSMG = () => {
         <section ref={containerRef} className="relative w-full h-screen min-h-[700px] flex flex-col bg-black overflow-hidden">
             {/* Background Image */}
             <div className="absolute inset-0 w-full h-full z-0">
-                {/* Note: Placeholder â€” replace with an SGM Studios still */}
-                <img
+                {/* Note: Placeholder — replace with an SGM Studios still */}
+                {/* The source is 5472px wide: Next serves a copy sized to the screen. On a screen
+                    narrower than the 3:2 photo, object-cover fills the height, so it shows 150vh wide */}
+                <Image
                     src="/img/final/home/home2/2O5A4368.webp"
                     alt="SGM Studios Background"
+                    fill
+                    sizes="(max-aspect-ratio: 3/2) 150vh, 100vw"
+                    preload
                     className="object-cover w-full h-full object-center"
                 />
                 {/* Dark overlay to ensure text and logo readability */}

@@ -223,7 +223,7 @@ const WWMilestones = () => {
                 style={SCROLL_DRIVEN ? { height: '100svh', minHeight: isMobile ? undefined : 680 } : undefined}
             >
                 {/* Dynamic Milestone Background Crossfade */}
-                <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none ">
                     {UNIQUE_DATA.map((item, i) => (
                         <div
                             key={item.year}
@@ -259,7 +259,7 @@ const WWMilestones = () => {
 
                 {/* Header */}
                 <div
-                    className="relative z-10 text-center px-4 mx-auto max-w-5xl"
+                    className="relative z-10 text-center px-4 mx-auto max-w-5xl  max-sm:mt-30"
                     style={{ paddingTop: isMobile ? 'clamp(20px, 5svh, 48px)' : 'clamp(28px, 8vh, 80px)' }}
                 >
                     {/* <h2
@@ -280,7 +280,7 @@ const WWMilestones = () => {
                 </div>
 
                 {/* Stage */}
-                <div className="relative w-full  " style={{ height: 560 }}>
+                <div className="relative w-full   " style={{ height: 560 }}>
                     {/* Fixed connector lines around the active year */}
                     <div className="absolute  left-1/2 w-px bg-white/40 z-20 hidden md:block" style={{ top: arcTop - 150, height: 40 }} />
                     <div className="absolute  left-1/2 w-px bg-white/40 z-20" style={{ top: arcTop - 51, height: 25 }} />

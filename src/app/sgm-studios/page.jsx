@@ -1,21 +1,19 @@
 import HeroSMG from "@/components/smg/HeroSMG";
 import SGMIntro from "@/components/smg/SGMIntro";
-import SGMShowreel from "@/components/smg/SGMShowreel";
 import WWAcademicPrograms from "@/components/whistling-woods/WWAcademicPrograms";
 import { createPageMetadata } from "@/lib/seo";
 
-const page = () => {
+const SGMStudiosPage = () => {
     return (
         <>
             <HeroSMG />
             <SGMIntro />
-            {/* <SGMShowreel /> */}
-            <WWAcademicPrograms/>
+            <WWAcademicPrograms />
         </>
     );
 };
 
-export default page;
+export default SGMStudiosPage;
 
 export async function generateMetadata(_props, parent) {
     return createPageMetadata("/sgm-studios", await parent);

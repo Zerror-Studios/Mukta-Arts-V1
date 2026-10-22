@@ -51,7 +51,7 @@ const MissionVision = () => {
           {stats.map((stat) => (
             <div
               key={stat.label}
-              className="flex flex-col justify-between border-l border-black/10 pl-6 md:pl-10 min-h-[300px] md:min-h-[350px]"
+              className="flex flex-col justify-between border-l border-black/10 pl-6 md:pl-10 sm:min-h-[300px] md:min-h-[350px]"
             >
               <div>
                 {/* Server-rendered at the final value; counts up from 0 once it scrolls into view */}

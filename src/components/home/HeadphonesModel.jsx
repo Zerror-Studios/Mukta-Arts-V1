@@ -1,12 +1,12 @@
 "use client"
-import React, { useRef, useEffect } from 'react';
-import { useGLTF, Environment, Center } from '@react-three/drei';
+import React, { useRef, useEffect, useLayoutEffect, Suspense } from 'react';
+import { useGLTF, useEnvironment, Environment, Center } from '@react-three/drei';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 // The same GSAP + ScrollTrigger instance as the rest of the site, so these triggers update in
 // step with Lenis instead of on a second, separate copy listening to the scroll on its own
 import { gsap, ScrollTrigger } from '@/lib/motion';
-import { modelIntro, MODEL_FRONT_Y, IDLE_SPEED, setModelReady } from '@/lib/homeIntro';
+import { modelIntro, MODEL_FRONT_Y, IDLE_SPEED, setModelReady, MODEL_URL, MODEL_ENV_URL } from '@/lib/homeIntro';
 
 // Reused every frame while the model follows the header logo / footer, instead of allocating new vectors
 const _point = new THREE.Vector3();
@@ -20,14 +20,15 @@ const TURN = Math.PI * 2;
 // Share of the header logo image's height that the headphones fill (the PNG has a little padding),
 // so the docked 3D logo ends the same size as the flat one it swaps with
 const DOCK_FILL = 0.86;
-// The trip up to the header logo runs from this much of a screen's scroll to this much
-// (fractions of the viewport height)
-const DOCK_START = 0.05;
-const DOCK_END = 0.85;
+// Scrolling past this much of a screen (a fraction of the viewport height) sets off the trip up to
+// the header logo, which then plays through on its own over DOCK_DURATION seconds instead of
+// following the scroll; scrolling back above it plays the trip back down into the hero
+const DOCK_TRIGGER = 0.06;
+const DOCK_DURATION = 1.4;
 // Share of that trip after which it starts turning to face front (below it, it is back in the hero
-// and turning on its own, so it doesn't wait for the scroll to settle exactly at the top)
+// and turning on its own)
 const DOCK_TURN_FROM = 0.03;
-// Share of that trip over which the scroll brings the model round to face front (it starts turning
+// Share of that trip over which the model is brought round to face front (it starts turning
 // to the front on its own as soon as the trip starts; this makes sure it gets there in time)
 const DOCK_HOLD_FROM = 0.3;
 const DOCK_HOLD_TO = 0.8;
@@ -52,6 +53,19 @@ const SPEED_RAMP = 1.2;
 const SETTLE_MIN = 0.5;
 // Radians the model turns per pixel dragged
 const DRAG_SPEED = 0.01;
+
+// Phones, upright or on their side (the `phone` variant in globals.css)
+const PHONE = '(max-width: 767.98px), (max-height: 500px)';
+// On phones the model's textures are cut down to this size before they reach the GPU. All 38 are
+// 1024px, about 200 MB of GPU memory, which is more than iOS and Android always give a page: they drop
+// the canvas's WebGL context and the logo disappears. The whole model is only a few hundred pixels
+// across on a phone, so half-size textures look the same there and take a quarter of the memory.
+const PHONE_TEXTURE_SIZE = 512;
+// Seconds the hero waits for the shaders to compile before its intro plays anyway: on a context the
+// phone drops part-way through, compiling never finishes, and the model would never rise in
+const COMPILE_WAIT = 2;
+// Milliseconds a lost WebGL context gets to come back before a fresh canvas replaces it
+const CONTEXT_RESTORE_WAIT = 1000;
 
 const clamp01 = (t) => Math.min(Math.max(t, 0), 1);
 const smooth = (t) => {
@@ -80,16 +94,54 @@ function elementToWorld(el, size, camera, out) {
   return out.copy(camera.position).add(_dir.multiplyScalar(distance));
 }
 
-export function Model({ onDrawingChange, scale: baseScale = 1, ...props }) {
-  const { scene } = useGLTF('/model/ModelV2.glb');
+// Redraws every texture of the (cached, shared) model at most `maxSize` across, once
+const shrunkScenes = new WeakSet();
+function shrinkTextures(scene, maxSize) {
+  if (shrunkScenes.has(scene)) return;
+  shrunkScenes.add(scene);
+  scene.traverse((obj) => {
+    if (!obj.isMesh) return;
+    [].concat(obj.material).forEach((material) => {
+      Object.values(material).forEach((texture) => {
+        const image = texture?.isTexture ? texture.image : null;
+        // An <img> on Safari, an ImageBitmap elsewhere; a texture shared by two maps is only done once
+        const drawable = image instanceof HTMLImageElement || (typeof ImageBitmap !== 'undefined' && image instanceof ImageBitmap);
+        if (!drawable || Math.max(image.width, image.height) <= maxSize) return;
+        const ratio = maxSize / Math.max(image.width, image.height);
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(image.width * ratio);
+        canvas.height = Math.round(image.height * ratio);
+        canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
+        image.close?.();
+        texture.image = canvas;
+        texture.needsUpdate = true;
+      });
+    });
+  });
+}
+
+// footerOnly: the other pages, which have no hero model. It starts docked in the header logo and
+// only makes the trip down into the footer (and back up), with no hero intro.
+export function Model({ onDrawingChange, footerOnly = false, scale: baseScale = 1, ...props }) {
+  const { scene } = useGLTF(MODEL_URL);
   const introRef = useRef();
   const groupRef = useRef();
   const spinRef = useRef();
-  const { size, camera, gl, scene: rootScene } = useThree();
+  const { size, camera, gl, scene: rootScene, invalidate } = useThree();
+  const frameloop = useThree((s) => s.frameloop);
+
+  // Back from "never" to "always" (drawing again after the header logo), R3F's render loop only
+  // starts up again when asked. The home page's other canvases keep it running anyway; this one
+  // is alone on the other pages.
+  useEffect(() => {
+    if (frameloop === 'always') invalidate();
+  }, [frameloop, invalidate]);
 
   // dockP: 0 in the hero, 1 once it has reached the header logo
   // footerP: 0 until the footer comes into view, 1 once the model sits in it
-  const stateRef = useRef({ dockP: 0, footerP: 0 });
+  const stateRef = useRef({ dockP: footerOnly ? 1 : 0, footerP: 0 });
+  // The hero intro only plays on the home page; elsewhere the model just turns on its own
+  const introIdle = () => (footerOnly ? 1 : modelIntro.idle);
   // The model's own height (before any scaling), measured once it is upright
   const modelHeightRef = useRef(0);
   const elsRef = useRef({ canvas: null, logo: null, footer: null, docked: false, drawing: true, z: '' });
@@ -109,7 +161,7 @@ export function Model({ onDrawingChange, scale: baseScale = 1, ...props }) {
   // Drag to turn it: in the hero (anywhere but the links), and in the footer over its spot
   useEffect(() => {
     const canDrag = (target) => {
-      if (turningFront() || modelIntro.idle < 1 || !(target instanceof Element)) return false;
+      if (turningFront() || introIdle() < 1 || !(target instanceof Element)) return false;
       if (stateRef.current.footerP > 0) return !!target.closest('#footer-headphone');
       return !target.closest('a, button, header, input, textarea');
     };
@@ -148,6 +200,12 @@ export function Model({ onDrawingChange, scale: baseScale = 1, ...props }) {
     };
   }, []);
 
+  // Phones get smaller textures (PHONE_TEXTURE_SIZE). A layout effect, so it is done before R3F
+  // first draws the model and before the effect below uploads the textures.
+  useLayoutEffect(() => {
+    if (window.matchMedia(PHONE).matches) shrinkTextures(scene, PHONE_TEXTURE_SIZE);
+  }, [scene]);
+
   // Get the GPU ready while the model is still out of view (textures uploaded, shaders
   // compiled), so the first frames of the hero intro never stutter. Then tell the hero.
   useEffect(() => {
@@ -160,7 +218,17 @@ export function Model({ onDrawingChange, scale: baseScale = 1, ...props }) {
         });
       });
     });
-    const compiled = gl.compileAsync ? gl.compileAsync(rootScene, camera) : Promise.resolve(gl.compile(rootScene, camera));
+    // Never waited on for longer than COMPILE_WAIT, and a compile that throws (a lost context) only
+    // rejects, so the hero always gets its go-ahead
+    const compiled = Promise.race([
+      new Promise((resolve) => resolve(gl.compileAsync ? gl.compileAsync(rootScene, camera) : gl.compile(rootScene, camera))),
+      new Promise((resolve) => setTimeout(resolve, COMPILE_WAIT * 1000)),
+    ]);
+    // Only the home hero waits on this
+    if (footerOnly) {
+      compiled.catch(() => {});
+      return;
+    }
     compiled
       .catch(() => {})
       .then(() => requestAnimationFrame(() => !cancelled && setModelReady(true)));
@@ -169,22 +237,24 @@ export function Model({ onDrawingChange, scale: baseScale = 1, ...props }) {
       cancelled = true;
       setModelReady(false);
     };
-  }, [scene, gl, rootScene, camera]);
+  }, [scene, gl, rootScene, camera, footerOnly]);
 
   useFrame((state, delta) => {
     // Capped so a long frame (or the first one after drawing resumes) never jumps the motion
     const dt = Math.min(delta, 0.1);
 
     // Hero intro (driven by Hero.jsx): rise from below and turn into place
-    if (introRef.current) {
+    if (introRef.current && !footerOnly) {
       introRef.current.position.y = modelIntro.y;
       introRef.current.rotation.y = modelIntro.spin;
       introRef.current.rotation.x = modelIntro.tilt;
       introRef.current.scale.setScalar(modelIntro.scale);
     }
 
-    // Measured once, upright (no intro tilt): the model's height in its own units
-    if (!modelHeightRef.current && modelIntro.tilt === 0) {
+    // Measured once, upright (no intro tilt): the model's height in its own units. The world
+    // matrices are brought up to date first: off the home page this can be the very first frame.
+    if (!modelHeightRef.current && (footerOnly || modelIntro.tilt === 0)) {
+      scene.updateWorldMatrix(true, true);
       new THREE.Box3().setFromObject(scene).getSize(_size);
       scene.getWorldScale(_worldScale);
       modelHeightRef.current = _size.y / _worldScale.y;
@@ -236,8 +306,7 @@ export function Model({ onDrawingChange, scale: baseScale = 1, ...props }) {
       } else {
         pos.set(0, 0, 0);
       }
-      groupRef.current.scale.setScalar(scale);
-    }
+      groupRef.current.scale.setScalar(scale);    }
 
     // 2. Rotation
     if (spinRef.current) {
@@ -253,7 +322,7 @@ export function Model({ onDrawingChange, scale: baseScale = 1, ...props }) {
           const distance = to - from;
           const duration = 0.6 + distance * 0.25;
           // Leaves at the speed it was turning (as a slope of the 0–1 curve)
-          const start = Math.min((s.speed * modelIntro.idle * IDLE_SPEED * duration) / distance, 3);
+          const start = Math.min((s.speed * introIdle() * IDLE_SPEED * duration) / distance, 3);
           s.settle = { from, to, t: 0, duration, start };
           s.angle = from;
           s.drag = s.dragTarget = 0;
@@ -261,7 +330,7 @@ export function Model({ onDrawingChange, scale: baseScale = 1, ...props }) {
         const st = s.settle;
         st.t = Math.min(st.t + dt, st.duration);
         const timed = st.from + (st.to - st.from) * settleEase(st.t / st.duration, st.start);
-        // ...and the scroll makes sure it is there by the time it swaps, however fast the scroll
+        // ...and the trip's progress makes sure it is there by the time it swaps
         const hold = footerP > 0
           ? 1 - smooth((footerP - FOOTER_TRAVEL_FROM) / (FOOTER_SPIN_FROM - FOOTER_TRAVEL_FROM))
           : smooth((dockP - DOCK_HOLD_FROM) / (DOCK_HOLD_TO - DOCK_HOLD_FROM));
@@ -283,7 +352,7 @@ export function Model({ onDrawingChange, scale: baseScale = 1, ...props }) {
         }
         // The hero intro holds this at 0 (modelIntro.idle) during its own turn, then hands over at
         // full speed, so the model never stops
-        s.angle += dt * IDLE_SPEED * s.speed * modelIntro.idle;
+        s.angle += dt * IDLE_SPEED * s.speed * introIdle();
         s.drag += (s.dragTarget - s.drag) * (1 - Math.exp(-dt * 12));
       }
 
@@ -346,19 +415,27 @@ export function Model({ onDrawingChange, scale: baseScale = 1, ...props }) {
 
     const state = stateRef.current;
     const ctx = gsap.context(() => {
-      // Hero to header logo: spread over most of the hero's scroll, so the logo visibly travels
-      // up to the corner (the move, the shrink and the turn happen every frame, in useFrame)
-      gsap.fromTo(state, { dockP: 0 }, {
-        dockP: 1,
-        ease: 'none',
-        onUpdate: update,
-        scrollTrigger: {
-          trigger: document.body,
-          start: () => window.innerHeight * DOCK_START,
-          end: () => window.innerHeight * DOCK_END,
-          scrub: 1,
-        },
-      });
+      // Hero to header logo: set off by the scroll, then timed, so the logo glides up to the corner
+      // in one smooth move however fast or slow the scroll is. Scrolling back to the top reverses it
+      // from wherever it has got to. (The move, the shrink and the turn happen every frame, in
+      // useFrame; the ease is applied there, so the progress here stays linear.)
+      // (Off the home page it is already docked.)
+      if (!footerOnly) {
+        const dock = gsap.fromTo(state, { dockP: 0 }, {
+          dockP: 1,
+          duration: DOCK_DURATION,
+          ease: 'none',
+          onUpdate: update,
+          scrollTrigger: {
+            trigger: document.body,
+            start: () => window.innerHeight * DOCK_TRIGGER,
+            toggleActions: 'play none none reverse',
+          },
+        });
+        // Set up part-way down the page (the model loaded after the visitor had scrolled on, or a
+        // fresh canvas replaced one the phone dropped): it starts docked instead of flying up again
+        if (window.scrollY > window.innerHeight * DOCK_TRIGGER) dock.progress(1);
+      }
 
       // Header logo to the footer, on every screen size (footerScaleFor picks the size)
       gsap.fromTo(state, { footerP: 0 }, {
@@ -394,8 +471,19 @@ export function Model({ onDrawingChange, scale: baseScale = 1, ...props }) {
       ctx.revert();
       els.docked = false;
       setDrawing(true);
+      // Hand the header logo back to its own classes (it stays mounted between the other pages)
+      if (els.logo) {
+        els.logo.style.opacity = '';
+        els.logo.style.visibility = '';
+        els.logo.style.pointerEvents = '';
+      }
+      // ...and the canvas's wrapper too, which stays mounted when a fresh canvas replaces a lost one
+      if (els.canvas) {
+        els.canvas.style.opacity = '';
+        els.canvas.style.zIndex = '';
+      }
     };
-  }, [onDrawingChange]);
+  }, [onDrawingChange, footerOnly]);
 
   return (
     <group ref={introRef}>
@@ -415,12 +503,48 @@ export function Model({ onDrawingChange, scale: baseScale = 1, ...props }) {
   );
 }
 
-useGLTF.preload('/model/headphones.glb');
+useGLTF.preload(MODEL_URL);
+useEnvironment.preload({ files: MODEL_ENV_URL });
 
-export default function HeadphonesCanvas() {
+export default function HeadphonesCanvas({ footerOnly = false }) {
   const [modelScale, setModelScale] = React.useState(30);
   // False while the model is docked in the header and this canvas is hidden
   const [drawing, setDrawing] = React.useState(true);
+  // Bumped to mount a fresh canvas in place of one whose WebGL context the phone dropped
+  const [contextKey, setContextKey] = React.useState(0);
+  const mountedRef = useRef(false);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
+  // Phones drop a page's WebGL contexts when GPU memory runs short or the browser has been in the
+  // background, and a lost canvas draws nothing from then on. If the browser gives the context back,
+  // three.js carries on by itself; if it doesn't, a fresh canvas (with a new context) takes over.
+  const handleCreated = ({ gl }) => {
+    const canvas = gl.domElement;
+    let timer = 0;
+    // Set once this canvas has been replaced: R3F forces its context to be lost as it unmounts
+    let retired = false;
+    const rebuild = () => {
+      if (retired || !mountedRef.current || !gl.getContext().isContextLost()) return;
+      // Not while the page is in the background, where the new context would be dropped as well
+      if (document.hidden) {
+        document.addEventListener('visibilitychange', rebuild, { once: true });
+        return;
+      }
+      retired = true;
+      setContextKey((key) => key + 1);
+    };
+    canvas.addEventListener('webglcontextlost', () => {
+      clearTimeout(timer);
+      timer = setTimeout(rebuild, CONTEXT_RESTORE_WAIT);
+    });
+    canvas.addEventListener('webglcontextrestored', () => clearTimeout(timer));
+  };
 
   useEffect(() => {
     const updateScale = () => {
@@ -441,9 +565,12 @@ export default function HeadphonesCanvas() {
   return (
     // Never takes the pointer (it covers the whole screen, over the footer too): dragging the model
     // is picked up on the window instead (Model)
-    <div id="hero-logo-canvas" className="fixed inset-0 z-10 pointer-events-none flex items-center justify-center">
+    // Off the home page it starts hidden behind the header logo (Model shows it when the footer comes in)
+    <div id="hero-logo-canvas" className={`fixed inset-0 z-10 pointer-events-none flex items-center justify-center ${footerOnly ? 'opacity-0' : ''}`}>
       <div id="3d-canvas-container" className="w-full h-full pointer-events-none">
         <Canvas
+          key={contextKey}
+          onCreated={handleCreated}
           camera={{ position: [0, 0, 8], fov: 45 }}
           className="w-full h-full"
           // R3F makes its wrapper take the pointer by default
@@ -455,8 +582,14 @@ export default function HeadphonesCanvas() {
           <ambientLight intensity={1} />
           <directionalLight position={[10, 10, 5]} intensity={0} />
           <directionalLight position={[-10, -10, -5]} intensity={0} />
-          <Environment preset="city" />
-          <Model position={[0, 0, 0]} scale={modelScale} onDrawingChange={setDrawing} />
+          {/* Its own boundary for the lighting and model loads, so they never suspend the page around the
+              canvas (off the home page that is the site layout's footer); while they did, no tap on the
+              page did anything */}
+          <Suspense fallback={null}>
+            {/* drei's "city" preset, served from this site (MODEL_ENV_URL) */}
+            <Environment files={MODEL_ENV_URL} />
+            <Model position={[0, 0, 0]} scale={modelScale} footerOnly={footerOnly} onDrawingChange={setDrawing} />
+          </Suspense>
         </Canvas>
       </div>
     </div>

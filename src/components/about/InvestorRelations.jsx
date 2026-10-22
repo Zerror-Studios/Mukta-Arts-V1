@@ -334,16 +334,16 @@ const InvestorRelations = () => {
               Investor Relations
             </h5>
 
-            <div data-reveal="rise" className="flex flex-col gap-2 ">
-              <p className="text-black text-[15px]! leading-relaxed! font-medium">
+            <div data-reveal="rise" className="flex flex-col gap-3 ">
+              <p className="text-black font-medium">
                 Contact information for assisting and handling investor grievances:
               </p>
-              <p className="text-[#555] text-[15px]! leading-relaxed!">
+              <p className="text-[#555]">
                 Ms. Pratiksha Panchal,<br />
                 Company Secretary and Compliance Officer<br />
                 Tel: Board line — 3364 9400;
               </p>
-              <p className="text-[#555] text-[15px]! leading-relaxed!">
+              <p className="text-[#555]  leading-relaxed!">
                 Email:{" "}
                 <a href="mailto:investorrelations@muktaarts.com" className="font-medium text-black hover:underline">
                   investorrelations@muktaarts.com

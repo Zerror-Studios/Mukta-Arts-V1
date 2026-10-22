@@ -7,6 +7,9 @@ import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { holdReveals, releaseReveals } from '@/lib/revealGate';
 
+// "The Ecosystem" dropdown (menu index 3) starts expanded
+const DEFAULT_OPEN_DROPDOWN = 3;
+
 const Header = () => {
   const containerRef = useRef(null);
   const menuButtonRef = useRef(null);
@@ -16,7 +19,7 @@ const Header = () => {
   const bgOverlayRef = useRef(null);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState(null);
+  const [openDropdown, setOpenDropdown] = useState(DEFAULT_OPEN_DROPDOWN);
   const tl = useRef();
   const router = useRouter();
   const pathname = usePathname();
@@ -52,7 +55,14 @@ const Header = () => {
         duration: 0.8,
         stagger: 0.05,
         ease: "expo.out"
-      }, "-=0.7");
+      }, "-=0.7")
+      // Dropdown sub-items (The Ecosystem is open by default) follow the main items
+      .to('.menu-subitem-text', {
+        y: '0%',
+        duration: 0.8,
+        stagger: 0.05,
+        ease: "expo.out"
+      }, "-=0.6");
   });
 
   useGSAP(() => {
@@ -64,8 +74,8 @@ const Header = () => {
       tl.current.play();
     } else {
       tl.current.reverse();
-      // Reset dropdown when menu is closed
-      setTimeout(() => setOpenDropdown(null), 800);
+      // Reset dropdown to its default when menu is closed
+      setTimeout(() => setOpenDropdown(DEFAULT_OPEN_DROPDOWN), 800);
     }
   }, [isMenuOpen]);
 
@@ -159,8 +169,9 @@ const Header = () => {
     <header ref={containerRef} className="fixed top-0 left-0 w-full z-50 p-6 md:p-8 flex justify-between items-center pointer-events-none z-99999">
       <div className={`${pathname === '/' ? 'pointer-events-none' : 'pointer-events-auto'} relative z-[60]`}>
         {pathname !== '/' ? (
-          // Own key so React remounts it: the home dock logo carries inline opacity/visibility from HeadphonesModel
-          <Link key="page-logo" href="/" aria-label="Mukta Arts home" className="block">
+          // Own key so React remounts it: the home dock logo carries inline opacity/visibility from HeadphonesModel.
+          // Visible here; the footer's 3D logo swaps with it when it sets off down into the footer.
+          <Link key="page-logo" id="header-dock-logo" href="/" aria-label="Mukta Arts home" className="block">
             <img src="/img/logo/logo-4k.png" alt="Mukta Arts" className="h-11 md:h-14 w-auto object-contain" draggable={false} />
           </Link>
         ) : (
@@ -228,7 +239,7 @@ const Header = () => {
                 { name: "Mukta A2 Cinemas", url: "/mukta-a2-cinemas" },
                 { name: "SGM Studios", url: "/sgm-studios" },
                 { name: "Mukta Arts Productions", url: "/our-films" },
-                { name: "Whistling Woods", url: "/whistling-woods" },
+                { name: "Whistling Woods International ", url: "/whistling-woods" },
               ]
             },
             { name: "Submit Script", url: "/submit-script" }
@@ -236,42 +247,46 @@ const Header = () => {
             <React.Fragment key={index}>
               {item.dropdown ? (
                 <div className="py-2 md:py-1 block overflow-hidden">
-                  <div
-                    className="menu-item-text translate-y-full text-white cursor-pointer flex justify-between items-center group"
-                    onClick={() => setOpenDropdown(openDropdown === index ? null : index)}
-                  >
-                    <h4 className="inline-block font-light! transform origin-left transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-skew-x-12 group-hover:translate-x-4">
-                      {item.name}
-                    </h4>
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className={`transform transition-transform duration-500 mr-2 md:mr-8 ${openDropdown === index ? 'rotate-180' : ''}`}
+                  {/* Own mask so the heading's slide-up isn't visible over the open dropdown */}
+                  <div className="overflow-hidden">
+                    <div
+                      className="menu-item-text translate-y-full text-white cursor-pointer flex justify-between items-center group"
+                      onClick={() => setOpenDropdown(openDropdown === index ? null : index)}
                     >
-                      <path d="m6 9 6 6 6-6" />
-                    </svg>
+                      <h4 className="inline-block font-light! transform origin-left transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-skew-x-12 group-hover:translate-x-4">
+                        {item.name}
+                      </h4>
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className={`transform transition-transform duration-500 mr-2 md:mr-8 ${openDropdown === index ? 'rotate-180' : ''}`}
+                      >
+                        <path d="m6 9 6 6 6-6" />
+                      </svg>
+                    </div>
                   </div>
                   <div
                     className={`flex flex-col gap-1 ml-6 md:ml-8 overflow-hidden transition-all duration-500 ease-in-out ${openDropdown === index ? 'max-h-80 opacity-100 mt-4 mb-2' : 'max-h-0 opacity-0 mt-0 mb-0'}`}
                   >
                     {item.dropdown.map((subItem, subIndex) => (
-                      <a
-                        key={subIndex}
-                        href={subItem.url}
-                        onClick={(e) => handleLinkClick(e, subItem.url)}
-                        className="block w-fit group menu-subitem-text"
-                      >
-                        <span className="relative inline-block text-white/70 group-hover:text-white transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-skew-x-12 group-hover:translate-x-5 text-lg md:text-xl font-light transform origin-left">
-                          <span className="absolute -left-4 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
-                          {subItem.name}
-                        </span>
-                      </a>
+                      <div key={subIndex} className="overflow-hidden">
+                        <a
+                          href={subItem.url}
+                          onClick={(e) => handleLinkClick(e, subItem.url)}
+                          className="block w-fit group menu-subitem-text translate-y-full"
+                        >
+                          <span className="relative inline-block text-white/70 group-hover:text-white transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-skew-x-12 group-hover:translate-x-5 text-lg md:text-xl font-light transform origin-left">
+                            <span className="absolute -left-4 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
+                            {subItem.name}
+                          </span>
+                        </a>
+                      </div>
                     ))}
                   </div>
                 </div>

@@ -3,6 +3,9 @@ import React from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { siteConfig } from '@/config/site';
+// A plain import, not next/dynamic: the lazy wrapper remounted the canvas once the model loaded,
+// and R3F's unmount throws away the WebGL context of the canvas it then reuses
+import HeadphonesCanvas from '@/components/home/HeadphonesModel';
 
 // The same routes as the header menu; Mukta VN Films has no page of its own yet, so it stays plain text
 const FOOTER_LINKS = [
@@ -42,23 +45,13 @@ export default function Footer() {
       {/* Main Content (a div: the page already has its <main>, and this sits inside <footer>) */}
       <div className="flex-1 flex flex-col lg:flex-row items-center justify-between px-6 md:px-20 lg:px-32 py-12   lg:py-2 ">
 
-        {/* HEADPHONE or Fallback Image */}
-        {isHome ? (
-          // The 3D logo (HeadphonesModel) settles over this spot and can be turned by dragging it;
-          // touch-pan-y keeps vertical swipes scrolling the page while sideways ones turn the model
-          <div id="footer-headphone" className="w-full bg- lg:w-2/3 flex justify-center lg:justify-center mb-12 lg:mb-0 min-h-[300px] cursor-grab active:cursor-grabbing touch-pan-y select-none">
-          </div>
-        ) : (
-          <div className="w-full lg:w-2/3 flex justify-center scale-[0.5] lg:justify-center mb-12 lg:mb-0 min-h-[300px] items-center">
-            <img
-              src="/img/logo/logo-4k.png"
-              alt="Mukta Arts Logo"
-              className="object-contain opacity-100 "
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-        )}
+        {/* The 3D logo (HeadphonesModel) settles over this spot and can be turned by dragging it;
+            touch-pan-y keeps vertical swipes scrolling the page while sideways ones turn the model */}
+        <div id="footer-headphone" className="w-full bg- lg:w-2/3 flex justify-center lg:justify-center mb-12 lg:mb-0 min-h-[300px] cursor-grab active:cursor-grabbing touch-pan-y select-none">
+        </div>
+        {/* On the home page the hero's model makes this trip; every other page gets its own, which
+            comes down from the header logo. Keyed by page so its scroll trigger starts fresh. */}
+        {!isHome && <HeadphonesCanvas key={pathname} footerOnly />}
 
         {/* Right Column - Text & Call to Action */}
         <div className="w-full lg:w-1/3 flex flex-col items-start max-w-xl relative z-20">

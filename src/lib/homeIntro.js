@@ -1,6 +1,13 @@
 // The hand-off between the home hero's intro timeline (components/home/Hero.jsx) and the
 // 3D headphones (components/home/HeadphonesModel.jsx), which live in different React trees.
 
+// The 3D logo and the lighting it is drawn with. The home page starts fetching both with the HTML
+// (app/page.jsx), so they live here, where the page and the model both read them.
+export const MODEL_URL = '/model/ModelV2.glb';
+// Served from this site, not drei's preset CDN (raw.githack.com): the logo can't appear until its
+// lighting has loaded, and that free proxy is often slow enough on phones that it never showed
+export const MODEL_ENV_URL = '/hdri/potsdamer_platz_1k.hdr';
+
 // World units below the resting spot: just past the bottom of the screen, so it comes into view
 // straight away as it starts to rise
 export const MODEL_OFFSCREEN_Y = -6;

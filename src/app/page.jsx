@@ -8,10 +8,13 @@ import SpiralScene from "@/components/home/SpiralScene";
 import CardsShowcase from "@/components/home/CardsShowcase";
 import StackedCards from "@/components/home/StackedCards";
 import OldCamera from "@/components/home/OldCamera";
+import { MODEL_URL, MODEL_ENV_URL } from "@/lib/homeIntro";
 
 const HomePage = () => {
-  // Start fetching the hero model with the HTML, not after the scripts load: the intro waits for it
-  preload("/model/headphones.glb", { as: "fetch", crossOrigin: "anonymous" });
+  // Start fetching the hero model and its lighting with the HTML, not after the scripts load: the
+  // intro waits for them
+  preload(MODEL_URL, { as: "fetch", crossOrigin: "anonymous" });
+  preload(MODEL_ENV_URL, { as: "fetch", crossOrigin: "anonymous" });
 
   return (
     <>

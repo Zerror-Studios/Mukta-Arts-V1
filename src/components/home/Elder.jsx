@@ -1,27 +1,15 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { Plus } from 'lucide-react';
 import { useGSAP } from '@gsap/react';
-import { gsap, EASE, DURATION, STAGGER, RISE, MOTION_OK } from '@/lib/motion';
+import { gsap, ScrollTrigger, EASE, DURATION, STAGGER, RISE, MOTION_OK, MOTION_REDUCED } from '@/lib/motion';
+import { smoothScrollTo } from '@/lib/smoothScroll';
 
 // Copy is word for word from the home page content doc; **double asterisks** mark the
 // phrases that are bold there. `link` is an internal page, `website` an external one.
 const data = [
-   ,
-    // {
-    //     title: "Mukta VN Films",
-    //     image: "/img/ma/MuktaVNFilms.jpg",
-    //     shortDesc: "Mukta VN Films is Mukta Arts’ film programming and distribution services venture, established in 2014 as a joint venture with UFO Moviez.",
-    //     bullets: [
-    //         "**Around 195 screens** have been programmed nationwide, across a growing network of cinemas.",
-    //         "**A trusted partner to cinema operators**, working where content, exhibition and audience demand meet.",
-    //         "**A legacy in programming**, rooted in Mukta Arts' earlier Mukta Movies Distributors division.",
-    //         "Part of India's multiplex story, having **programmed for PVR, INOX, Cinepolis, Big Cinemas, Fame, Fun Cinemas, DT and Carnival Cinemas** in their early years.",
-    //     ],
-    //     color1: "#7e1c79",
-    //     color2: "#202257"
-    // },
     {
         title: "Mukta A2 Cinemas",
         image: "/img/final/home/home2/TOPIWALA.webp",
@@ -51,7 +39,6 @@ const data = [
         color1: "#DF4819",
         color2: "#DF4819"
     },
-   
     {
         title: "Mukta Arts Productions",
         image: "/img/final/home/home2/2O5A4368.webp",
@@ -68,7 +55,7 @@ const data = [
         color1: "#597D9B",
         color2: "#597D9B"
     },
-      {
+    {
         title: "Whistling Woods International",
         image: "/img/final/home/home2/2O5A3438.webp",
         shortDesc: "Whistling Woods International (WWI) is India’s premier institute for Film, Communication, and Creative Arts.",
@@ -84,8 +71,7 @@ const data = [
         website: "https://www.whistlingwoods.net/",
         color1: "#c02690",
         color2: "#2d346b",
-
-        BOTTOMIMG:"/img/final/home/WWI_Philosophy_Lockup_Transparent.png"
+        BOTTOMIMG: "/img/final/home/WWI_Philosophy_Lockup_Transparent.png"
     },
 ];
 
@@ -99,38 +85,232 @@ const rich = (text) =>
         )
     );
 
-// The closing paragraph, split into its bold and regular runs (bold as in the content doc)
-const finalCopy = [
-    { text: "For nearly five decades,", bold: true },
-    { text: "Mukta Arts has been telling stories that became a part of India’s cultural memory. From iconic films and unforgettable music to cinema, education and new forms of storytelling,", bold: false },
-    { text: "Mukta continues to build on a legacy shaped by a belief in the power of the moving image.", bold: true },
-];
-
-const finalColors = {
-    color1: "#3c1a5e",
-    color2: "#881a28"
-};
-
 // Timeline length of one item. At SCROLL_PER_UNIT one item gets ~144vh of scroll, about what a
 // popup travels (100vh plus its own height), so it moves with the scroll.
 const ITEM_SPAN = 8;
 const SCROLL_PER_UNIT = 18; // vh of scroll per second of timeline
-// The intro and the closing words take ~10 more timeline seconds; the last 100vh is the sticky screen
+// The intro takes ~2 more timeline seconds; the last 100vh is the sticky screen. The section ends as
+// the last popup leaves, so it unpins on the last company rather than an empty screen.
 // Names other than the active one: translucent white, which reads on every company colour
 const DIM = 0.35;
-const SECTION_HEIGHT = `${(data.length * ITEM_SPAN + 10) * SCROLL_PER_UNIT + 100}vh`;
+const SECTION_HEIGHT = `${(data.length * ITEM_SPAN + 2) * SCROLL_PER_UNIT + 100}vh`;
 
-const Elder = () => {
+// Tailwind's md: the pinned scroll story from here up, the dropdown list below it
+const DESKTOP = "(min-width: 768px)";
+const PHONE = "(max-width: 767px)";
+const PANEL_TIME = 0.6; // s; a dropdown opening or closing
+const HEADER_CLEARANCE = 96; // px; the fixed header's height, with a little room
+
+// WWI's two colours as a gradient; the others are flat
+const swatch = (item) => `linear-gradient(135deg, ${item.color1} 0%, ${item.color2} 100%)`;
+
+/* ---------- phones: one company, a name that drops down to what the desktop sidebar shows ---------- */
+
+const CompanyRow = ({ item, index, isOpen, isDimmed, onToggle, rowRef }) => {
+    const panelRef = useRef(null);
+    const mounted = useRef(false);
+
+    // Same height tween as the other dropdowns on the site; the panel starts closed from its classes
+    useEffect(() => {
+        if (!mounted.current) {
+            mounted.current = true;
+            return;
+        }
+        const panel = panelRef.current;
+        const instant = window.matchMedia(MOTION_REDUCED).matches;
+        gsap.to(panel, {
+            height: isOpen ? "auto" : 0,
+            autoAlpha: isOpen ? 1 : 0,
+            duration: instant ? 0 : PANEL_TIME,
+            ease: isOpen ? EASE : "power2.inOut",
+            overwrite: "auto",
+        });
+        if (isOpen && !instant) {
+            gsap.fromTo(
+                panel.querySelectorAll("[data-panel-item]"),
+                { autoAlpha: 0, y: RISE },
+                { autoAlpha: 1, y: 0, duration: DURATION, ease: EASE, stagger: STAGGER, delay: 0.1 }
+            );
+        }
+    }, [isOpen]);
+
+    const buttonId = `elder-company-${index}`;
+    const panelId = `${buttonId}-panel`;
+
+    return (
+        <div ref={rowRef} className="relative border-b border-white/15">
+            {/* The company's colour draws across the top of the open row */}
+            <span
+                aria-hidden="true"
+                className={`absolute -top-px left-0 h-[3px] w-full origin-left transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] ${isOpen ? "scale-x-100" : "scale-x-0"}`}
+                style={{ background: swatch(item) }}
+            />
+
+            {/* `!` because the global h2 size in fonts.css is unlayered and would win over the utilities */}
+            <h2 className="text-[clamp(1.625rem,7.2vw,2.5rem)]! leading-[1.1]! font-bold tracking-tight">
+                <button
+                    type="button"
+                    id={buttonId}
+                    onClick={onToggle}
+                    aria-expanded={isOpen}
+                    aria-controls={panelId}
+                    className="w-full flex items-center justify-between gap-4 py-6 text-left cursor-pointer outline-none focus-visible:bg-white/5"
+                >
+                    <span className={`text-balance transition-opacity duration-500 ${isDimmed ? "opacity-40" : "opacity-100"}`}>
+                        {item.title}
+                    </span>
+                    <span aria-hidden="true" className="relative grid place-items-center flex-shrink-0 w-10 h-10 rounded-full border border-white/40 overflow-hidden">
+                        <span
+                            className={`absolute inset-0 transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0"}`}
+                            style={{ background: swatch(item) }}
+                        />
+                        <Plus strokeWidth={1.5} className={`relative w-5 h-5 transition-transform duration-500 ease-out ${isOpen ? "rotate-45" : ""}`} />
+                    </span>
+                </button>
+            </h2>
+
+            {/* invisible while closed, so its links are not tabbed to */}
+            <div
+                ref={panelRef}
+                id={panelId}
+                role="region"
+                aria-labelledby={buttonId}
+                className="h-0 overflow-hidden invisible opacity-0"
+            >
+                <div className="pb-10 flex flex-col gap-5 text-white/80 text-sm font-light leading-relaxed">
+                    <div data-panel-item className="w-full aspect-video relative overflow-hidden shadow-2xl rounded-sm">
+                        <img loading="lazy" src={item.image} alt={item.title} decoding="async" className="w-full h-full object-cover" />
+                    </div>
+
+                    <div data-panel-item className="text-white text-base leading-snug font-['SwitzerM']">
+                        {item.shortDesc}
+                    </div>
+
+                    {item.bullets && (
+                        <ul className="space-y-3 pl-1">
+                            {item.bullets.map((bullet, i) => (
+                                <li key={i} data-panel-item className="flex items-start gap-3">
+                                    <span className="text-[#e2a866] text-[0.6em] mt-[0.55em] flex-shrink-0 select-none" aria-hidden="true">●</span>
+                                    <span className="flex-1">{rich(bullet)}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+
+                    {item.paragraphs?.map((para, i) => (
+                        <div key={i} data-panel-item>{para}</div>
+                    ))}
+
+                    {item.BOTTOMIMG && (
+                        <img
+                            data-panel-item
+                            src={item.BOTTOMIMG}
+                            alt=""
+                            aria-hidden="true"
+                            loading="lazy"
+                            decoding="async"
+                            className="mt-2 w-full max-w-[80%] h-auto object-contain object-left"
+                        />
+                    )}
+
+                    {(item.link || item.website) && (
+                        <div data-panel-item className="mt-2 flex flex-wrap items-center gap-3">
+                            {item.link && (
+                                <Link
+                                    href={item.link}
+                                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-black hover:bg-gray-200 text-[10px] font-medium tracking-[0.2em] uppercase transition-colors group"
+                                >
+                                    View More
+                                    <span className="transform group-hover:translate-x-1 transition-transform">→</span>
+                                </Link>
+                            )}
+                            {item.website && (
+                                <a
+                                    href={item.website}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center justify-center px-6 py-3 bg-white text-black hover:bg-gray-200 text-[10px] font-medium tracking-[0.2em] uppercase transition-colors"
+                                >
+                                    Visit Website
+                                </a>
+                            )}
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// The pinned story needs the names and the popups side by side, which a phone has no room for
+const ElderMobile = () => {
+    const sectionRef = useRef(null);
+    const rowsRef = useRef([]);
+    const toggled = useRef(false);
+    // One company open at a time; all start closed
+    const [openIndex, setOpenIndex] = useState(null);
+
+    // The names rise in as the list comes into view
+    useGSAP(() => {
+        const mm = gsap.matchMedia();
+        mm.add(`${PHONE} and ${MOTION_OK}`, () => {
+            gsap.fromTo(
+                rowsRef.current,
+                { autoAlpha: 0, y: RISE },
+                {
+                    autoAlpha: 1, y: 0, duration: DURATION, ease: EASE, stagger: STAGGER,
+                    scrollTrigger: { trigger: sectionRef.current, start: "top 80%", once: true },
+                }
+            );
+        });
+    }, { scope: sectionRef });
+
+    // Once the panels have settled: the scroll triggers further down measure the new page height,
+    // and a name pushed up under the header by a panel closing above it comes back into view
+    useEffect(() => {
+        if (!toggled.current) {
+            toggled.current = true;
+            return;
+        }
+        const settle = gsap.delayedCall(PANEL_TIME + 0.05, () => {
+            ScrollTrigger.refresh();
+            if (openIndex === null) return;
+            const top = rowsRef.current[openIndex].getBoundingClientRect().top;
+            if (top < HEADER_CLEARANCE) smoothScrollTo(window.scrollY + top - HEADER_CLEARANCE);
+        });
+        return () => settle.kill();
+    }, [openIndex]);
+
+    const toggle = (i) => setOpenIndex((current) => (current === i ? null : i));
+
+    return (
+        <div ref={sectionRef} className="md:hidden w-full relative z-[888] bg-[#1B123D] text-white px-4 sm:px-8 py-20">
+            <div className="border-t border-white/15">
+                {data.map((item, i) => (
+                    <CompanyRow
+                        key={item.title}
+                        item={item}
+                        index={i}
+                        isOpen={openIndex === i}
+                        isDimmed={openIndex !== null && openIndex !== i}
+                        onToggle={() => toggle(i)}
+                        rowRef={(el) => (rowsRef.current[i] = el)}
+                    />
+                ))}
+            </div>
+        </div>
+    );
+};
+
+/* ---------- laptops and up: the pinned scroll story ---------- */
+
+const ElderDesktop = () => {
     const containerRef = useRef(null);
-    const listRef = useRef(null);
     const titlesRef = useRef([]);
     const popupsRef = useRef([]);
-    const finalRef = useRef(null);
-    const overlayRef = useRef(null);
     const bgRef = useRef(null);
     const panelRef = useRef(null);
     const [activeItem, setActiveItem] = useState(null);
-    const scrollTimeout = useRef(null);
 
     // The opened panel builds in with the section's own rise: photo/title, intro, then each bullet
     useGSAP(() => {
@@ -145,128 +325,71 @@ const Elder = () => {
         });
     }, { scope: panelRef, dependencies: [activeItem] });
 
-    useEffect(() => {
-        // Wheel events fire dozens of times a second: only touch the overlay's classes when
-        // the zoom actually switches, so the page is not restyled on every event
-        let zoomed = false;
-        const handleScroll = () => {
-            if (!zoomed && overlayRef.current) {
-                zoomed = true;
-                overlayRef.current.classList.add('scale-[1.03]');
-                overlayRef.current.classList.remove('scale-100');
-            }
-            if (scrollTimeout.current) {
-                clearTimeout(scrollTimeout.current);
-            }
-            scrollTimeout.current = setTimeout(() => {
-                zoomed = false;
-                if (overlayRef.current) {
-                    overlayRef.current.classList.remove('scale-[1.03]');
-                    overlayRef.current.classList.add('scale-100');
-                }
-            }, 150);
-        };
-
-        window.addEventListener('wheel', handleScroll, { passive: true });
-        window.addEventListener('touchmove', handleScroll, { passive: true });
-
-        return () => {
-            window.removeEventListener('wheel', handleScroll);
-            window.removeEventListener('touchmove', handleScroll);
-            if (scrollTimeout.current) {
-                clearTimeout(scrollTimeout.current);
-            }
-        };
-    }, []);
-
     useGSAP(() => {
-        const tl = gsap.timeline({
-            scrollTrigger: {
-                trigger: containerRef.current,
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 1.5,
-            }
-        });
+        // Only where this layout shows; phones get ElderMobile
+        const mm = gsap.matchMedia();
+        mm.add(DESKTOP, () => {
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: containerRef.current,
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 1.5,
+                }
+            });
 
-        // 1. Text animates from bottom
-        tl.fromTo(titlesRef.current,
-            { y: 120, opacity: 0 },
-            { y: 0, opacity: DIM, stagger: 0.2, duration: 0.5, ease: "power3.out" }
-        );
-
-        // Hold a little bit before continuing
-        tl.to({}, { duration: 0.5 });
-
-        data.forEach((item, i) => {
-            // Fade in the title
-            tl.to(titlesRef.current[i], { opacity: 1, duration: 1 }, `step${i}`);
-
-            // Change background gradient smoothly over the entire scroll of this item
-            tl.to(bgRef.current, {
-                "--color1": item.color1,
-                "--color2": item.color2,
-                duration: 3.5,
-                ease: "power1.inOut"
-            }, `step${i}`);
-
-            // The popup rises from just below the screen to just above it (100vh + its own height)
-            // across the whole item, so it moves at roughly the scroll's own speed (see SECTION_HEIGHT)
-            tl.fromTo(popupsRef.current[i],
-                { y: "100vh", yPercent: 0 },
-                { y: 0, yPercent: -100, duration: ITEM_SPAN, ease: "none" },
-                `step${i}`
+            // 1. Text animates from bottom
+            tl.fromTo(titlesRef.current,
+                { y: 120, opacity: 0 },
+                { y: 0, opacity: DIM, stagger: 0.2, duration: 0.5, ease: "power3.out" }
             );
 
-            // Fade in the popup
-            tl.fromTo(popupsRef.current[i],
-                { autoAlpha: 0, scale: 0.95 },
-                { autoAlpha: 1, scale: 1, duration: 1.5, ease: "power2.out" },
-                `step${i}`
-            );
+            // Hold a little bit before continuing
+            tl.to({}, { duration: 0.5 });
 
-            // Hand over to the next item as this popup leaves the top of the screen
-            tl.addLabel(`end${i}`, `step${i}+=${ITEM_SPAN - 1.5}`);
+            data.forEach((item, i) => {
+                // Fade in the title
+                tl.to(titlesRef.current[i], { opacity: 1, duration: 1 }, `step${i}`);
 
-            // Fade them out if not the last item
-            if (i !== data.length - 1) {
-                tl.to(titlesRef.current[i], { opacity: DIM, duration: 1 }, `end${i}`);
+                // Change background gradient smoothly over the entire scroll of this item
+                tl.to(bgRef.current, {
+                    "--color1": item.color1,
+                    "--color2": item.color2,
+                    duration: 3.5,
+                    ease: "power1.inOut"
+                }, `step${i}`);
+
+                // The popup rises from just below the screen to just above it (100vh + its own height)
+                // across the whole item, so it moves at roughly the scroll's own speed (see SECTION_HEIGHT)
+                tl.fromTo(popupsRef.current[i],
+                    { y: "100vh", yPercent: 0 },
+                    { y: 0, yPercent: -100, duration: ITEM_SPAN, ease: "none" },
+                    `step${i}`
+                );
+
+                // Fade in the popup
+                tl.fromTo(popupsRef.current[i],
+                    { autoAlpha: 0, scale: 0.95 },
+                    { autoAlpha: 1, scale: 1, duration: 1.5, ease: "power2.out" },
+                    `step${i}`
+                );
+
+                // Hand over to the next item as this popup leaves the top of the screen
+                tl.addLabel(`end${i}`, `step${i}+=${ITEM_SPAN - 1.5}`);
+
                 tl.to(popupsRef.current[i], { autoAlpha: 0, duration: 1 }, `end${i}`);
-            } else {
-                // Last item: fade out the whole list and the popup
-                tl.to(listRef.current, { autoAlpha: 0, y: -50, duration: 2 }, `end${i}`);
-                tl.to(popupsRef.current[i], { autoAlpha: 0, duration: 1 }, `end${i}`);
-            }
+                // The last name stays lit as the section scrolls away
+                if (i !== data.length - 1) {
+                    tl.to(titlesRef.current[i], { opacity: DIM, duration: 1 }, `end${i}`);
+                }
+            });
         });
-
-        // Fade in final text container & change background to final smoothly
-        tl.to(bgRef.current, {
-            "--color1": finalColors.color1,
-            "--color2": finalColors.color2,
-            duration: 3,
-            ease: "power1.inOut"
-        }, "-=1");
-
-        tl.to(finalRef.current, { autoAlpha: 1, duration: 0.1 }, "-=1");
-
-        // Animate words staggered
-        tl.to(".final-word", {
-            autoAlpha: 1,
-            y: 0,
-            duration: 1,
-            stagger: 0.08,
-            ease: "power3.out"
-        }, "-=1");
-
-        // Hold final text
-        tl.to({}, { duration: 2 });
-
     }, { scope: containerRef, dependencies: [] });
 
     return (
         <div
             ref={containerRef}
-            className="w-full relative z-[888] text-white overflow-clip"
+            className="hidden md:block w-full relative z-[888] text-white overflow-clip"
             style={{ height: SECTION_HEIGHT }}
         >
             <div className="w-full h-[100vh] sticky top-0 left-0 overflow-hidden flex items-center justify-center">
@@ -284,53 +407,9 @@ const Elder = () => {
                     }}
                 />
 
-                {/* Camera Recording Overlay */}
-                {/* <div ref={overlayRef} className="absolute inset-0 pointer-events-none z-[880] transition-transform duration-500 ease-out flex items-center justify-center scale-100">
-                   
-                    <div className="absolute top-6 left-4 md:top-28 md:left-16 flex items-center gap-2 md:gap-3">
-                        <div className="w-2 h-2 md:w-4 md:h-4 bg-red-600 rounded-full animate-[pulse_1.5s_ease-in-out_infinite]"></div>
-                        <span className="text-white font-mono text-xs md:text-base tracking-widest font-bold">REC</span>
-                    </div>
-
-                 
-                    <div className="absolute top-6 right-4 md:top-28 md:right-16 flex items-center gap-2 md:gap-4">
-                        <span className="text-white/80 font-mono text-[10px] md:text-sm">4K</span>
-                        <span className="text-white/80 font-mono text-[10px] md:text-sm border border-white/40 px-1">60FPS</span>
-                        <div className="w-6 h-3 md:w-8 md:h-4 border border-white/60 rounded-sm p-[1px] md:p-[2px] flex">
-                            <div className="w-full bg-white/80 rounded-[1px]"></div>
-                        </div>
-                    </div>
-
-                    
-                    <div className="absolute bottom-6 left-4 md:bottom-28 md:left-16 text-white/80 font-mono text-[10px] md:text-sm flex gap-2 md:gap-3">
-                        <span>ISO 800</span>
-                        <span>F/2.8</span>
-                        <span>1/50</span>
-                    </div>
-
-                    
-                    <div className="absolute bottom-6 right-4 md:bottom-28 md:right-16 text-white/80 font-mono text-[10px] md:text-sm">
-                        TC 01:23:45:12
-                    </div>
-
-                   
-                    <div className="opacity-40 w-[95%] h-[75%] absolute inset-0 m-auto pointer-events-none">
-                        <div className="w-full h-full border border-white/20 relative">
-                           
-                            <div className="absolute -top-[1px] -left-[1px] w-6 h-6 border-t-[3px] border-l-[3px] border-white"></div>
-                            <div className="absolute -top-[1px] -right-[1px] w-6 h-6 border-t-[3px] border-r-[3px] border-white"></div>
-                            <div className="absolute -bottom-[1px] -left-[1px] w-6 h-6 border-b-[3px] border-l-[3px] border-white"></div>
-                            <div className="absolute -bottom-[1px] -right-[1px] w-6 h-6 border-b-[3px] border-r-[3px] border-white"></div>
-
-                           
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-1 bg-white/60 rounded-full"></div>
-                        </div>
-                    </div>
-                </div> */}
-
                 {/* List Container */}
-                <div className="absolute max-sm:top-1/2  left-4 md:left-12 lg:left-20 md:top-1/2 -translate-y-1/2 z-10 pointer-events-none w-full max-w-[85vw] md:max-w-[55vw]">
-                    <div ref={listRef} className="flex flex-col items-start gap-3 md:gap-6">
+                <div className="absolute top-1/2 left-4 md:left-12 lg:left-20 -translate-y-1/2 z-10 pointer-events-none w-full max-w-[85vw] md:max-w-[55vw]">
+                    <div className="flex flex-col items-start gap-3 md:gap-6">
                         {data.map((item, i) => (
                             <h2
                                 key={i}
@@ -395,25 +474,6 @@ const Elder = () => {
                     </div>
                 ))}
 
-                {/* Final Text
-                <div
-                    ref={finalRef}
-                    className="absolute z-30 w-full max-w-7xl px-4 md:px-12 opacity-0 invisible pointer-events-none flex flex-col items-center justify-center text-center"
-                >
-                    
-                    <h4 className="text-[1.6rem]! leading-[1.25]! md:text-[2.4rem]! md:leading-[1.25]! font-normal text-white/90 flex flex-wrap justify-center text-center gap-x-1.5 md:gap-x-[0.28em] gap-y-1 md:gap-y-1.5">
-                        {finalCopy.flatMap((run, r) =>
-                            run.text.split(/\s+/).map((word, i) => (
-                                <span
-                                    key={`${r}-${i}`}
-                                    className={`final-word opacity-0 translate-y-8 inline-block ${run.bold ? "font-['SwitzerB'] text-white" : "font-['SwitzerM'] text-[#e2a866]"}`}
-                                >
-                                    {word}
-                                </span>
-                            ))
-                        )}
-                    </h4>
-                </div> */}
 
                 {/* Sidebar for Full Description */}
                 <div
@@ -512,5 +572,12 @@ const Elder = () => {
         </div>
     );
 };
+
+const Elder = () => (
+    <>
+        <ElderDesktop />
+        <ElderMobile />
+    </>
+);
 
 export default Elder;
