@@ -54,7 +54,7 @@ export const propertiesCategories = [
     about: "Cinemas run together with a joint-venture partner.",
     properties: [
       { name: "Sri Sai Ram 70 MM", location: "Khammam, Telangana" },
-      { name: "Konrak Theatre", location: "Hyderabad, Telangana" },
+      { name: "Konark Theatre", location: "Hyderabad, Telangana" },
       { name: "MJR Mall", location: "Narapally, Hyderabad, Telangana" },
       { name: "VMR Mall", location: "Aganampudi, Visakhapatnam, Andhra Pradesh" },
     ],

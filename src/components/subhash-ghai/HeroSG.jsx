@@ -6,7 +6,7 @@ import useEntrance from '@/hooks/useEntrance';
 const stats = [
     { value: 50, suffix: " Years", label: "as a Filmmaker" },
     { value: 19, suffix: " Films", label: "Written and Directed" },
-    { value: 45, suffix: "+", label: "Films Produced" },
+    { value: 50, suffix: "+", label: "Films Produced" },
 ];
 
 const HeroSG = () => {

@@ -798,7 +798,7 @@ const SubmitScriptPage = ({ blobUploads = false }) => {
                                 <Field
                                     label="C. SWA registration certificate"
                                     required
-                                    hint="Only SWA-registered submissions will be reviewed."
+                                    hint=""
                                     error={errors.swaCertificate}
                                 >
                                     <FileDropzone
@@ -839,11 +839,13 @@ const SubmitScriptPage = ({ blobUploads = false }) => {
                                                 type="checkbox"
                                                 checked={declarations[key]}
                                                 onChange={() => handleDeclaration(key)}
+                                                aria-required="true"
                                                 aria-invalid={errors.declarations && !declarations[key] && i === 0 ? 'true' : undefined}
                                                 className="mt-0.5 h-5 w-5 shrink-0 accent-black cursor-pointer"
                                             />
                                             <span className="text-[14px] sm:text-[15px] text-[#555] leading-relaxed group-hover:text-black transition-colors">
                                                 {text}
+                                                <span className="text-red-600 ml-0.5" aria-hidden="true">*</span>
                                             </span>
                                         </label>
                                     ))}

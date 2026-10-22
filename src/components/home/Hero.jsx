@@ -181,7 +181,7 @@ const Hero = () => {
       {/* Bottom Left Content */}
       <div className=" z-20  w-full md:w-[34vw] mr-auto ">
         <h3 data-hero="tagline" data-entrance className="mb-6 text-balance text-[1.6rem] md:text-[2.1rem] leading-[1.15] tracking-tight font-['SwitzerM'] font-normal max-w-[30ch]">
-          Telling stories across cinema, screens and classrooms.
+         Telling stories across cinema, screens and classrooms.
         </h3>
         <div data-hero="cta" data-entrance className="w-fit">
           <Link href={'/about'}>
