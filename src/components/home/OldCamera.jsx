@@ -179,19 +179,19 @@ function AnimatedCameraGroup() {
 // and each has its own background (the working still, the portrait, Whistling Woods)
 const SLIDES = [
     {
-        role: "THE FILMMAKER",
+        role: "The Filmmaker",
         subheading: "A Legacy in Indian Cinema",
         text: "From his directorial debut Kalicharan in 1976 to films including Karma, Ram Lakhan, Saudagar, Pardes and Taal, Subhash Ghai has shaped mainstream Hindi cinema through stories, music and characters that have endured across generations. He has written and directed 19 motion pictures, with 14 achieving blockbuster status.",
         image: "/img/final/SG/S2/SG_0067_3_11zon.webp",
     },
     {
-        role: "THE VISIONARY",
+        role: "The Visionary",
         subheading: "Building the Business of Cinema",
         text: "Ghai went beyond filmmaking to help shape the infrastructure of the Indian film industry. He founded Mukta Films in 1978, took Mukta Arts public, and pioneered initiatives in film financing, insurance, exhibition and digital projection. Mukta Arts became the first Indian film studio to undertake an IPO and list on the major stock exchanges, and pioneered film insurance with Taal as the first Indian film to be insured.",
         image: "/img/final/home/home2/WhatsApp2.webp",
     },
     {
-        role: "THE EDUCATOR",
+        role: "The Educator",
         subheading: "Shaping the Next Generation",
         text: "In 2006, Ghai founded Whistling Woods International, transforming his experience in cinema into a platform for film and media education. His vision was to create a world-class institution that could equip the next generation of filmmakers, technicians and storytellers for a global industry.",
         image: "/img/final/home/home2/WhatsApp1.webp",
@@ -282,17 +282,17 @@ export default function OldCamera() {
 
                 {/* Title, with the role that changes on scroll right below it */}
                 <div className="absolute top-[15%] left-[5%] md:left-[4%] z-40 text-black pointer-events-none">
-                    <h2 className="tracking-tighter leading-none uppercase">
+                    <h2 className="tracking-tighter leading-none ">
                         Subhash Ghai
                     </h2>
-                    <h5 className=" uppercase">Founder and Chairman</h5>
+                    <h5 className=" ">Founder and Chairman</h5>
                     {/* The roles share one grid cell, so they swap in place */}
                     <div className="grid ">
                         {SLIDES.map((slide, i) => (
                             <h4
                                 key={slide.role}
                                 ref={(el) => { roleRefs.current[i] = el; }}
-                                className="[grid-area:1/1] text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight uppercase"
+                                className="[grid-area:1/1] text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight "
                             >
                                 {/* {slide.role} */}
                             </h4>
@@ -311,7 +311,7 @@ export default function OldCamera() {
                                 className="[grid-area:1/1] self-end"
                             >
                                 {/* SUBHEADING */}
-                                <h4 className="text-base uppercase sm:text-lg md:text-xl font-medium text-[#1B123D] mb-3 md:mb-4 leading-snug">
+                                <h4 className="text-base  sm:text-lg md:text-xl font-medium text-[#1B123D] mb-3 md:mb-4 leading-snug">
                                     {/* {slide.subheading} */} {slide.role}
                                 </h4>
                                 <p className="text-sm md:text-base opacity-90 leading-relaxed mb-4 md:mb-5">
@@ -324,7 +324,7 @@ export default function OldCamera() {
                     <div ref={buttonRef} className="pt-2 pointer-events-auto w-fit">
                         <Link
                             href="/subhash-ghai"
-                            className="inline-flex items-center gap-2 bg-[#1B123D] hover:bg-[#2A1D5C] text-white px-6 py-2.5 text-xs md:text-sm tracking-wider font-semibold rounded-[3px] transition-all duration-300 shadow-md hover:shadow-lg group cursor-pointer"
+                            className="inline-flex items-center gap-2 bg-[#1B123D] hover:bg-[#2A1D5C] text-white px-6 py-2.5 text-xs md:text-sm tracking-wider font-semibold  transition-all duration-300 shadow-md hover:shadow-lg group cursor-pointer"
                         >
                             <span>View More</span>
                             <span className="transform group-hover:translate-x-1 transition-transform">→</span>

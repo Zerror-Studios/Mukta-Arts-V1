@@ -9,6 +9,7 @@ import CardsShowcase from "@/components/home/CardsShowcase";
 import StackedCards from "@/components/home/StackedCards";
 import OldCamera from "@/components/home/OldCamera";
 import { MODEL_URL, MODEL_ENV_URL } from "@/lib/homeIntro";
+import FilmReel from "@/components/home/FilmReel";
 
 const HomePage = () => {
   // Start fetching the hero model and its lighting with the HTML, not after the scripts load: the
@@ -23,6 +24,7 @@ const HomePage = () => {
       <SpiralScene />
       <Elder />
       <OldCamera />
+      {/* <FilmReel/> */}
       <CardsShowcase />
 
 

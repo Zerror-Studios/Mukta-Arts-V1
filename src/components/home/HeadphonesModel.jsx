@@ -18,31 +18,50 @@ const _worldScale = new THREE.Vector3();
 const TURN = Math.PI * 2;
 
 // Share of the header logo image's height that the headphones fill (the PNG has a little padding),
-// so the docked 3D logo ends the same size as the flat one it swaps with
+// so the docked 3D logo ends the same size as the flat one it dissolves into
 const DOCK_FILL = 0.86;
 // Scrolling past this much of a screen (a fraction of the viewport height) sets off the trip up to
 // the header logo, which then plays through on its own over DOCK_DURATION seconds instead of
 // following the scroll; scrolling back above it plays the trip back down into the hero
 const DOCK_TRIGGER = 0.06;
-const DOCK_DURATION = 1.4;
+const DOCK_DURATION = 1.8;
 // Share of that trip after which it starts turning to face front (below it, it is back in the hero
 // and turning on its own)
 const DOCK_TURN_FROM = 0.03;
 // Share of that trip over which the model is brought round to face front (it starts turning
-// to the front on its own as soon as the trip starts; this makes sure it gets there in time)
-const DOCK_HOLD_FROM = 0.3;
-const DOCK_HOLD_TO = 0.8;
-// Share of the trip at which the model has reached the header logo and swaps with it
-const DOCK_SWAP = 0.97;
+// to the front on its own as soon as the trip starts; this makes sure it gets there in time).
+// It faces front before the dissolve starts, so the two never overlap at different angles.
+const DOCK_HOLD_FROM = 0.22;
+const DOCK_HOLD_TO = 0.62;
+// Share of the trip at which the model has reached the header logo's spot and size (the glide itself
+// takes about as long as before; the extra time goes to the dissolve)
+const DOCK_ARRIVE = 0.8;
+// From here to the end of the trip the model dissolves into the flat logo: over the last of its glide,
+// as it eases into place, and a moment sitting there (about 0.7s). The logo is still faint and soft
+// while the model covers its last few pixels, so nothing is seen sliding under it. Scrolling back up
+// plays it backwards, so the logo melts back into the model before it sets off.
+const DOCK_FADE_FROM = 0.62;
 
 // The trip down into the footer, from when the footer's top comes into view to when it reaches the
-// top of the screen: it swaps back from the header logo at the start, sets off from the corner just
-// after, and starts turning again on the way
+// top of the screen: the flat logo dissolves back into the model at the start, which eases off from
+// the corner as it does, and starts turning again on the way
 const FOOTER_START = 'top 80%';
 const FOOTER_END = 'top top';
-const FOOTER_SWAP = 0.03;
+const FOOTER_FADE_TO = 0.12;
+// The model only sets off once the flat logo has all but gone, so no flat copy is left behind in the corner
 const FOOTER_TRAVEL_FROM = 0.06;
 const FOOTER_SPIN_FROM = 0.3;
+
+// Share of the dissolve over which each side fades. The flat logo (above the canvas) comes in over the
+// first part and the model goes out over the last, so they overlap in the middle and the logo never
+// dims part-way through, as it would if both faded at once.
+const FADE_SPAN = 0.6;
+// While it is faint, the flat logo is a little soft and a little larger, then sharpens and settles to its
+// size as it comes in. The model is rendered with lighting and the logo is a flat drawing, so a plain
+// crossfade shows the change in shading as a swap; this way the model reads as coming into focus as the
+// logo. Blur is a share of the logo's height, so it looks the same at every breakpoint.
+const FADE_BLUR = 0.08;
+const FADE_GROW = 0.06;
 // The footer model's scale, per breakpoint (desktop, tablet, phone)
 const footerScaleFor = (width) => (width >= 1024 ? 25 : width >= 768 ? 8 : 15);
 
@@ -144,7 +163,8 @@ export function Model({ onDrawingChange, footerOnly = false, scale: baseScale = 
   const introIdle = () => (footerOnly ? 1 : modelIntro.idle);
   // The model's own height (before any scaling), measured once it is upright
   const modelHeightRef = useRef(0);
-  const elsRef = useRef({ canvas: null, logo: null, footer: null, docked: false, drawing: true, z: '' });
+  // mix: how far the model has dissolved into the flat logo (0: all model, 1: all logo)
+  const elsRef = useRef({ canvas: null, logo: null, footer: null, mix: null, drawing: true, z: '' });
   // angle: the turn the model is at; speed (0–1): how much of the idle speed it is turning at;
   // settle: the turn to the front in progress; drag / dragTarget: the turn added by the pointer
   const spin = useRef({ angle: 0, speed: 1, ramping: false, settle: null, drag: 0, dragTarget: 0 });
@@ -287,8 +307,8 @@ export function Model({ onDrawingChange, footerOnly = false, scale: baseScale = 
 
         // Up to the header logo: it rises a little ahead of moving across, so it curves up into the
         // corner, and shrinks evenly (by ratio, so it doesn't collapse at the start and crawl at the end).
-        // It arrives exactly as it swaps with the flat logo.
-        const travel = easeInOut(dockP / DOCK_SWAP);
+        // It is all but there (within about 1%) by the time it starts to dissolve into the flat logo.
+        const travel = easeInOut(dockP / DOCK_ARRIVE);
         const rise = 1 - (1 - travel) * (1 - travel);
         pos.set(_dockPos.x * travel, _dockPos.y * rise, 0);
         scale = baseScale * Math.pow(dockScale / baseScale, travel);
@@ -323,15 +343,19 @@ export function Model({ onDrawingChange, footerOnly = false, scale: baseScale = 
           const duration = 0.6 + distance * 0.25;
           // Leaves at the speed it was turning (as a slope of the 0–1 curve)
           const start = Math.min((s.speed * introIdle() * IDLE_SPEED * duration) / distance, 3);
-          s.settle = { from, to, t: 0, duration, start };
+          // dock: begun on the way up to the header (or already docked there, off the home page)
+          s.settle = { from, to, t: 0, duration, start, dock: footerP === 0 };
           s.angle = from;
           s.drag = s.dragTarget = 0;
         }
         const st = s.settle;
         st.t = Math.min(st.t + dt, st.duration);
         const timed = st.from + (st.to - st.from) * settleEase(st.t / st.duration, st.start);
-        // ...and the trip's progress makes sure it is there by the time it swaps
-        const hold = footerP > 0
+        // ...and the trip's progress makes sure it is there by the time it dissolves into the logo. A turn
+        // begun on the way up keeps it held facing front on the way down to the footer as well, until it
+        // starts spinning there: the canvas stops drawing in the header, often before that timed turn has
+        // finished, and the model would otherwise wind back to finish it as it leaves the corner.
+        const hold = footerP > 0 && !st.dock
           ? 1 - smooth((footerP - FOOTER_TRAVEL_FROM) / (FOOTER_SPIN_FROM - FOOTER_TRAVEL_FROM))
           : smooth((dockP - DOCK_HOLD_FROM) / (DOCK_HOLD_TO - DOCK_HOLD_FROM));
         s.angle = timed + (st.to - timed) * hold;
@@ -363,30 +387,36 @@ export function Model({ onDrawingChange, footerOnly = false, scale: baseScale = 
   useEffect(() => {
     if (!groupRef.current) return;
 
-    // Swapping between the 3D model and the flat logo in the header: instant, in the same frame, so
-    // there is no fade to see. The model is already at the logo's spot and size, facing front, so one
-    // simply replaces the other. While the canvas is hidden it stops drawing altogether (it covers the
-    // whole screen); its last frame is that same docked pose, so it shows straight back without a gap.
+    // The dissolve between the 3D model and the flat logo in the header, played by the trip's progress
+    // (so it runs backwards too). The model is at the logo's spot and size, facing front, so the two
+    // overlap and only their shading differs: the rendered model melts into the drawn logo instead of
+    // cutting to it. Once the logo shows alone the canvas stops drawing altogether (it covers the whole
+    // screen); its last frame is that same docked pose, so it fades straight back in.
     const els = elsRef.current;
     const setDrawing = (drawing) => {
       if (drawing === els.drawing) return;
       els.drawing = drawing;
       onDrawingChange?.(drawing);
     };
-    const swap = (toLogo) => {
+    const fade = (mix) => {
       const { canvas, logo } = els;
-      if (!canvas) return;
-      if (!logo) {
-        canvas.style.opacity = toLogo ? '0' : '1';
-        setDrawing(!toLogo);
-        return;
+      if (mix < 1) setDrawing(true);
+      canvas.style.opacity = (1 - smooth((mix - (1 - FADE_SPAN)) / FADE_SPAN)).toFixed(3);
+      if (logo) {
+        const opacity = smooth(mix / FADE_SPAN);
+        logo.style.opacity = opacity.toFixed(3);
+        logo.style.visibility = opacity > 0 ? 'visible' : 'hidden';
+        logo.style.pointerEvents = mix > 0.5 ? 'auto' : 'none';
+        // On the image, not the link, so the link's box (which the model is placed and sized by) never changes
+        const img = logo.querySelector('img');
+        if (img) {
+          const soft = opacity > 0 && opacity < 1 ? 1 - opacity : 0;
+          img.style.filter = soft ? `blur(${(soft * FADE_BLUR * img.offsetHeight).toFixed(2)}px)` : '';
+          img.style.transform = soft ? `scale(${(1 + soft * FADE_GROW).toFixed(4)})` : '';
+          img.style.willChange = soft ? 'opacity, filter, transform' : '';
+        }
       }
-      if (!toLogo) setDrawing(true);
-      canvas.style.opacity = toLogo ? '0' : '1';
-      logo.style.opacity = toLogo ? '1' : '0';
-      logo.style.visibility = toLogo ? 'visible' : 'hidden';
-      logo.style.pointerEvents = toLogo ? 'auto' : 'none';
-      if (toLogo) setDrawing(false);
+      if (mix >= 1) setDrawing(false);
     };
 
     const update = () => {
@@ -395,10 +425,10 @@ export function Model({ onDrawingChange, footerOnly = false, scale: baseScale = 
       if (!els.canvas) return;
       const { dockP, footerP } = stateRef.current;
 
-      const docked = dockP >= DOCK_SWAP && footerP < FOOTER_SWAP;
-      if (docked !== els.docked) {
-        els.docked = docked;
-        swap(docked);
+      const mix = smooth((dockP - DOCK_FADE_FROM) / (1 - DOCK_FADE_FROM)) * (1 - smooth(footerP / FOOTER_FADE_TO));
+      if (mix !== els.mix) {
+        els.mix = mix;
+        fade(mix);
       }
 
       // While it travels to the header or down into the footer, the model passes over the page, not
@@ -454,6 +484,8 @@ export function Model({ onDrawingChange, footerOnly = false, scale: baseScale = 
     });
 
     update();
+    // The flat logo is a 4K PNG, decoded ahead of time so its first frames in the dissolve never wait on it
+    els.logo?.querySelector('img')?.decode?.().catch(() => {});
     // A refresh (a resize, or content loading in further down) measures the triggers by putting their
     // tweens back to the start and then straight back, without a last onUpdate: check again after it
     let refreshFrame = 0;
@@ -469,13 +501,19 @@ export function Model({ onDrawingChange, footerOnly = false, scale: baseScale = 
       cancelAnimationFrame(refreshFrame);
       updateRef.current = null;
       ctx.revert();
-      els.docked = false;
+      els.mix = null;
       setDrawing(true);
       // Hand the header logo back to its own classes (it stays mounted between the other pages)
       if (els.logo) {
         els.logo.style.opacity = '';
         els.logo.style.visibility = '';
         els.logo.style.pointerEvents = '';
+        const img = els.logo.querySelector('img');
+        if (img) {
+          img.style.filter = '';
+          img.style.transform = '';
+          img.style.willChange = '';
+        }
       }
       // ...and the canvas's wrapper too, which stays mounted when a fresh canvas replaces a lost one
       if (els.canvas) {
