@@ -28,7 +28,6 @@ const VideoSection = () => {
             <video
                 ref={videoRef}
                 src={videoOn ? "/video/video-web.mp4" : undefined}
-                poster="/video/video-poster.webp"
                 loop muted autoPlay playsInline
                 aria-label="Mukta Arts brand film"
                 className="absolute inset-0 w-full h-full object-cover scale-[1.32] group-hover:scale-[1.36] transition-transform duration-700 ease-in-out"
