@@ -42,12 +42,12 @@ const HeroSecMa2 = () => {
                             fill
                             className="object-contain"
                         /> */}
-                        <h2 data-entrance="words" className='text-white uppercase'>Mukta A2 Cinemas</h2>
+                        <h2 data-entrance="words" className='text-white uppercase max-sm:text-center'>Mukta A2 Cinemas</h2>
                     </div>
                 </div>
 
                 {/* Bottom Section */}
-                <div className="w-full">
+                <div className="w-full max-sm:pb-10">
                     {/* Divider Line */}
                     <div data-entrance="line" className="w-full h-[1px] bg-white/30 mb-10 md:mb-12"></div>
 
@@ -55,11 +55,11 @@ const HeroSecMa2 = () => {
                     <div className="flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-8">
 
                         {/* Left Side: Description and Button */}
-                        <div className="flex flex-col gap-8 max-w-[440px]">
-                            <p data-entrance="lines" className="text-white text-[15px] md:text-[17px] leading-[1.6]">
+                        <div className="flex flex-col gap-8 max-w-[440px] ">
+                            <p data-entrance="lines" className="text-white text-[15px] md:text-[17px] leading-[1.6] ">
                                 Mukta A2 Cinemas is the exhibition arm of Mukta Arts, founded with a vision to make the big-screen experience accessible to audiences across India.
                             </p>
-                            <div data-entrance="rise">
+                            <div data-entrance="rise ">
                                 <Button onDark href="https://muktaa2cinemas.in/" external>
                                     Visit Our Website
                                 </Button>
@@ -67,7 +67,7 @@ const HeroSecMa2 = () => {
                         </div>
 
                         {/* Right Side: Description */}
-                        <div className="flex flex-col gap-3.5 text-white max-w-[440px] lg:min-w-[400px]">
+                        <div className="flex flex-col gap-3.5 text-white max-w-[440px] lg:min-w-[400px] ">
                             <p data-entrance="lines" className="text-white text-[15px] md:text-[17px] leading-[1.6]">
                                 Built around the idea of offering quality cinema at affordable prices, the brand has grown into a diverse cinema exhibition network spanning established and emerging markets.
                             </p>

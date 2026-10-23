@@ -11,7 +11,7 @@ import { holdReveals, releaseReveals } from '@/lib/revealGate';
 const DEFAULT_OPEN_DROPDOWN = 3;
 
 // A 320px copy of logo-4k.png (it shows 44-56px tall), with its size so the box is right before it loads
-const LOGO_SRC = "/img/logo/logo-320.webp";
+const LOGO_SRC = "/img/logo/logo-4k.png";
 const LOGO_WIDTH = 320;
 const LOGO_HEIGHT = 298;
 

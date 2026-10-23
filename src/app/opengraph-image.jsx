@@ -23,11 +23,11 @@ export default async function Image() {
           backgroundColor: "#FAFAFA",
         }}
       >
-        {/* 612x570 keeps logo-4k.png's 3840x3574 proportions; its even transparent margin
-            leaves the artwork about 520px tall, so it also survives a centred square crop.
+        {/* 558x520 keeps logo-4k.png's 59x55 proportions; it has no transparent margin,
+            so 520px tall leaves room around it and it also survives a centred square crop.
             ImageResponse renders plain <img>, next/image does not apply here. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={`data:image/png;base64,${logo}`} alt="Mukta Arts logo" width={612} height={570} />
+        <img src={`data:image/png;base64,${logo}`} alt="Mukta Arts logo" width={558} height={520} />
       </div>
     ),
     size

@@ -37,7 +37,7 @@ const HeroSG = () => {
             <div className="flex-1 min-h-0 flex flex-col gap-5 md:gap-8 lg:grid lg:grid-cols-3 lg:grid-rows-[minmax(0,1fr)] lg:gap-16 lg:mt-[clamp(1.5rem,6svh,6rem)]">
 
                 {/* Left Column - Stats: a row of three on phones and tablets, a column on desktop */}
-                <div className="order-2 lg:order-1 grid grid-cols-3 lg:flex lg:flex-col lg:justify-end">
+                <div className="order-2 lg:order-1 grid grid-cols-3 lg:flex lg:flex-col lg:justify-end  max-sm:text-center">
                     {stats.map((stat, i) => (
                         <div
                             key={stat.label}
@@ -87,7 +87,7 @@ const HeroSG = () => {
                     <p
                         data-entrance="lines"
                         data-entrance-at="0.5"
-                        className="text-white text-[1.1rem] leading-relaxed max-lg:text-[15px]! max-lg:leading-[1.5]! md:max-lg:text-[17px]! font-['SwitzerR'] lg:pr-4"
+                        className="text-white text-[1.1rem] leading-relaxed max-lg:text-[15px]! max-sm:text-center max-lg:leading-[1.5]! md:max-lg:text-[17px]! font-['SwitzerR'] lg:pr-4"
                     >
                         A five-decade journey across cinema, education and entrepreneurship. From creating
                         some of Indian cinema’s most enduring films to building institutions that shape the next
