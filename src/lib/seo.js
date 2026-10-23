@@ -72,9 +72,11 @@ export function createMetadata({
       description,
       ...(twitterImages?.length > 0 && { images: twitterImages }),
     },
+    // Listing icons here replaces Next's file-based ones, so app/apple-icon.png is named too
     icons: {
       icon: "/favicon.ico",
       shortcut: "/favicon.ico",
+      apple: "/apple-icon.png",
     },
   };
 }
