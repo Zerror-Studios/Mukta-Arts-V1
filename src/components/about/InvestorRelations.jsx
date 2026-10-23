@@ -230,8 +230,6 @@ const UnclaimedDividend = ({ onView }) => {
   );
 };
 
-/* ---------- the in-page PDF viewer ---------- */
-
 const PdfViewer = ({ doc, onClose }) => {
   const panelRef = useRef(null);
   const closeRef = useRef(null);
