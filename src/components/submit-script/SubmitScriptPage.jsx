@@ -18,6 +18,7 @@ import {
     CheckCircle2,
 } from 'lucide-react';
 import { upload } from '@vercel/blob/client';
+import Button from '@/components/common/Button';
 import useEntrance from '@/hooks/useEntrance';
 import useScrollReveal from '@/hooks/useScrollReveal';
 import { smoothScrollTo } from '@/lib/smoothScroll';
@@ -244,9 +245,9 @@ const FileDropzone = ({ file, onSelect, onRemove, accept, formatLabel, error, di
                     <p className="text-[11px] sm:text-[12px] text-gray-400 mb-2">
                         Supported format: {formatLabel} (max {MAX_FILE_MB} MB)
                     </p>
-                    <span className="px-5 sm:px-6 py-2 border border-[#202020] bg-transparent text-[11px] font-bold tracking-[0.1em] text-black hover:bg-gray-50 transition-colors">
-                        BROWSE FILE
-                    </span>
+                    <Button as="span">
+                        Browse File
+                    </Button>
                 </div>
             )}
         </div>
@@ -481,13 +482,9 @@ const SubmitScriptPage = ({ blobUploads = false }) => {
                             Thank you, {values.firstName}. Our creative team has received your submission for
                             {' '}<span className="text-black font-medium">{values.title}</span>. We will contact you at {values.email} if your project moves forward.
                         </p>
-                        <button
-                            type="button"
-                            onClick={resetForm}
-                            className="mt-2 px-6 py-3 border border-[#202020] bg-transparent text-[12px] font-medium tracking-[0.1em] text-black hover:bg-gray-50 transition-colors"
-                        >
-                            SUBMIT ANOTHER SCRIPT
-                        </button>
+                        <Button onClick={resetForm} className="mt-2">
+                            Submit Another Script
+                        </Button>
                     </div>
                 ) : (
                     <form
@@ -860,13 +857,13 @@ const SubmitScriptPage = ({ blobUploads = false }) => {
                                         {submitError}
                                     </p>
                                 )}
-                                <button
+                                <Button
                                     type="submit"
                                     disabled={submitting}
-                                    className="form-element mt-2 sm:mt-4 w-full py-3.5 sm:py-4 bg-black text-white text-[12px] sm:text-[13px] font-medium tracking-[0.1em] hover:bg-gray-900 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                                    className="form-element mt-2 sm:mt-4 w-full"
                                 >
-                                    {submitting ? 'SUBMITTING...' : 'SUBMIT SCRIPT'}
-                                </button>
+                                    {submitting ? 'Submitting...' : 'Submit Script'}
+                                </Button>
                                 {submitStage && (
                                     <p aria-live="polite" className="text-[13px]! text-[#555]">{submitStage}</p>
                                 )}

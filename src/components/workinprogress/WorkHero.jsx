@@ -1,9 +1,13 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
 import { gsap } from 'gsap';
+
+// The poster when the page is opened directly rather than from the film grid
+const DEFAULT_IMAGE = "https://m.media-amazon.com/images/M/MV5BNTI3M2Y1YzYtYzNkZC00OTc0LTk0MGQtYWM1ZWU1Yzk4N2VmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg";
+
 const WorkHero = () => {
-    const [imageSrc, setImageSrc] = useState("https://m.media-amazon.com/images/M/MV5BNTI3M2Y1YzYtYzNkZC00OTc0LTk0MGQtYWM1ZWU1Yzk4N2VmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg");
+    // Set once the grid's choice has been read, so the default poster is never downloaded only to be replaced
+    const [imageSrc, setImageSrc] = useState(null);
     const [title, setTitle] = useState("Yaadein");
     const [description, setDescription] = useState("Yaadein (Transl. Memories) Is A 2001 Indian Hindi-Language Musical Drama Film Written, Directed, Edited And Produced By Subhash Ghai.[2] The Film Stars Hrithik Roshan, Kareena Kapoor, Jackie Shroff And Amrish Puri.");
     const [year, setYear] = useState("2001");
@@ -14,7 +18,7 @@ const WorkHero = () => {
         const savedDesc = localStorage.getItem("selectedFilmDesc");
         const savedYear = localStorage.getItem("selectedFilmYear");
 
-        if (savedImage) setImageSrc(savedImage);
+        setImageSrc(savedImage || DEFAULT_IMAGE);
         if (savedTitle) {
             setTitle(savedTitle);
             // A film without a brief yet should show nothing, not the default copy
@@ -109,7 +113,7 @@ const WorkHero = () => {
                 <div className="relative w-full max-w-[600px] aspect-[4/5] bg-gray-100 shadow-2xl">
                     {/* Fallback image as standard img tag to avoid Next.js domain config issues for external URLs */}
                     <img
-                        src={imageSrc}
+                        src={imageSrc ?? undefined}
                         alt={`${title} Movie Poster`}
                         className="w-full h-full object-cover work-hero-image opacity-0"
                     />

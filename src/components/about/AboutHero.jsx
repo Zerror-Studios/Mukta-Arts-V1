@@ -14,7 +14,7 @@ const carouselItems = [
     { src: "/img/final/about_Img/AB1/SG_0123_6_11zon_6_11zon.webp" },
     { src: "/img/final/about_Img/AB1/SG_0125_7_11zon_7_11zon.webp" },
     { src: "/img/final/about_Img/AB1/SG_0134_8_11zon_8_11zon.webp" },
-    { src: "/img/final/about_Img/AB1/WHISTLING WOODS CAMPAIGN 09.04_2_9_11zon_9_11zon.webp" },
+    { src: "/img/final/about_Img/AB1/web/WHISTLING WOODS CAMPAIGN 09.04_2_9_11zon_9_11zon.webp" },
 ];
 
 // Seconds for the strip to scroll one full set on its own

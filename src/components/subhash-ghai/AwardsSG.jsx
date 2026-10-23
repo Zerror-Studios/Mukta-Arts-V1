@@ -5,8 +5,9 @@ export default function AwardsSG() {
     <section className="relative w-full bg-[#f8f9fa] text-black py-24 md:py-36 lg:py-44 px-6 md:px-12 lg:px-20 overflow-hidden font-['SwitzerR']">
       {/* Background Graphic Watermark */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.035] select-none">
+        {/* A 1024px copy of logo-4k.png: it shows at most 680px wide, and faint */}
         <img
-          src="/img/logo/logo-4k.png"
+          src="/img/logo/logo-1024.webp"
           alt=""
           className="w-[500px] h-[500px] md:w-[680px] md:h-[680px] object-contain grayscale"
           loading="lazy"

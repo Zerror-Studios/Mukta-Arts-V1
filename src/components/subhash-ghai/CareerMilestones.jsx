@@ -13,7 +13,8 @@ if (typeof window !== "undefined") {
 
 // Film posters are the client's own, the compressed copies of /img/final/home/all (Gautam Govinda, Krodhi,
 // Vidhaata and Meri Jung have no client poster yet). Event photos are web-sized copies of /img/final/about_Img/AB2.
-const POSTERS = "/img/final/home/all/compressed/";
+// Served from WebP copies in web/ folders: the posters at the same size, the event photos 1200px wide.
+const POSTERS = "/img/final/home/all/compressed/web/";
 const TL = "/img/final/timeline/";
 
 const milestonesData = [
@@ -32,49 +33,49 @@ const milestonesData = [
     year: "1979",
     title: "Gautam Govinda",
     tag: "Feature Film",
-    img: "/img/films/gautam-govinda.jpg",
+    img: "/img/films/web/gautam-govinda.webp",
   },
   {
     id: "m-3",
     year: "1980",
     title: "Karz",
     tag: "Cult Classic",
-    img: `${POSTERS}04_KARZ_(1980).jpg`,
+    img: `${POSTERS}04_KARZ_(1980).webp`,
   },
   {
     id: "m-4",
     year: "1981",
     title: "Krodhi",
     tag: "Feature Film",
-    img: "/img/films/krodhi.jpg",
+    img: "/img/films/web/krodhi.webp",
   },
   {
     id: "m-5",
     year: "1982",
     title: "Vidhaata",
     tag: "Blockbuster",
-    img: "/img/films/vidhaata.jpg",
+    img: "/img/films/web/vidhaata.webp",
   },
   {
     id: "m-6",
     year: "1983",
     title: "Hero",
     tag: "Breakthrough",
-    img: `${POSTERS}06_HERO_(1982).jpg`,
+    img: `${POSTERS}06_HERO_(1982).webp`,
   },
   {
     id: "m-7",
     year: "1985",
     title: "Meri Jung",
     tag: "Courtroom Drama",
-    img: "/img/films/meri-jung.jpg",
+    img: "/img/films/web/meri-jung.webp",
   },
   {
     id: "m-8",
     year: "1986",
     title: "Karma",
     tag: "National Award",
-    img: `${POSTERS}08_KARMA_(1986).jpg`,
+    img: `${POSTERS}08_KARMA_(1986).webp`,
     isMilestone: true,
   },
   {
@@ -82,70 +83,70 @@ const milestonesData = [
     year: "1987",
     title: "Uttar Dakshin",
     tag: "Feature Film",
-    img: `${POSTERS}UTTAR DAKSHIN (HINDI).jpg`,
+    img: `${POSTERS}UTTAR DAKSHIN (HINDI).webp`,
   },
   {
     id: "m-10",
     year: "1989",
     title: "Ram Lakhan",
     tag: "Mega Blockbuster",
-    img: `${POSTERS}10_RAM_LAKHAN_(1987).jpg`,
+    img: `${POSTERS}10_RAM_LAKHAN_(1987).webp`,
   },
   {
     id: "m-11",
     year: "1991",
     title: "Saudagar",
     tag: "Best Director",
-    img: `${POSTERS}11_SAUDAGAR_(1991).jpg`,
+    img: `${POSTERS}11_SAUDAGAR_(1991).webp`,
   },
   {
     id: "m-12",
     year: "1992",
     title: "Prem Deewane",
     tag: "Romantic Adventure",
-    img: `${POSTERS}12_PREM_DEEWANE_(1992).jpg`,
+    img: `${POSTERS}12_PREM_DEEWANE_(1992).webp`,
   },
   {
     id: "m-13",
     year: "1993",
     title: "Khalnayak",
     tag: "Blockbuster",
-    img: `${POSTERS}13_KHALNAYAK_(1993).jpg`,
+    img: `${POSTERS}13_KHALNAYAK_(1993).webp`,
   },
   {
     id: "m-14",
     year: "1995",
     title: "Trimurti",
     tag: "Grand Spectacle",
-    img: `${POSTERS}15_TRIMURTI_(1995).jpg`,
+    img: `${POSTERS}15_TRIMURTI_(1995).webp`,
   },
   {
     id: "m-15",
     year: "1996",
     title: "Jaan",
     tag: "Action Romance",
-    img: `${POSTERS}16_JAAN_(1996).jpg`,
+    img: `${POSTERS}16_JAAN_(1996).webp`,
   },
   {
     id: "m-16",
     year: "1997",
     title: "Pardes",
     tag: "Global Hit",
-    img: `${POSTERS}17_PARDES_(1997).jpg`,
+    img: `${POSTERS}17_PARDES_(1997).webp`,
   },
   {
     id: "m-17",
     year: "1998",
     title: "Shyam Ghanshyam",
     tag: "Feature Film",
-    img: `${POSTERS}18_SHYAM_GHANSHYAM_(1998).jpg`,
+    img: `${POSTERS}18_SHYAM_GHANSHYAM_(1998).webp`,
   },
   {
     id: "m-18",
     year: "1999",
     title: "Taal",
     tag: "Global Milestone",
-    img: `${POSTERS}19_TAAL_(1999).jpg`,
+    img: `${POSTERS}19_TAAL_(1999).webp`,
     isMilestone: true,
   },
   {
@@ -154,7 +155,7 @@ const milestonesData = [
     title: "Mukta Arts IPO",
     tag: "First Studio IPO",
     desc: "Mukta Arts became India’s first film studio listed on major stock exchanges, pioneering corporatization.",
-    img: `${TL}mal-ipo.webp`,
+    img: `${TL}web/mal-ipo.webp`,
     imgPos: "50% 30%",
     isMilestone: true,
   },
@@ -163,28 +164,28 @@ const milestonesData = [
     year: "2001",
     title: "Yaadein",
     tag: "Family Drama",
-    img: `${POSTERS}20_YAADEIN_(2001).jpg`,
+    img: `${POSTERS}20_YAADEIN_(2001).webp`,
   },
   {
     id: "m-21",
     year: "2004",
     title: "Aitraaz",
     tag: "Courtroom Thriller",
-    img: `${POSTERS}25_AITRAAZ_(2004).jpg`,
+    img: `${POSTERS}25_AITRAAZ_(2004).webp`,
   },
   {
     id: "m-22",
     year: "2005",
     title: "Kisna",
     tag: "Period Epic",
-    img: `${POSTERS}26_KISNA_(2005).jpg`,
+    img: `${POSTERS}26_KISNA_(2005).webp`,
   },
   {
     id: "m-23",
     year: "2005",
     title: "Iqbal",
     tag: "National Award",
-    img: `${POSTERS}27_IQBAL_(2005).jpg`,
+    img: `${POSTERS}27_IQBAL_(2005).webp`,
     isMilestone: true,
   },
   {
@@ -193,16 +194,16 @@ const milestonesData = [
     title: "Whistling Woods International",
     tag: "Media Education",
     desc: "Asia’s premier film, television, and creative arts institute founded to nurture future media leaders.",
-    img: `${TL}whistling-woods.webp`,
+    img: `${TL}web/whistling-woods.webp`,
     isMilestone: true,
   },
   {
     id: "m-25",
-    year: "2011",
+    year: "",
     title: "Mukta A2 Cinemas",
     tag: "Exhibition Network",
     desc: "Mukta Arts enters theatrical exhibition, providing premium yet accessible moviegoing across India and the Middle East.",
-    img: `${TL}excelsior-ma2-36.webp`,
+    img: `${TL}web/excelsior-ma2-36.webp`,
     isMilestone: true,
   },
   {
@@ -501,7 +502,7 @@ export default function CareerMilestones() {
                   </h3>
                   {/* Only corporate milestones carry a description; film entries show title and tag */}
                   {m.desc && (
-                    <p className="mt-[6px] md:mt-[8px] text-gray-600 text-[12px]! md:text-[13px]! leading-[1.5]! font-['SwitzerR'] short:hidden line-clamp-2 md:max-w-[90%]">
+                    <p className="mt-[6px] md:mt-[8px] text-[16px]!  text-gray-600 short:hidden line-clamp-2 md:max-w-[90%]">
                       {m.desc}
                     </p>
                   )}
@@ -517,7 +518,7 @@ export default function CareerMilestones() {
         <div className="relative h-[16px] mb-[8px]">
           {milestonesData.map((m, i) =>
             decadeLabelIndexes.includes(i) ? (
-              <span
+              <p
                 key={m.id}
                 ref={(el) => (yearsRef.current[i] = el)}
                 data-passed={i === 0}
@@ -525,7 +526,7 @@ export default function CareerMilestones() {
                 style={{ left: `${(i / (milestonesData.length - 1)) * 100}%` }}
               >
                 {m.year}
-              </span>
+              </p>
             ) : null
           )}
         </div>
@@ -554,13 +555,13 @@ export default function CareerMilestones() {
           ))}
         </div>
 
-        <div className="mt-[14px] short:mt-[8px] flex justify-end">
+        <div className="mt-[14px] short:mt-[8px] flex justify-center items-center ">
           <button
             type="button"
             onClick={() => skipRef.current?.()}
             className="group flex items-center gap-2 text-[10px] md:text-[11px] font-['SwitzerM'] uppercase   text-gray-500 hover:text-black transition-colors duration-300 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-4"
           >
-            Skip to Investor Relations
+            <span className="text-[16px]!">Skip to Investor Relations</span>
             <svg
               aria-hidden="true"
               viewBox="0 0 12 12"

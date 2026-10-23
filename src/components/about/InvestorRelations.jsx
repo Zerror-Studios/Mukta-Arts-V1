@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { ChevronDown, Eye, Download, FileText, FileSpreadsheet, X } from "lucide-react";
 import { gsap, MOTION_REDUCED } from "@/lib/motion";
 import useScrollReveal from "@/hooks/useScrollReveal";
+import Button from "@/components/common/Button";
 import { investorCategories, unclaimedDividend } from "@/data/investorRelations";
 
 // Every document lives on this site (public/investor-relations/), so viewing or downloading
@@ -197,18 +198,13 @@ const UnclaimedDividend = ({ onView }) => {
 
   return (
     <div className="mt-4">
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        aria-expanded={isOpen}
-        className="inline-flex w-fit items-center gap-2 bg-[#1B123D] hover:bg-[#2A1D5C] text-white px-6 py-2.5 text-xs md:text-sm tracking-wider font-semibold rounded-[3px] transition-colors duration-300 cursor-pointer"
-      >
-        <span>{unclaimedDividend.title}</span>
+      <Button onClick={() => setIsOpen(!isOpen)} aria-expanded={isOpen}>
+        {unclaimedDividend.title}
         <ChevronDown
           strokeWidth={2}
           className={`w-4 h-4 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
         />
-      </button>
+      </Button>
       <div ref={contentRef} className="overflow-hidden">
         <div className="pt-[20px]">
           <p className="text-[14px]! font-medium text-black mb-1">Refund to claimants from Fund</p>
@@ -338,13 +334,13 @@ const InvestorRelations = () => {
               <p className="text-black font-medium">
                 Contact information for assisting and handling investor grievances:
               </p>
-              <p className="text-[#555]">
+              <p className="text-black">
                 Ms. Pratiksha Panchal,<br />
                 Company Secretary and Compliance Officer<br />
                 Tel: Board line — 3364 9400;
               </p>
-              <p className="text-[#555]  leading-relaxed!">
-                Email:{" "}
+              <p className="text-black  leading-relaxed!">
+                Email: {" "}
                 <a href="mailto:investorrelations@muktaarts.com" className="font-medium text-black hover:underline">
                   investorrelations@muktaarts.com
                 </a>

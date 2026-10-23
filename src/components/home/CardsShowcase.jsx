@@ -12,7 +12,7 @@ let arr = [
     year: "2025",
     // clr: "#1B123D",
     clr: "#0474BA",
-    img: "/img/final/WW/W1/0R2A2411_1_11zon_2_11zon.webp",
+    img: "/img/final/WW/W1/web/0R2A2411_1_11zon_2_11zon.webp",
     title: "Digital Studio M&E Award - Media & Entertainment Education Award for Cinema",
     desc: "Whistling Woods International in 2025"
   },
@@ -20,7 +20,7 @@ let arr = [
     year: "2025",
     // clr: "#1F1056",
     clr: "#00A7E1",
-    img: "/img/final/MA-2-Cinima.webp",
+    img: "/img/final/web/MA-2-Cinima.webp",
     title: "Big Cine Awards - Fastest Growing Cinema Chain of the Year",
     desc: "Mukta A2 Cinemas in 2025"
   },
@@ -28,7 +28,7 @@ let arr = [
     year: "2024",
     // clr: "#1B123D",
     clr: "#0474BA",
-    img: "/img/final/WW/W1/0R2A9947_2_11zon_3_11zon.webp",
+    img: "/img/final/WW/W1/web/0R2A9947_2_11zon_3_11zon.webp",
     title: "Navbharat Education Excellence Award - Filmmaking Institute of the Year",
     desc: "Whistling Woods International in 2024"
   },
@@ -36,7 +36,7 @@ let arr = [
     year: "2019",
     // clr: "#1F1056",
     clr: "#00A7E1",
-    img: "/img/final/WW/W1/0R2A0174 (1)_3_11zon_1_11zon.webp",
+    img: "/img/final/WW/W1/web/0R2A0174 (1)_3_11zon_1_11zon.webp",
     title: "FICCI Higher Education Excellence Award - Excellence in Creative & Performing Arts",
     desc: "Whistling Woods International in 2019"
   },
@@ -44,7 +44,7 @@ let arr = [
     year: "2019",
     // clr: "#1B123D",
     clr: "#0474BA",
-    img: "/img/final/about_Img/AB2/EXCELSIOR_MA2_36_4_11zon_1_11zon.webp",
+    img: "/img/final/about_Img/AB2/web/EXCELSIOR_MA2_36_4_11zon_1_11zon.webp",
     title: "Big Cine Awards - Best Single-Screen Theatre of the Year",
     desc: "New Excelsior Mukta A2 Cinemas in 2019"
   },
@@ -52,7 +52,7 @@ let arr = [
     year: "2017",
     // clr: "#1F1056",
     clr: "#00A7E1",
-    img: "/img/final/SG/S1/DSC00988 2_2_11zon.webp",
+    img: "/img/final/SG/S1/web/DSC00988 2_2_11zon.webp",
     title: "Screen Award - Lifetime Achievement",
     desc: "Subhash Ghai in 2017"
   },
@@ -60,7 +60,7 @@ let arr = [
     year: "2015",
     clr: "#0474BA",
     // clr: "#1B123D",
-    img: "/img/final/SG/S1/DSC00997 2_1_11zon.webp",
+    img: "/img/final/SG/S1/web/DSC00997 2_1_11zon.webp",
     title: "IIFA Award - Outstanding Contribution to Indian Cinema",
     desc: "Subhash Ghai in 2015"
   },
@@ -68,7 +68,7 @@ let arr = [
     year: "2006",
     // clr: "#1F1056",
     clr: "#00A7E1",
-    img: "/img/final/home/all/27_IQBAL_(2005).jpg",
+    img: "/img/final/home/all/compressed/27_IQBAL_(2005).jpg",
     title: "National Film Award - Best Film on Other Social Issues",
     desc: "Iqbal produced by Subhash Ghai / Mukta Arts in 2006"
   },
@@ -76,7 +76,7 @@ let arr = [
     year: "1998",
     // clr: "#1B123D",
     clr: "#0474BA",
-    img: "/img/final/home/all/17_PARDES_(1997).jpg",
+    img: "/img/final/home/all/compressed/17_PARDES_(1997).jpg",
     title: "Filmfare Award - Best Screenplay",
     desc: "Subhash Ghai for Pardes in 1998"
   },
@@ -84,7 +84,7 @@ let arr = [
     year: "1992",
     // clr: "#1F1056",
     clr: "#00A7E1",
-    img: "/img/final/home/all/11_SAUDAGAR_(1991).jpg",
+    img: "/img/final/home/all/compressed/11_SAUDAGAR_(1991).jpg",
     title: "Filmfare Award - Best Director",
     desc: "Subhash Ghai for Saudagar in 1992"
   }
@@ -148,9 +148,9 @@ export default function CardsShowcase() {
   const centerOffset = (arr.length - 1) / 2;
 
   return (
-    <div className="w-full relative z-[10] mt-[5vh] md:mt-[35vh] pb-[4vh] overflow-hidden">
+    <div className="w-full relative z-[10] mt-[5vh]  pb-[4vh] overflow-hidden">
       {/* Title */}
-      <div className="w-full px-6 md:px-12 relative z-50 pointer-events-none max-sm:mb-10">
+      <div className="w-full px-6 md:px-12 relative z-50 pointer-events-none max-sm:mb-10 sm:mb-10">
         <h2 className="text-[12vw] md:text-[8vw] font-semibold tracking-tighter text-black">Honours.</h2>
       </div>
 

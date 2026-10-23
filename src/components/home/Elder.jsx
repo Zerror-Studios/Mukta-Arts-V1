@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from 'react';
-import Link from 'next/link';
+import Button from '@/components/common/Button';
 import { Plus } from 'lucide-react';
 import { useGSAP } from '@gsap/react';
 import { gsap, ScrollTrigger, EASE, DURATION, STAGGER, RISE, MOTION_OK, MOTION_REDUCED } from '@/lib/motion';
@@ -9,10 +9,11 @@ import { smoothScrollTo } from '@/lib/smoothScroll';
 
 // Copy is word for word from the home page content doc; **double asterisks** mark the
 // phrases that are bold there. `link` is an internal page, `website` an external one.
+// The photos are 1280px copies (web/ folders): the popups show them at most 448px wide.
 const data = [
     {
         title: "Mukta A2 Cinemas",
-        image: "/img/final/home/home2/TOPIWALA.webp",
+        image: "/img/final/home/home2/web/TOPIWALA.webp",
         shortDesc: "Mukta A2 Cinemas is the exhibition arm of Mukta Arts, founded with a vision to make the big-screen experience accessible to audiences across India.",
         // TODO(client): the doc's last line, "Manage XX screens across XX", is left out until it has figures
         bullets: [
@@ -41,7 +42,7 @@ const data = [
     },
     {
         title: "Mukta Arts Productions",
-        image: "/img/final/home/home2/2O5A4368.webp",
+        image: "/img/final/home/home2/web/2O5A4368.webp",
         shortDesc: "The house behind Karz, Hero, Ram Lakhan, Pardes and Taal, producing 50+ stories that have stayed with Indian audiences since 1978.",
         bullets: [
             "**50+ films** produced and co-produced since 1978, in Hindi and regional languages.",
@@ -57,7 +58,7 @@ const data = [
     },
     {
         title: "Whistling Woods International",
-        image: "/img/final/home/home2/2O5A3438.webp",
+        image: "/img/final/home/home2/web/2O5A3438.webp",
         shortDesc: "Whistling Woods International (WWI) is India’s premier institute for Film, Communication, and Creative Arts.",
         bullets: [
             "Among the **world's ten best film schools**, as rated by The Hollywood Reporter, more than once.",
@@ -71,7 +72,7 @@ const data = [
         website: "https://www.whistlingwoods.net/",
         color1: "#c02690",
         color2: "#2d346b",
-        BOTTOMIMG: "/img/final/home/WWI_Philosophy_Lockup_Transparent.png"
+        BOTTOMIMG: "/img/final/home/web/WWI_Philosophy_Lockup_Transparent.webp"
     },
 ];
 
@@ -216,23 +217,14 @@ const CompanyRow = ({ item, index, isOpen, isDimmed, onToggle, rowRef }) => {
                     {(item.link || item.website) && (
                         <div data-panel-item className="mt-2 flex flex-wrap items-center gap-3">
                             {item.link && (
-                                <Link
-                                    href={item.link}
-                                    className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-black hover:bg-gray-200 text-[10px] font-medium tracking-[0.2em] uppercase transition-colors group"
-                                >
+                                <Button onDark href={item.link}>
                                     View More
-                                    <span className="transform group-hover:translate-x-1 transition-transform">→</span>
-                                </Link>
+                                </Button>
                             )}
                             {item.website && (
-                                <a
-                                    href={item.website}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center justify-center px-6 py-3 bg-white text-black hover:bg-gray-200 text-[10px] font-medium tracking-[0.2em] uppercase transition-colors"
-                                >
+                                <Button onDark href={item.website} external>
                                     Visit Website
-                                </a>
+                                </Button>
                             )}
                         </div>
                     )}
@@ -449,25 +441,14 @@ const ElderDesktop = () => {
                                     +
                                 </button>
                                 {item.link && (
-                                    <Link
-                                        href={item.link}
-                                        onClick={(e) => e.stopPropagation()}
-                                        className="inline-flex items-center gap-2 bg-[#1B123D] hover:bg-[#2A1D5C] text-white px-4 py-2 md:px-6 md:py-2.5 text-[10px] md:text-sm tracking-wider font-semibold rounded-[3px] transition-all duration-300 shadow-md hover:shadow-lg group cursor-pointer"
-                                    >
-                                        <span>View More</span>
-                                        <span className="transform group-hover:translate-x-1 transition-transform">→</span>
-                                    </Link>
+                                    <Button onDark href={item.link} onClick={(e) => e.stopPropagation()}>
+                                        View More
+                                    </Button>
                                 )}
                                 {item.website && (
-                                    <a
-                                        href={item.website}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        onClick={(e) => e.stopPropagation()}
-                                        className="text-[10px] md:text-xs uppercase tracking-widest border-b border-white/40 hover:border-white text-white/80 hover:text-white transition-colors pb-0.5 cursor-pointer py-1 md:py-2"
-                                    >
-                                        Website
-                                    </a>
+                                    <Button onDark href={item.website} external onClick={(e) => e.stopPropagation()}>
+                                        Visit Website
+                                    </Button>
                                 )}
                             </div>
                         </div>
@@ -543,23 +524,14 @@ const ElderDesktop = () => {
                                 {(activeItem.link || activeItem.website) && (
                                     <div className="panel-reveal mt-8 md:mt-12 mb-4 flex flex-wrap items-center gap-4">
                                         {activeItem.link && (
-                                            <Link
-                                                href={activeItem.link}
-                                                className="inline-flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 bg-white text-black hover:bg-gray-200 text-[10px] md:text-xs lg:text-sm font-medium tracking-[0.2em] uppercase transition-colors group"
-                                            >
+                                            <Button onDark href={activeItem.link}>
                                                 View More
-                                                <span className="transform group-hover:translate-x-1 transition-transform">→</span>
-                                            </Link>
+                                            </Button>
                                         )}
                                         {activeItem.website && (
-                                            <a
-                                                href={activeItem.website}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="inline-flex items-center justify-center px-6 py-3 md:px-8 md:py-4 bg-white text-black hover:bg-gray-200 text-[10px] md:text-xs lg:text-sm font-medium tracking-[0.2em] uppercase transition-colors"
-                                            >
+                                            <Button onDark href={activeItem.website} external>
                                                 Visit Website
-                                            </a>
+                                            </Button>
                                         )}
                                     </div>
                                 )}

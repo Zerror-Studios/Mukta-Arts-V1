@@ -10,6 +10,11 @@ import { holdReveals, releaseReveals } from '@/lib/revealGate';
 // "The Ecosystem" dropdown (menu index 3) starts expanded
 const DEFAULT_OPEN_DROPDOWN = 3;
 
+// A 320px copy of logo-4k.png (it shows 44-56px tall), with its size so the box is right before it loads
+const LOGO_SRC = "/img/logo/logo-320.webp";
+const LOGO_WIDTH = 320;
+const LOGO_HEIGHT = 298;
+
 const Header = () => {
   const containerRef = useRef(null);
   const menuButtonRef = useRef(null);
@@ -172,7 +177,7 @@ const Header = () => {
           // Own key so React remounts it: the home dock logo carries inline opacity/visibility from HeadphonesModel.
           // Visible here; the footer's 3D logo swaps with it when it sets off down into the footer.
           <Link key="page-logo" id="header-dock-logo" href="/" aria-label="Mukta Arts home" className="block">
-            <img src="/img/logo/logo-4k.png" alt="Mukta Arts" className="h-11 md:h-14 w-auto object-contain" draggable={false} />
+            <img src={LOGO_SRC} width={LOGO_WIDTH} height={LOGO_HEIGHT} alt="Mukta Arts" className="h-11 md:h-14 w-auto object-contain" draggable={false} />
           </Link>
         ) : (
           // Home only: the 3D logo docks here once it reaches the top left (HeadphonesModel drives the opacity)
@@ -183,7 +188,7 @@ const Header = () => {
             aria-label="Mukta Arts home"
             className="block opacity-0 invisible pointer-events-none"
           >
-            <img src="/img/logo/logo-4k.png" alt="Mukta Arts" className="h-11 md:h-14 w-auto object-contain" draggable={false} />
+            <img src={LOGO_SRC} width={LOGO_WIDTH} height={LOGO_HEIGHT} alt="Mukta Arts" className="h-11 md:h-14 w-auto object-contain" draggable={false} />
           </Link>
         )}
       </div>
@@ -221,7 +226,7 @@ const Header = () => {
       {/* Side Menu Overlay */}
       <div
         ref={menuOverlayRef}
-        className="fixed top-0 right-0 w-full md:w-[50vw] h-[100svh] bg-[#1B123D] translate-x-full pointer-events-auto flex flex-col justify-center px-8 md:px-20 z-50 shadow-2xl"
+        className={`fixed top-0 right-0 w-full md:w-[70vw] lg:w-[50vw] h-[100svh] bg-[#1B123D] translate-x-full pointer-events-auto flex flex-col justify-center px-8 md:px-14 lg:px-20 z-50 ${isMenuOpen ? 'shadow-2xl' : ''}`}
       >
 
         <div className="flex flex-col w-full relative mt-[20vh] mb-auto  gap-2">

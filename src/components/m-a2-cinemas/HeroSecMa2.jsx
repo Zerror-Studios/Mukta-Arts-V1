@@ -3,6 +3,7 @@
 import React, { useRef } from 'react';
 import Image from 'next/image';
 import useEntrance from '@/hooks/useEntrance';
+import Button from '@/components/common/Button';
 
 const HeroSecMa2 = () => {
     const containerRef = useRef(null);
@@ -15,9 +16,11 @@ const HeroSecMa2 = () => {
             {/* Background Image */}
             <div className="absolute inset-0 w-full h-full z-0">
                 {/* Note: Update the src to your actual background image */}
+                {/* A 2560px copy of the 5760px original (/img/final/MA-2-Cinima.webp) */}
                 <img
-                    src="/img/final/MA-2-Cinima.webp"
+                    src="/img/final/web/MA-2-Cinima.webp"
                     alt="Mukta A2 Cinemas Background"
+                    fetchPriority="high"
 
                     className="object-cover w-full h-full object-center"
 
@@ -57,14 +60,9 @@ const HeroSecMa2 = () => {
                                 Mukta A2 Cinemas is the exhibition arm of Mukta Arts, founded with a vision to make the big-screen experience accessible to audiences across India.
                             </p>
                             <div data-entrance="rise">
-                                <a
-                                    href="https://muktaa2cinemas.in/"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-block bg-white text-black px-8 py-3.5 text-[11px] font-bold tracking-[0.15em] transition-colors hover:bg-gray-200"
-                                >
-                                    VISIT OUR WEBSITE
-                                </a>
+                                <Button onDark href="https://muktaa2cinemas.in/" external>
+                                    Visit Our Website
+                                </Button>
                             </div>
                         </div>
 

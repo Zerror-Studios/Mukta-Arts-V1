@@ -18,6 +18,7 @@ const OFHero = () => {
                 <img
                     src="/img/final/MA_Productions.webp"
                     alt="Mukta Arts Background"
+                    fetchPriority="high"
 
                     className="object-cover w-full h-full object-center"
 

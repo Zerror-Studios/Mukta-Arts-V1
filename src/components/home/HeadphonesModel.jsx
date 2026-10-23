@@ -17,7 +17,7 @@ const _size = new THREE.Vector3();
 const _worldScale = new THREE.Vector3();
 const TURN = Math.PI * 2;
 
-// Share of the header logo image's height that the headphones fill (the PNG has a little padding),
+// Share of the header logo image's height that the headphones fill (the image has a little padding),
 // so the docked 3D logo ends the same size as the flat one it dissolves into
 const DOCK_FILL = 0.86;
 // Scrolling past this much of a screen (a fraction of the viewport height) sets off the trip up to
@@ -62,8 +62,10 @@ const FADE_SPAN = 0.6;
 // logo. Blur is a share of the logo's height, so it looks the same at every breakpoint.
 const FADE_BLUR = 0.08;
 const FADE_GROW = 0.06;
-// The footer model's scale, per breakpoint (desktop, tablet, phone)
-const footerScaleFor = (width) => (width >= 1024 ? 25 : width >= 768 ? 8 : 15);
+// The footer model's scale, per breakpoint (desktop, tablet, phone). The model is sized by the screen's
+// height, so a tall screen 1024px or wider (a tablet held upright), where the footer stacks, gets the
+// tablet size. Keep in step with the `wide` variant in globals.css.
+const footerScaleFor = ({ width, height }) => (width >= 1024 && width > height ? 25 : width >= 768 ? 16 : 15);
 
 // Seconds the rotation takes to get back up to speed (after the header, or after a drag)
 const SPEED_RAMP = 1.2;
@@ -320,7 +322,7 @@ export function Model({ onDrawingChange, footerOnly = false, scale: baseScale = 
             elementToWorld(els.footer, size, camera, _footerPos);
             const down = easeInOut((footerP - FOOTER_TRAVEL_FROM) / (1 - FOOTER_TRAVEL_FROM));
             pos.lerp(_footerPos, down);
-            scale *= Math.pow(footerScaleFor(size.width) / scale, down);
+            scale *= Math.pow(footerScaleFor(size) / scale, down);
           }
         }
       } else {
@@ -484,7 +486,7 @@ export function Model({ onDrawingChange, footerOnly = false, scale: baseScale = 
     });
 
     update();
-    // The flat logo is a 4K PNG, decoded ahead of time so its first frames in the dissolve never wait on it
+    // The flat logo is decoded ahead of time so its first frames in the dissolve never wait on it
     els.logo?.querySelector('img')?.decode?.().catch(() => {});
     // A refresh (a resize, or content loading in further down) measures the triggers by putting their
     // tweens back to the start and then straight back, without a last onUpdate: check again after it
@@ -589,7 +591,7 @@ export default function HeadphonesCanvas({ footerOnly = false }) {
       if (window.innerWidth < 768) {
         setModelScale(15); // scale down for mobile
       } else if (window.innerWidth < 1024) {
-        setModelScale(8); // scale down for tablet
+        setModelScale(18); // scale down for tablet
       } else {
         setModelScale(30); // default desktop scale
       }

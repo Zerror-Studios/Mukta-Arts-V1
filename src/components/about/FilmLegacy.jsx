@@ -493,7 +493,7 @@ const FilmLegacy = () => {
         </div>
 
         {/* Descriptions and Details */}
-        <div className="relative w-full px-6 md:px-12 lg:px-16 flex justify-center min-h-[360px] md:min-h-[300px] phone:block phone:min-h-0">
+        <div className="relative w-full px-6 md:px-12 lg:px-16 flex justify-start min-h-[360px] md:min-h-[300px]  phone:block phone:min-h-0">
           <div className="relative w-full max-w-6xl phone:max-w-none">
             {slides.map((slide, i) => (
               <div

@@ -120,7 +120,7 @@ const Category = ({ category, index, isOpen, onToggle }) => {
           {pad(index + 1)}
         </h4>
 
-        <p className="min-w-0">
+        <span className="block min-w-0">
           <h4
             className={`block font-['SwitzerB'] text-[30px] md:text-[48px] lg:text-[60px] leading-none tracking-tight transition-colors duration-300 ${
               isOpen ? "text-black" : "text-neutral-400 group-hover:text-black"
@@ -130,21 +130,21 @@ const Category = ({ category, index, isOpen, onToggle }) => {
           </h4>
           {/* The meaning sits under the name on phones */}
           <p className="md:hidden block mt-2 text-[14px] leading-snug text-[#555]">{category.about}</p>
-        </p>
+        </span>
 
         <p className="hidden md:block text-[15px] lg:text-[16px] leading-relaxed text-[#555] max-w-[34ch]">
           {category.about}
         </p>
 
-        <p className="flex items-center gap-4 md:gap-6">
-          <p className="text-right">
+        <span className="flex items-center gap-4 md:gap-6">
+          <span className="block text-right">
             <p className="block text-[26px] md:text-[36px] font-light leading-none tabular-nums text-black">
               {pad(category.properties.length)}
             </p>
             <p className="hidden md:block mt-1 font-mono text-[10px] uppercase  text-neutral-500">
               Cinemas
             </p>
-          </p>
+          </span>
           <p
             className={`grid place-items-center w-10 h-10 md:w-12 md:h-12 rounded-full border transition-colors duration-300 ${
               isOpen
@@ -157,7 +157,7 @@ const Category = ({ category, index, isOpen, onToggle }) => {
               className={`w-5 h-5 transition-transform duration-500 ease-out ${isOpen ? "rotate-45" : ""}`}
             />
           </p>
-        </p>
+        </span>
       </button>
 
       {/* The cinemas, in a lined grid lined up with the category name */}
@@ -177,7 +177,7 @@ const Category = ({ category, index, isOpen, onToggle }) => {
                 </p>
                 <p className="block mt-1.5 text-[13px] md:text-[14px] leading-snug text-[#666]">
                   {parts.slice(0, -1).join(", ")}
-                  {parts.length > 1 && <p className="text-neutral-400"> · </p>}
+                  {parts.length > 1 && <span className="text-neutral-400"> · </span>}
                   {parts.at(-1)}
                 </p>
               </li>

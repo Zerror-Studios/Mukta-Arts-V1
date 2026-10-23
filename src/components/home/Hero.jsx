@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react';
 import HeadphonesCanvas from './HeadphonesModel';
-import Link from 'next/link';
+import Button from '@/components/common/Button';
 import { useGSAP } from '@gsap/react';
 import { gsap, SplitText, EASE, DURATION, STAGGER, RISE, MOTION_OK, MOTION_REDUCED } from '@/lib/motion';
 import { whenRevealsReleased } from '@/lib/revealGate';
@@ -162,11 +162,11 @@ const Hero = () => {
   );
 
   return (
-    <section ref={heroRef} className="relative w-full h-[100svh]  bg-white px-5 py-20  sm:px-10 sm:py-10 text-black overflow-hidden flex flex-col items-center justify-between">
+    <section ref={heroRef} className="relative w-full h-[100svh] overflow-x-hidden  bg-white px-5 py-20  sm:px-10 sm:py-10 md:max-lg:pt-20 text-black overflow-hidden flex flex-col items-center justify-between">
 
       {/* Huge Background Text */}
       <div className="  w-full  text-center flex justify-start   items-start z-0 select-none pointer-events-none">
-        <h1 data-hero="title" data-entrance className=" text-[4rem] md:text-[180px] lg:text-[240px]  font-bold leading-none whitespace-nowrap text-black flex items-start">
+        <h1 data-hero="title" data-entrance className=" text-[4rem] md:text-[min(15vw,240px)] lg:text-[min(16.5vw,240px)]  font-bold leading-none whitespace-nowrap text-black flex items-start">
           <span>Mukta Arts</span>
           <span className="font-['SwitzerSB'] text-[2rem] leading-[2.2rem] min-[651px]:text-[3rem] min-[651px]:leading-[3.2rem] font-normal mb-auto">
             LTD
@@ -179,17 +179,14 @@ const Hero = () => {
       <HeadphonesCanvas />
 
       {/* Bottom Left Content */}
-      <div className=" z-20  w-full md:w-[34vw] mr-auto ">
+      <div className=" z-20  w-full md:w-[55vw] lg:w-[34vw] mr-auto ">
         <h3 data-hero="tagline" data-entrance className="mb-6 text-balance text-[1.6rem] md:text-[2.1rem] leading-[1.15] tracking-tight font-['SwitzerM'] font-normal max-w-[30ch]">
          Telling stories across cinema, screens and classrooms.
         </h3>
         <div data-hero="cta" data-entrance className="w-fit">
-          <Link href={'/about'}>
-            <button className="bg-[black] hover:bg-[black] text-white px-5 py-2.5 text-xs md:text-sm tracking-wide font-medium  flex items-center gap-3 transition-colors cursor-pointer group">
-              About Us
-              <span className="text-lg leading-none transform group-hover:translate-x-1 transition-transform">→</span>
-            </button>
-          </Link>
+          <Button href="/about">
+            About Us
+          </Button>
         </div>
       </div>
 

@@ -5,80 +5,82 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { smoothScrollTo } from '@/lib/smoothScroll';
 
+// Backgrounds are 2560px copies of the campaign photos in W2/ (up to 7952px there)
+
 const UNIQUE_DATA = [
     {
         year: '2006',
-        image: '/img/final/WW/W2/WHISTLING%20WOODS%20CAMPAIGN%2009.04_1.jpg',
+        image: '/img/final/WW/W2/web/WHISTLING%20WOODS%20CAMPAIGN%2009.04_1.webp',
         text: '· Located in the heart of filmcity, Mumbai. Founded by Subhash Ghai.\n\n· Introduced India’s first programme for Producers.\n\n· Introduced India’s first long-term full-time programme in Animation.',
     },
     {
         year: '2008',
-        image: '/img/final/WW/W2/WHISTLING%20WOODS%20CAMPAIGN%2009.04_8.jpg',
+        image: '/img/final/WW/W2/web/WHISTLING%20WOODS%20CAMPAIGN%2009.04_8.webp',
         text: '· Launched India’s 1st MBA in Media & Entertainment.',
     },
     {
         year: '2010',
-        image: '/img/final/WW/W2/110.jpg',
+        image: '/img/final/WW/W2/web/110.webp',
         text: '· Recognised as one of the top 10 film schools globally by the Hollywood Reporter.\n\n· Received CILECT membership, a mark of global credibility and excellence in film & media education.',
     },
     {
         year: '2011',
-        image: '/img/final/WW/W2/WHISTLING%20WOODS%20CAMPAIGN%2009.04_17.jpg',
+        image: '/img/final/WW/W2/web/WHISTLING%20WOODS%20CAMPAIGN%2009.04_17.webp',
         text: '· Partnered with Sony to set up the Sony Media Technology Centre.\n\n· Expansion to Media Management Programmes at UG & PG levels',
     },
     {
         year: '2013',
-        image: '/img/final/WW/W2/30.jpg',
+        image: '/img/final/WW/W2/web/30.webp',
         text: '· Expansion to commence Fashion Design education, in association with Neeta Lulla.',
     },
     {
         year: '2014',
-        image: '/img/final/WW/W2/1L0.jpg',
+        image: '/img/final/WW/W2/web/1L0.webp',
         text: "· Partnered with the Tata Institute of Social Sciences (TISS) to offer UG & PG degree.\n\n· Launched India’s first UG applied arts degrees in Filmmaking, Acting & Music programmes.",
     },
     {
         year: '2015',
-        image: '/img/final/WW/W2/220.jpg',
+        image: '/img/final/WW/W2/web/220.webp',
         text: '· Partnered with FoxConn to set up the FoxConn Media Lab to broaden the scope of education in the creation of digital content for UGC (User Generated Content) platforms.\n\n· Partnered with Google to set up the YouTube Space & YouTube Educator Lab at the WWI Mumbai campus.',
     },
     {
         year: '2016',
-        image: '/img/final/WW/W2/330.jpg',
+        image: '/img/final/WW/W2/web/330.webp',
         text: '· Partnered with REDucation platform to become India’s first institute to have DSMC2 cameras.',
     },
     {
         year: '2018',
-        image: '/img/final/WW/W2/440.jpg',
+        image: '/img/final/WW/W2/web/440.webp',
         text: '· Partnered with Reliance Jio to set up the WWI Jio VR Lab.\n\n· First in India to introduce 8k Cinematography, in association with RED.\n\n· WWI hosts the CILECT World Congress, first time in India.\n\n· Recognised with the excellence in creative & performing arts award at the 6th FICCI Higher Education Excellence Award.',
     },
     {
         year: '2019',
-        image: '/img/final/WW/W2/50.jpg',
+        image: '/img/final/WW/W2/web/50.webp',
         text: '· Institutional partner to Apple for ‘Shot on iPhone’ education.',
     },
     {
         year: '2020',
-        image: '/img/final/WW/W2/55..tiff0.jpg',
+        image: '/img/final/WW/W2/web/55..tiff0.webp',
         text: '· Established the WWI Emerging Media Lab for Virtual Production, Motion Capture, Photogrammetry & Volumetric Capture.',
     },
     {
         year: '2022',
-        image: '/img/final/WW/W2/6L0.jpg',
+        image: '/img/final/WW/W2/web/6L0.webp',
         text: '· Partnered with the Epic Games, the creator of unreal engine for 3D creation tools.\n\n· Partnered with the Disguise for integrated video & media server technology used in live events, broadcast & virtual production.',
     },
     {
         year: '2024',
-        image: '/img/final/WW/W2/7L0.jpg',
+        image: '/img/final/WW/W2/web/7L0.webp',
         text: '· Partnered with Intel to livestream the 2024 Paris Olympics in 8k.\n\n· Meghna Ghai Puri, President, WWI has been welcomed into the prestigious EMMY Academy – a global community of creative visionaries shaping the future of television and media.\n\n· Chaitanya Chinchlikar, Vice President & CTO, WWI received the SMPTE EXCELLENCE in education.',
     },
     {
         year: '2025',
-        image: '/img/final/WW/W2/90.jpg',
+        image: '/img/final/WW/W2/web/90.webp',
         text: 'FICCI BAF Awards 2025: Our Students Shine with 3 Prestigious Wins!\n\n· Best Student Animation Film\n\n· Best Student Game\n\n· Best Student VFX Work',
     },
     {
         year: '2026',
-        image: '/img/final/WW/W2/WHISTLING%20WOODS%20CAMPAIGN%2009.04_18.jpg',
+        image: '/img/final/WW/W2/web/WHISTLING%20WOODS%20CAMPAIGN%2009.04_18.webp',
         text: 'WWI partners with IIM Mumbai to launch India’s first MBA in Creative Industries, shaping future leaders at the intersection of business and entertainment.',
     },
 ];

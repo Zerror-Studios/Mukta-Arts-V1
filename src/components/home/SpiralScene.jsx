@@ -24,7 +24,7 @@ const RISE_RATE = 28 / TOTAL_ANGLE; // b ≈ 2.228 — vertical rise per radian
 const ARC_PER_RAD = Math.sqrt(RADIUS * RADIUS + RISE_RATE * RISE_RATE); // x ≈ 12.205
 const TOTAL_ARC = TOTAL_ANGLE * ARC_PER_RAD; // y ≈ 153.3 — total spiral arc length
 
-const NUM_CARDS = 12;
+const NUM_CARDS = 13;
 const CARD_SLOT_LENGTH = 5.8 * 1.15; // arc length each card's slot spans (the old landscape card width) — keeps spacing and timing
 const CARD_SPACING = 6 * 1; // arc length between successive card starts — scaled to match
 const CARD_ARC_LENGTH = 5; // portrait card width, centred in its slot
@@ -33,20 +33,22 @@ const CARD_HEIGHT = CARD_ARC_LENGTH * CARD_ASPECT; // ≈ 6.7
 const TOTAL_CARDS_LENGTH = (NUM_CARDS - 1) * CARD_SPACING + CARD_SLOT_LENGTH; // 63.3
 const SEGMENTS_X = 116; // horizontal subdivisions per card mesh
 
-// Placeholder images (9 cards)
+// Film posters (13 cards) — Kalicharan and Meri Jung aren't in compressed/, so they come from /img/films.
+// WebP copies (web/ folders) of those JPEGs, at the same size
 const images = [
-  "/img/final/home/all/04_KARZ_(1980).jpg",
-  "/img/final/home/all/06_HERO_(1982).jpg",
-  "/img/final/home/all/08_KARMA_(1986).jpg",
-  "/img/final/home/all/10_RAM_LAKHAN_(1987).jpg",
-  "/img/final/home/all/11_SAUDAGAR_(1991).jpg",
-  "/img/final/home/all/12_PREM_DEEWANE_(1992).jpg",
-  "/img/final/home/all/13_KHALNAYAK_(1993).jpg",
-  "/img/final/home/all/15_TRIMURTI_(1995).jpg",
-  "/img/final/home/all/16_JAAN_(1996).jpg",
-  "/img/final/home/all/22_BADHAI_HO_BADHAI_(2002).jpg",
-  "/img/final/home/all/25_AITRAAZ_(2004).jpg",
-  "/img/final/home/all/45_NOUKADUBI__(2010).jpg"
+  "/img/final/home/all/compressed/web/27_IQBAL_(2005).webp",
+  "/img/final/home/all/compressed/web/25_AITRAAZ_(2004).webp",
+  "/img/final/home/all/compressed/web/20_YAADEIN_(2001).webp",
+  "/img/final/home/all/compressed/web/19_TAAL_(1999).webp",
+  "/img/final/home/all/compressed/web/17_PARDES_(1997).webp",
+  "/img/final/home/all/compressed/web/13_KHALNAYAK_(1993).webp",
+  "/img/final/home/all/compressed/web/11_SAUDAGAR_(1991).webp",
+  "/img/final/home/all/compressed/web/10_RAM_LAKHAN_(1987).webp",
+  "/img/final/home/all/compressed/web/08_KARMA_(1986).webp",
+  "/img/films/web/meri-jung.webp",
+  "/img/final/home/all/compressed/web/06_HERO_(1982).webp",
+  "/img/final/home/all/compressed/web/04_KARZ_(1980).webp",
+  "/img/films/web/kalicharan.webp"
 ];
 
 // =============================================
@@ -390,7 +392,7 @@ export default function SpiralScene() {
   return (
     <div
       ref={containerRef}
-      className="w-full h-[400vh] relative bg-[white]"
+      className="w-full h-[400vh] relative bg-[white] "
     >
 
       <div className="sticky top-0 w-full h-screen overflow-hidden">
@@ -398,12 +400,7 @@ export default function SpiralScene() {
         <div className=" NAMEDIV1 absolute top-0 left-0 z-[-1]  w-full h-full flex justify-center items-center">
           {/* Word for word from the content doc; the bold runs are bold there too */}
           <h5 className="w-[90vw] sm:w-2/3 text-center font-['SwitzerR'] text-balance">
-            Mukta Arts is the vision of <strong className="font-['SwitzerB'] font-normal">Subhash Ghai</strong>, one of India&apos;s most celebrated filmmakers,
-            who founded the company in 1978. What started with landmark films like Karz, Ram Lakhan, Khalnayak and Pardes
-            has grown into an entertainment group spanning <strong className="font-['SwitzerB'] font-normal">production, education, exhibition and animation</strong>.
-            Through <strong className="font-['SwitzerB'] font-normal">Whistling Woods International</strong>, one of Asia&apos;s leading film schools,{" "}
-            <strong className="font-['SwitzerB'] font-normal">Mukta A2 Cinemas</strong> and <strong className="font-['SwitzerB'] font-normal">SGM Studios</strong>,
-            the group continues to shape how stories are made, taught and experienced across India.
+            Mukta Arts is the vision of Subhash Ghai, one of India's most celebrated filmmakers, who founded the company in 1978. What started with landmark films like Karz, Ram Lakhan, Khalnayak and Pardes has grown into an entertainment group spanning production, exhibition, animation and education. Through Whistling Woods International, Mukta A2 Cinemas and SGM Studios, the group continues to shape how stories are made, taught and experienced across India. 
           </h5>
         </div>
 

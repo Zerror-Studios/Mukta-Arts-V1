@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useRef, useEffect, Suspense } from "react";
-import Link from "next/link";
-import { Canvas, useFrame } from "@react-three/fiber";
+import React, { useRef, Suspense } from "react";
+import Button from "@/components/common/Button";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, ContactShadows } from "@react-three/drei";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -14,92 +14,10 @@ import useGpuWarmup from "@/hooks/useGpuWarmup";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function FilmReel({ running, loadImages }) {
-    const marqueeRef = useRef();
-    const tweenRef = useRef(null);
-
-    useGSAP(() => {
-        if (marqueeRef.current) {
-            // Infinite horizontal scrolling from left to right (or right to left)
-            tweenRef.current = gsap.to(marqueeRef.current, {
-                x: "-50%", // Move half the width
-                duration: 25,
-                repeat: -1,
-                ease: "none",
-            });
-        }
-    });
-
-    // Only runs while the section is near the screen
-    useEffect(() => {
-        tweenRef.current?.paused(!running);
-    }, [running]);
-
-    // Section 9 of the home page content doc: five frames, one figure each, on the client's own photos
-    // (the behind-the-scenes stills, Whistling Woods and Topiwala; strip/ holds 800px copies of the big files)
-    const content = [
-        { value: "45+", label: "Years of Legacy", image: "/img/final/home/home2/SG_0067.webp" },
-        { value: "50+", label: "Films Produced", image: "/img/final/home/home2/SG_0054.webp" },
-        { value: "35", label: "Blockbusters", image: "/img/final/home/home2/SG_0044.webp" },
-        { value: "4500+", label: "Alumni", image: "/img/final/home/strip/WWI_0R2A9902.webp" },
-        { value: "37", label: " Mukta A2 Cinemas", image: "/img/final/home/strip/TOPIWALA_MA2_28.webp" },
-    ];
-
-    // Duplicate multiple times for a seamless scroll effect
-    const loopContent = [...content, ...content, ...content, ...content, ...content, ...content];
-
-    return (
-        <div className="absolute max-sm:bottom-0 sm:-bottom-40 left-1/2 -translate-x-1/2 w-[120vw] z-[100] transform -rotate-[3deg] pointer-events-none">
-            <div className="bg-[#111] py-6 relative flex shadow-2xl overflow-hidden">
-                {/* Top holes */}
-                <div
-                    className="absolute top-2 left-0 w-full h-3 z-10"
-                    style={{
-                        backgroundImage: 'repeating-linear-gradient(to right, #ffffff 0, #ffffff 16px, transparent 16px, transparent 32px)'
-                    }}
-                ></div>
-
-                {/* Scrolling content */}
-                <div className="flex w-max gap-2 px-2" ref={marqueeRef}>
-                    {loopContent.map((item, i) => (
-                        <div
-                            key={i}
-                            className="relative flex flex-col items-center justify-center min-w-[200px] md:min-w-[280px] h-[120px] md:h-[160px] px-4 md:px-8 rounded-sm overflow-hidden"
-                        >
-                            {/* Background Image for each frame */}
-                            <div
-                                className="absolute inset-0 bg-cover bg-center z-0 opacity-100"
-                                style={loadImages ? { backgroundImage: `url("${encodeURI(item.image)}")` } : undefined}
-                            ></div>
-                            {/* Overlay for text readability */}
-                            <div className="absolute inset-0 bg-black/50 z-0"></div>
-
-                            {/* Text Content */}
-                            <div className="relative z-10 text-center">
-                                <h3 className="text-[#f97316] text-3xl! md:text-5xl! leading-none! font-bold tracking-tight whitespace-nowrap drop-shadow-md">{item.value}</h3>
-                                <p className="mt-1 md:mt-2 text-white text-xs md:text-base font-semibold uppercase tracking-wide whitespace-nowrap drop-shadow-md">{item.label}</p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
-                {/* Bottom holes */}
-                <div
-                    className="absolute bottom-2 left-0 w-full h-3 z-10 opacity-40 "
-                    style={{
-                        backgroundImage: 'repeating-linear-gradient(to right, #ffffff 0, #ffffff 16px, transparent 16px, transparent 32px)'
-                    }}
-                ></div>
-            </div>
-        </div>
-    );
-}
-
-function CameraModel({ url }) {
+function CameraModel({ url, modelRef }) {
     const { scene } = useGLTF(url);
     // The camera is a heavy model: get it onto the GPU before the section is reached
     useGpuWarmup();
-    const modelRef = useRef();
 
     useGSAP(() => {
         if (modelRef.current) {
@@ -138,31 +56,81 @@ function CameraModel({ url }) {
     );
 }
 
-function AnimatedCameraGroup() {
+// The camera group's scale, and where it ends up beside the copy on wide screens
+const CAMERA_SCALE = 0.05;
+const WIDE_END = { x: 2, y: -2.5, scale: CAMERA_SCALE };
+// Narrower than this (phones, tablets upright) there is no room beside the copy, so the camera
+// settles into the space between the title and the copy instead
+const WIDE_ASPECT = 1.2;
+// Share of that space the camera may fill, so it never touches the text
+const SLOT_FILL = 0.9;
+
+// Where the camera ends up on a portrait screen: centred in the gap between the title and the
+// copy (measured from the page), as large as fits. Its size comes from the model's own bounds.
+function slotEnd(group, model, camera, size, titleEl, bodyEl, sectionEl) {
+    const section = sectionEl.getBoundingClientRect();
+    const top = titleEl.getBoundingClientRect().bottom - section.top;
+    const bottom = bodyEl.getBoundingClientRect().top - section.top;
+    const gap = Math.max(bottom - top, 0);
+
+    // World units per pixel on the z = 0 plane the camera moves in
+    const viewHeight = 2 * camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+    const unit = viewHeight / size.height;
+
+    // The model's height and centre at scale 1 (turning about y never changes its height)
+    group.updateWorldMatrix(true, true);
+    const box = new THREE.Box3().setFromObject(model);
+    const s = group.scale.y;
+    const minY = (box.min.y - group.position.y) / s;
+    const height = (box.max.y - box.min.y) / s;
+    const width = Math.max(box.max.x - box.min.x, box.max.z - box.min.z) / s;
+
+    const scale = Math.min((gap * SLOT_FILL * unit) / height, (size.width * SLOT_FILL * unit) / width, CAMERA_SCALE);
+    const centreY = (size.height / 2 - (top + gap / 2)) * unit;
+    return { x: 0, y: centreY - (minY + height / 2) * scale, scale };
+}
+
+function AnimatedCameraGroup({ titleRef, bodyRef, sectionRef }) {
     const groupRef = useRef();
+    const modelRef = useRef();
+    // The canvas state as it is now, read on every refresh so a resize or rotation lands it in the right place
+    const getThree = useThree((state) => state.get);
 
     useGSAP(() => {
+        const group = groupRef.current;
+        let end = WIDE_END;
+        const measure = () => {
+            const { camera, size } = getThree();
+            end = size.width / size.height >= WIDE_ASPECT
+                ? WIDE_END
+                : slotEnd(group, modelRef.current, camera, size, titleRef.current, bodyRef.current, sectionRef.current);
+        };
+
+        // Initial state
+        gsap.set(group.position, { x: 0, y: -2, z: 0 });
+        gsap.set(group.rotation, { x: 0, y: -2, z: 0 });
+        measure();
+
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: ".old-camera-container",
                 start: "top top",
                 end: "bottom bottom",
                 scrub: 1,
+                invalidateOnRefresh: true,
+                onRefreshInit: measure,
             }
         });
 
-        // Initial state
-        gsap.set(groupRef.current.position, { x: 0, y: -2, z: 0 });
-        gsap.set(groupRef.current.rotation, { x: 0, y: -2, z: 0 });
-
-        tl.to(groupRef.current.position, { x: 2, y: -2.5, z: 0, duration: 1 }, 0)
-            .to(groupRef.current.rotation, { y: -Math.PI / 1.3 - Math.PI * 2, duration: 1 }, 0)
+        tl.to(group.position, { x: () => end.x, y: () => end.y, z: 0, duration: 1 }, 0)
+            .to(group.scale, { x: () => end.scale, y: () => end.scale, z: () => end.scale, duration: 1 }, 0)
+            .to(group.rotation, { y: -Math.PI / 1.3 - Math.PI * 2, duration: 1 }, 0)
             .to({}, { duration: 3 }); // pad to 4.0 total duration
     });
 
     return (
-        <group ref={groupRef} scale={0.05}>
-            <CameraModel url="/model/camera.glb" />
+        <group ref={groupRef} scale={CAMERA_SCALE}>
+            <CameraModel url="/model/camera.glb" modelRef={modelRef} />
             <ContactShadows
                 position={[0, -1, 0]}
                 opacity={0.6}
@@ -207,6 +175,9 @@ const BG_OPACITY = 0.35;
 
 export default function OldCamera() {
     const containerRef = useRef(null);
+    const sectionRef = useRef(null);
+    const titleRef = useRef(null);
+    const bodyRef = useRef(null);
     const roleRefs = useRef([]);
     const bodyRefs = useRef([]);
     const bgRefs = useRef([]);
@@ -261,10 +232,10 @@ export default function OldCamera() {
     }, { scope: containerRef });
 
     return (
-        <div ref={containerRef} className="old-camera-container w-full h-[400vh] relative z-30">
+        <div ref={containerRef} className="old-camera-container w-full h-[400vh] relative z-30  ">
 
 
-            <section className="sticky top-0 w-full h-[100vh] bg-white max-sm:overflow-hidden flex items-center justify-center">
+            <section ref={sectionRef} className="sticky top-0 w-full h-[100vh] bg-white max-sm:overflow-hidden flex items-center justify-center ">
 
                 {/* Background Images - reveal after 3D camera rotation, one per slide */}
                 {/* <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
@@ -281,7 +252,7 @@ export default function OldCamera() {
                 </div> */}
 
                 {/* Title, with the role that changes on scroll right below it */}
-                <div className="absolute top-[15%] left-[5%] md:left-[4%] z-40 text-black pointer-events-none">
+                <div ref={titleRef} className="absolute top-[15%] left-[5%] md:left-[4%] z-40 text-black pointer-events-none">
                     <h2 className="tracking-tighter leading-none ">
                         Subhash Ghai
                     </h2>
@@ -301,7 +272,7 @@ export default function OldCamera() {
                 </div>
 
                 {/* Subheading, copy and button at the bottom */}
-                <div className="absolute bottom-[190px] sm:bottom-16 left-[5%] md:left-[4%] w-[90%] md:max-w-lg z-[80] text-black">
+                <div ref={bodyRef} className="absolute bottom-16 left-[5%] md:left-[4%] w-[90%] md:max-w-lg z-[80] text-black">
                     {/* Stacked in one grid cell and pinned to its bottom, so the button never moves */}
                     <div className="grid pointer-events-none">
                         {SLIDES.map((slide, i) => (
@@ -314,7 +285,7 @@ export default function OldCamera() {
                                 <h4 className="text-base  sm:text-lg md:text-xl font-medium text-[#1B123D] mb-3 md:mb-4 leading-snug">
                                     {/* {slide.subheading} */} {slide.role}
                                 </h4>
-                                <p className="text-sm md:text-base opacity-90 leading-relaxed mb-4 md:mb-5">
+                                <p className="text-sm md:text-base max-md:text-[14px]! max-md:leading-[1.5]! opacity-90 leading-relaxed mb-4 md:mb-5">
                                     {slide.text}
                                 </p>
                             </div>
@@ -322,13 +293,9 @@ export default function OldCamera() {
                     </div>
                     {/* Single View More Button placed directly after the text paragraph */}
                     <div ref={buttonRef} className="pt-2 pointer-events-auto w-fit">
-                        <Link
-                            href="/subhash-ghai"
-                            className="inline-flex items-center gap-2 bg-[#1B123D] hover:bg-[#2A1D5C] text-white px-6 py-2.5 text-xs md:text-sm tracking-wider font-semibold  transition-all duration-300 shadow-md hover:shadow-lg group cursor-pointer"
-                        >
-                            <span>View More</span>
-                            <span className="transform group-hover:translate-x-1 transition-transform">→</span>
-                        </Link>
+                        <Button href="/subhash-ghai">
+                            View More
+                        </Button>
                     </div>
                 </div>
 
@@ -349,7 +316,7 @@ export default function OldCamera() {
                                 does anything until they finish */}
                             <Suspense fallback={null}>
                                 <Environment preset="studio" />
-                                <AnimatedCameraGroup />
+                                <AnimatedCameraGroup titleRef={titleRef} bodyRef={bodyRef} sectionRef={sectionRef} />
                             </Suspense>
 
                             {/* <OrbitControls
@@ -361,8 +328,6 @@ export default function OldCamera() {
                         </Canvas>
                     )}
                 </div>
-
-                <FilmReel running={inView} loadImages={bgReady} />
 
             </section>
         </div>

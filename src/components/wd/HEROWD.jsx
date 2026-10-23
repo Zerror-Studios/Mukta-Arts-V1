@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
+import Button from '@/components/common/Button';
 
 const HEROWD = () => {
     const containerRef = useRef(null);
@@ -66,7 +67,7 @@ const HEROWD = () => {
                 className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
                 style={{
                     // Using a relevant unsplash image of a film camera on set as a placeholder
-                    backgroundImage: 'url("/img/wd/wdh.png")',
+                    backgroundImage: 'url("/img/wd/wdh.webp")',
                 }}
             >
                 {/* Overlay to darken background for text readability */}
@@ -119,9 +120,9 @@ const HEROWD = () => {
                                 world-class education in Film, Communication,<br className="hidden md:block" />
                                 Creative and Performing Arts.
                             </p>
-                            <button className="bg-white text-black text-xs font-bold tracking-[0.15em] uppercase px-8 py-3.5 hover:bg-gray-200 transition-colors duration-300">
+                            <Button onDark>
                                 Visit Our Website
-                            </button>
+                            </Button>
                         </div>
 
                         {/* Right Content */}

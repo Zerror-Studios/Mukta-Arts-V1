@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import Button from "@/components/common/Button";
 import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger } from "@/lib/motion";
 import useScrollReveal from "@/hooks/useScrollReveal";
@@ -25,7 +25,7 @@ const team = [
       "Director - Academics - Whistling Woods International",
       "Director - Mukta A2 Cinemas Private Ltd",
     ],
-    image: "/img/final/about_Img/AB3/RAHUL PURI_6_11zon_5_11zon.webp",
+    image: "/img/final/about_Img/AB3/web/RAHUL PURI_6_11zon_5_11zon.webp",
   },
   {
     name: "Parvez Farooqui",
@@ -33,7 +33,7 @@ const team = [
       "Director - Mukta Arts Ltd",
       "Executive Director - Mukta A2 Cinemas Private Ltd",
     ],
-    image: "/img/final/about_Img/AB3/PARVEZ FAROOQUI_5_11zon_4_11zon.webp",
+    image: "/img/final/about_Img/AB3/web/PARVEZ FAROOQUI_5_11zon_4_11zon.webp",
   },
   {
     name: "Kapil Bagla",
@@ -43,7 +43,7 @@ const team = [
   {
     name: "Rajendra Doshi",
     titles: ["Independent Director - Mukta Arts Ltd"],
-    image: "/img/final/about_Img/AB3/RAJENDRA DOSHI_4_11zon_6_11zon.webp",
+    image: "/img/final/about_Img/AB3/web/RAJENDRA DOSHI_4_11zon_6_11zon.webp",
   },
   {
     name: "Madhumati Ramchandra Lele",
@@ -189,13 +189,9 @@ const TeamMembers = () => {
           {/* Only Subhash Ghai has a profile page; the row keeps its height so nothing jumps */}
           <div className="flex items-center min-h-[42px] shrink-0">
             {activePerson.profile && (
-              <Link
-                href={activePerson.profile}
-                className="inline-flex items-center gap-2 bg-[#1B123D] hover:bg-[#2A1D5C] text-white px-[22px] py-[11px] text-[13px] leading-none tracking-wider font-semibold rounded-[3px] transition-colors duration-300 group"
-              >
-                <span>View Full Profile</span>
-                <span className="transform group-hover:translate-x-1 transition-transform">→</span>
-              </Link>
+              <Button href={activePerson.profile}>
+                View Full Profile
+              </Button>
             )}
           </div>
 

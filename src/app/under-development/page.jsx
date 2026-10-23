@@ -3,8 +3,8 @@
 import React, { useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import Link from 'next/link';
-import { Construction, ArrowLeft, Sparkles } from 'lucide-react';
+import Button from '@/components/common/Button';
+import { Construction, Sparkles } from 'lucide-react';
 
 export default function UnderDevelopmentPage() {
     const containerRef = useRef(null);
@@ -72,16 +72,9 @@ export default function UnderDevelopmentPage() {
                 </div>
 
                 {/* Action Button */}
-                <Link
-                    href="/"
-                    className="reveal-button group relative inline-flex items-center gap-2 px-8 py-4 bg-zinc-900 text-white rounded-full font-medium transition-transform hover:scale-105 active:scale-95 overflow-hidden shadow-md"
-                >
-                    <div className="absolute inset-0 w-full h-full bg-black/20 group-hover:bg-zinc-800 transition-colors" />
-                    <span className="relative z-10 flex items-center gap-2">
-                        <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-                        Back to Home
-                    </span>
-                </Link>
+                <Button href="/" className="reveal-button">
+                    Back to Home
+                </Button>
             </div>
         </div>
     );

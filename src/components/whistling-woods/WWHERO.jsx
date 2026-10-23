@@ -2,6 +2,7 @@
 
 import React, { useRef } from 'react';
 import useEntrance from '@/hooks/useEntrance';
+import Button from '@/components/common/Button';
 
 const WEBSITE = 'https://www.whistlingwoods.net/';
 
@@ -15,14 +16,15 @@ const WWHERO = () => {
         <section ref={heroRef} className="relative w-full min-h-svh lg:h-screen lg:min-h-[700px] flex flex-col bg-black overflow-hidden">
             {/* Background Image */}
             <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
+                {/* A 2560px copy of the 8192px original (W1/), so the first screen loads quickly */}
                 <img
-                    src="/img/final/WW/W1/0R2A2411_1_11zon_2_11zon.webp"
+                    src="/img/final/WW/W1/web/0R2A2411_1_11zon_2_11zon.webp"
                     alt=""
                     fetchPriority="high"
                     className="object-cover w-full h-full object-center"
                 />
                 {/* Dark overlay to keep the type readable */}
-                <div className="absolute inset-0 bg-black/50"></div>
+                <div className="absolute inset-0 bg-black/20"></div>
             </div>
 
             {/* Content Container */}
@@ -50,16 +52,10 @@ const WWHERO = () => {
                                 Whistling Woods International (WWI) and the Tata Institute of Social Sciences (TISS) team up to offer degree and diploma programmes in Filmmaking, Animation &amp; Game Design, Acting, Media &amp; Communication, Fashion, Music and Visual communication Design.
                             </p>
                             <div data-entrance="rise">
-                                <a
-                                    href={WEBSITE}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2 bg-[#1B123D] hover:bg-[#2A1D5C] text-white px-6 py-2.5 text-xs md:text-sm tracking-wider font-semibold rounded-[3px] transition-colors duration-300 group"
-                                >
-                                    <span>Visit Our Website</span>
-                                    <span aria-hidden="true" className="transform group-hover:translate-x-1 transition-transform">→</span>
+                                <Button onDark href={WEBSITE} external>
+                                    Visit Our Website
                                     <span className="sr-only">(opens in a new tab)</span>
-                                </a>
+                                </Button>
                             </div>
                         </div>
 

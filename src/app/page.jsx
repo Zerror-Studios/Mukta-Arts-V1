@@ -1,12 +1,10 @@
 import { preload } from "react-dom";
 import Hero from "@/components/home/Hero";
 import VideoSection from "@/components/home/VideoSection";
-import FilmsSection from "@/components/home/FilmsSection";
 import { createPageMetadata } from "@/lib/seo";
 import Elder from "@/components/home/Elder";
 import SpiralScene from "@/components/home/SpiralScene";
 import CardsShowcase from "@/components/home/CardsShowcase";
-import StackedCards from "@/components/home/StackedCards";
 import OldCamera from "@/components/home/OldCamera";
 import { MODEL_URL, MODEL_ENV_URL } from "@/lib/homeIntro";
 import FilmReel from "@/components/home/FilmReel";
@@ -24,7 +22,8 @@ const HomePage = () => {
       <SpiralScene />
       <Elder />
       <OldCamera />
-      {/* <FilmReel/> */}
+      <FilmReel />
+
       <CardsShowcase />
 
 
