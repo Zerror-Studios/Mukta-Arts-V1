@@ -6,8 +6,12 @@ import gsap from "gsap";
 import { MdOutlineArrowOutward } from "react-icons/md";
 import { MOTION_REDUCED } from "@/lib/motion";
 
+// The arrows' slide on hover (with reduced motion they swap at once)
+const ARROW_MOTION = "transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] motion-reduce:transition-none";
+
 // The header's Menu button, for every other call to action: it leans towards the cursor
-// (the label a little less, like Menu) and on hover an arrow slides in after the label.
+// (the label a little less, like Menu), with an arrow after the label that swaps for a fresh one
+// on hover.
 // Black on light sections; `onDark` makes it white with black text for dark sections.
 // `href` makes it a link (`external` opens it in a new tab), `as="span"` a purely visual one.
 // `className` goes on the magnetic area (spacing, `w-full`), `innerClassName` on the button itself.
@@ -55,12 +59,15 @@ const Button = ({
   const content = (
     <span ref={textRef} className="relative inline-flex items-center justify-center text-center">
       <span className="inline-flex items-center justify-center gap-2">{children}</span>
-      {/* Takes no room until hover, then opens up and the arrow rises in from the bottom left */}
-      <span
-        aria-hidden="true"
-        className="inline-flex overflow-hidden max-w-0 opacity-0 group-hover/btn:max-w-[1.5em] group-hover/btn:ml-1.5 group-hover/btn:opacity-100 group-focus-visible/btn:max-w-[1.5em] group-focus-visible/btn:ml-1.5 group-focus-visible/btn:opacity-100 group-disabled/btn:max-w-0 group-disabled/btn:ml-0 group-disabled/btn:opacity-0 transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]"
-      >
-        <MdOutlineArrowOutward className="shrink-0 -translate-x-full translate-y-full group-hover/btn:translate-0 group-focus-visible/btn:translate-0 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]" />
+      {/* Always shown. On hover it flies off to the top right and a second one rises in from the
+          bottom left to take its place; a disabled button keeps the first one still. */}
+      <span aria-hidden="true" className="relative inline-flex ml-1.5 overflow-hidden">
+        <MdOutlineArrowOutward
+          className={`shrink-0 group-hover/btn:translate-x-full group-hover/btn:-translate-y-full group-focus-visible/btn:translate-x-full group-focus-visible/btn:-translate-y-full group-disabled/btn:translate-0 ${ARROW_MOTION}`}
+        />
+        <MdOutlineArrowOutward
+          className={`absolute inset-0 shrink-0 -translate-x-full translate-y-full group-hover/btn:translate-0 group-focus-visible/btn:translate-0 group-disabled/btn:-translate-x-full group-disabled/btn:translate-y-full ${ARROW_MOTION}`}
+        />
       </span>
     </span>
   );

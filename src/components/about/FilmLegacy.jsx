@@ -400,7 +400,9 @@ const FilmLegacy = () => {
               opacity: i === 0 ? 1 : 0,
             }}
           >
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/85 to-black/60 backdrop-blur-[2px]"></div>
+            {/* No blur on phones: a full-screen backdrop blur is redone on every scroll frame there,
+                which is heavy on a phone's GPU, and under this much black the 2px of it doesn't show */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/85 to-black/60 backdrop-blur-[2px] phone:backdrop-blur-none"></div>
           </div>
         ))}
       </div>
@@ -574,13 +576,28 @@ const FilmLegacy = () => {
       </div>
 
       {/* Scroll guide; phones scroll the chapters like any page, so they go without */}
+
+      <div ref={hintRef}></div>
       <div
-        ref={hintRef}
-        className="pointer-events-none absolute bottom-5 md:bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2 text-[10px] md:text-xs font-['SwitzerM'] tracking-[0.25em] uppercase text-white/60 whitespace-nowrap phone:hidden"
+        className="pointer-events-none absolute bottom-5 md:bottom-8 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center gap-2 text-[10px] md:text-xs font-['SwitzerM'] tracking-[0.25em]  text-white/60 whitespace-nowrap phone:hidden"
       >
-        <p>Scroll to explore · or click a title</p>
-        <span className="relative h-8 w-[1px] overflow-hidden bg-white/20">
-          <span className="absolute inset-x-0 top-0 h-1/2 bg-white motion-safe:animate-[scroll-hint_1.6s_ease-in-out_infinite]" />
+        <p className="text-[14px]! ">Scroll to explore</p>
+        <span className="flex flex-col items-center -space-y-3" aria-hidden="true">
+          {[0].map((i) => (
+            <svg
+              key={i}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-5 w-5 md:h-6 md:w-6 text-white motion-safe:animate-[scroll-arrow_1.6s_ease-in-out_infinite]"
+              style={{ animationDelay: `${i * 0.2}s` }}
+            >
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          ))}
         </span>
       </div>
     </section>

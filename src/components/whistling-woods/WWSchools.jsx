@@ -71,8 +71,8 @@ const schoolsData = [
     id: "09",
     color: "#4D7C0F",
     name: "Short Course Unit",
-    description:
-      "Short-term programmes across specialised areas including filmmaking, production design and other creative disciplines.",
+    programs: [{ name: "Short-term programmes across specialised areas including filmmaking, production design and other creative disciplines.", duration: "" }],
+    
   },
 ];
 

@@ -294,7 +294,7 @@ export default function OldCamera() {
                     {/* Single View More Button placed directly after the text paragraph */}
                     <div ref={buttonRef} className="pt-2 pointer-events-auto w-fit">
                         <Button href="/subhash-ghai">
-                            View More
+                            Learn More
                         </Button>
                     </div>
                 </div>
@@ -308,6 +308,8 @@ export default function OldCamera() {
                             className="w-full h-full pointer-events-none"
                             // Full-screen canvas: capped at 1.5x it still looks sharp and draws ~45% fewer pixels than 2x
                             dpr={[1, 1.5]}
+                            // R3F needn't measure it again after every scroll: nothing here uses where it sits on the page
+                            resize={{ scroll: false }}
                         >
                             <ambientLight intensity={0.4} />
                             <directionalLight position={[5, 10, 5]} intensity={1.2} />

@@ -19,49 +19,50 @@ const TURN = Math.PI * 2;
 
 // Share of the header logo image's height that the headphones fill (the image has a little padding),
 // so the docked 3D logo ends the same size as the flat one it dissolves into
-const DOCK_FILL = 0.86;
+const DOCK_FILL = 0.95;
+// ...and how far it is nudged off the middle of the image (shares of the image's height), so it lands
+// right on the drawn headphones, Om on Om (measured against the logo image, seen head on)
+const DOCK_NUDGE_LEFT = 0.04;
+const DOCK_NUDGE_UP = 0.04;
 // Scrolling past this much of a screen (a fraction of the viewport height) sets off the trip up to
 // the header logo, which then plays through on its own over DOCK_DURATION seconds instead of
 // following the scroll; scrolling back above it plays the trip back down into the hero
 const DOCK_TRIGGER = 0.06;
-const DOCK_DURATION = 1.8;
+const DOCK_DURATION = 2;
 // Share of that trip after which it starts turning to face front (below it, it is back in the hero
 // and turning on its own)
 const DOCK_TURN_FROM = 0.03;
 // Share of that trip over which the model is brought round to face front (it starts turning
 // to the front on its own as soon as the trip starts; this makes sure it gets there in time).
 // It faces front before the dissolve starts, so the two never overlap at different angles.
-const DOCK_HOLD_FROM = 0.22;
-const DOCK_HOLD_TO = 0.62;
-// Share of the trip at which the model has reached the header logo's spot and size (the glide itself
-// takes about as long as before; the extra time goes to the dissolve)
-const DOCK_ARRIVE = 0.8;
-// From here to the end of the trip the model dissolves into the flat logo: over the last of its glide,
-// as it eases into place, and a moment sitting there (about 0.7s). The logo is still faint and soft
-// while the model covers its last few pixels, so nothing is seen sliding under it. Scrolling back up
-// plays it backwards, so the logo melts back into the model before it sets off.
-const DOCK_FADE_FROM = 0.62;
+const DOCK_HOLD_FROM = 0.2;
+const DOCK_HOLD_TO = 0.56;
+// Share of the trip at which the model has reached the header logo's spot and size (about 1.45s;
+// the rest of the trip goes to the dissolve)
+const DOCK_ARRIVE = 0.72;
+// From here to the end of the trip (about 0.9s) the model dissolves into the flat logo: over the last
+// of its glide, as it eases into place, and a moment sitting there. The flat logo rides on the model
+// while they blend (useFrame), so it can start coming in before the model stops without being seen
+// sliding under it. Scrolling back up plays it backwards, so the logo melts back into the model as
+// it sets off.
+const DOCK_FADE_FROM = 0.56;
 
 // The trip down into the footer, from when the footer's top comes into view to when it reaches the
 // top of the screen: the flat logo dissolves back into the model at the start, which eases off from
 // the corner as it does, and starts turning again on the way
 const FOOTER_START = 'top 80%';
 const FOOTER_END = 'top top';
-const FOOTER_FADE_TO = 0.12;
-// The model only sets off once the flat logo has all but gone, so no flat copy is left behind in the corner
+const FOOTER_FADE_TO = 0.2;
+// The model sets off from the corner part-way through that, taking what is left of the flat logo with it
 const FOOTER_TRAVEL_FROM = 0.06;
 const FOOTER_SPIN_FROM = 0.3;
 
-// Share of the dissolve over which each side fades. The flat logo (above the canvas) comes in over the
-// first part and the model goes out over the last, so they overlap in the middle and the logo never
-// dims part-way through, as it would if both faded at once.
-const FADE_SPAN = 0.6;
-// While it is faint, the flat logo is a little soft and a little larger, then sharpens and settles to its
-// size as it comes in. The model is rendered with lighting and the logo is a flat drawing, so a plain
-// crossfade shows the change in shading as a swap; this way the model reads as coming into focus as the
-// logo. Blur is a share of the logo's height, so it looks the same at every breakpoint.
-const FADE_BLUR = 0.08;
-const FADE_GROW = 0.06;
+// Share of the dissolve over which each side fades, each on its own gentle ease. The flat logo (above
+// the canvas) comes in over the first part and the model goes out over the last, so they overlap in
+// the middle and the logo never dims part-way through, as it would if both faded at once. Docked and
+// facing the camera, the model matches the logo in place, size, colour and sharpness, so a plain
+// crossfade is all it takes: softening either side would only add a difference to see.
+const FADE_SPAN = 0.7;
 // The footer model's scale, per breakpoint (desktop, tablet, phone). The model is sized by the screen's
 // height, so a tall screen 1024px or wider (a tablet held upright), where the footer stacks, gets the
 // tablet size. Keep in step with the `wide` variant in globals.css.
@@ -290,16 +291,21 @@ export function Model({ onDrawingChange, footerOnly = false, scale: baseScale = 
     if (groupRef.current) {
       const pos = groupRef.current.position;
       let scale = baseScale;
+      // The camera's own view, offset only for the docked look further down: everything here is
+      // measured with the plain one
+      if (camera.view?.enabled) camera.clearViewOffset();
 
       if (dockP > 0 || footerP > 0) {
         // The header logo's spot, and the scale at which the model is the logo's height on screen
         if (!els.logo || !els.logo.isConnected) els.logo = document.getElementById('header-dock-logo');
         let dockScale = baseScale;
+        // World units per screen pixel on the plane the model moves in (z = 0)
+        const worldPerPx = (2 * camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2))) / size.height;
         if (els.logo) {
           elementToWorld(els.logo, size, camera, _dockPos);
-          // World units per screen pixel on the plane the model moves in (z = 0)
-          const worldPerPx = (2 * camera.position.z * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2))) / size.height;
           const logoHeight = els.logo.getBoundingClientRect().height;
+          _dockPos.x -= DOCK_NUDGE_LEFT * logoHeight * worldPerPx;
+          _dockPos.y += DOCK_NUDGE_UP * logoHeight * worldPerPx;
           if (modelHeightRef.current && logoHeight) {
             dockScale = (logoHeight * worldPerPx * DOCK_FILL) / modelHeightRef.current;
           }
@@ -309,21 +315,46 @@ export function Model({ onDrawingChange, footerOnly = false, scale: baseScale = 
 
         // Up to the header logo: it rises a little ahead of moving across, so it curves up into the
         // corner, and shrinks evenly (by ratio, so it doesn't collapse at the start and crawl at the end).
-        // It is all but there (within about 1%) by the time it starts to dissolve into the flat logo.
+        // It is a few percent short of the spot as it starts to dissolve into the flat logo.
         const travel = easeInOut(dockP / DOCK_ARRIVE);
         const rise = 1 - (1 - travel) * (1 - travel);
         pos.set(_dockPos.x * travel, _dockPos.y * rise, 0);
         scale = baseScale * Math.pow(dockScale / baseScale, travel);
 
         // Down from the header logo into the footer, growing to its footer size on the way
+        let down = 0;
         if (footerP > 0) {
           if (!els.footer || !els.footer.isConnected) els.footer = document.getElementById('footer-headphone');
           if (els.footer) {
             elementToWorld(els.footer, size, camera, _footerPos);
-            const down = easeInOut((footerP - FOOTER_TRAVEL_FROM) / (1 - FOOTER_TRAVEL_FROM));
+            down = easeInOut((footerP - FOOTER_TRAVEL_FROM) / (1 - FOOTER_TRAVEL_FROM));
             pos.lerp(_footerPos, down);
             scale *= Math.pow(footerScaleFor(size) / scale, down);
           }
+        }
+
+        // While the two blend, the flat logo rides on the model: moved and scaled to wherever the model
+        // is on screen this frame, so they overlap exactly however far along the glide it is. Set here,
+        // with the pose this frame draws, so the logo never trails the model by a frame.
+        const img = els.mix > 0 && els.mix < 1 ? els.logo?.querySelector('img') : null;
+        if (img) {
+          const x = (pos.x - _dockPos.x) / worldPerPx;
+          const y = (_dockPos.y - pos.y) / worldPerPx;
+          img.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) scale(${(scale / dockScale).toFixed(4)})`;
+        }
+
+        // Moved out to the corner, the model is well off to the side of the camera (about 30° across and
+        // 17° up on a desktop screen), so it is seen partly from the side and from below, and stretched
+        // the way things are at the edge of a wide lens; the flat logo is drawn head on, so the Om sat
+        // a few pixels off the logo's and showed double as they blended. So as it glides up, more and
+        // more of the move is made by shifting the camera's view instead of the model: the model stays
+        // in front of the lens and is drawn head on, in the same place on screen. Docked,
+        // it lines up with the logo, Om on Om. Handed back to the model as it heads down to the footer.
+        // (This canvas draws nothing but the model, so shifting its view moves nothing else.)
+        const lens = travel * (1 - down);
+        if (lens > 0) {
+          camera.setViewOffset(size.width, size.height, (-pos.x * lens) / worldPerPx, (pos.y * lens) / worldPerPx, size.width, size.height);
+          pos.multiplyScalar(1 - lens);
         }
       } else {
         pos.set(0, 0, 0);
@@ -409,13 +440,14 @@ export function Model({ onDrawingChange, footerOnly = false, scale: baseScale = 
         logo.style.opacity = opacity.toFixed(3);
         logo.style.visibility = opacity > 0 ? 'visible' : 'hidden';
         logo.style.pointerEvents = mix > 0.5 ? 'auto' : 'none';
-        // On the image, not the link, so the link's box (which the model is placed and sized by) never changes
+        // Moved along with the model (useFrame) only while both are showing; back in its own place at
+        // either end. On the image, not the link, so the link's box (which the model is placed and
+        // sized by) never changes.
         const img = logo.querySelector('img');
         if (img) {
-          const soft = opacity > 0 && opacity < 1 ? 1 - opacity : 0;
-          img.style.filter = soft ? `blur(${(soft * FADE_BLUR * img.offsetHeight).toFixed(2)}px)` : '';
-          img.style.transform = soft ? `scale(${(1 + soft * FADE_GROW).toFixed(4)})` : '';
-          img.style.willChange = soft ? 'opacity, filter, transform' : '';
+          const blending = mix > 0 && mix < 1;
+          if (!blending) img.style.transform = '';
+          img.style.willChange = blending ? 'transform' : '';
         }
       }
       if (mix >= 1) setDrawing(false);
@@ -427,7 +459,8 @@ export function Model({ onDrawingChange, footerOnly = false, scale: baseScale = 
       if (!els.canvas) return;
       const { dockP, footerP } = stateRef.current;
 
-      const mix = smooth((dockP - DOCK_FADE_FROM) / (1 - DOCK_FADE_FROM)) * (1 - smooth(footerP / FOOTER_FADE_TO));
+      // Linear here: each side is eased on its own in fade() (eased twice, it rushed through the middle)
+      const mix = clamp01((dockP - DOCK_FADE_FROM) / (1 - DOCK_FADE_FROM)) * (1 - clamp01(footerP / FOOTER_FADE_TO));
       if (mix !== els.mix) {
         els.mix = mix;
         fade(mix);
@@ -512,7 +545,6 @@ export function Model({ onDrawingChange, footerOnly = false, scale: baseScale = 
         els.logo.style.pointerEvents = '';
         const img = els.logo.querySelector('img');
         if (img) {
-          img.style.filter = '';
           img.style.transform = '';
           img.style.willChange = '';
         }
@@ -606,7 +638,12 @@ export default function HeadphonesCanvas({ footerOnly = false }) {
     // Never takes the pointer (it covers the whole screen, over the footer too): dragging the model
     // is picked up on the window instead (Model)
     // Off the home page it starts hidden behind the header logo (Model shows it when the footer comes in)
-    <div id="hero-logo-canvas" className={`fixed inset-0 z-10 pointer-events-none flex items-center justify-center ${footerOnly ? 'opacity-0' : ''}`}>
+    // A full screen tall in vh, not pinned to the bottom (inset-0): on phones the screen's height
+    // changes as the address bar slides away and back while scrolling, and a canvas that followed it
+    // would be resized mid-scroll, reallocating its drawing buffer and changing the camera's aspect
+    // so the logo jumped in size and place. 100vh is the screen with the bar away, which never
+    // changes; with the bar showing, the bit below the screen is simply out of sight.
+    <div id="hero-logo-canvas" className={`fixed top-0 inset-x-0 h-screen z-10 pointer-events-none flex items-center justify-center ${footerOnly ? 'opacity-0' : ''}`}>
       <div id="3d-canvas-container" className="w-full h-full pointer-events-none">
         <Canvas
           key={contextKey}
@@ -618,6 +655,8 @@ export default function HeadphonesCanvas({ footerOnly = false }) {
           frameloop={drawing ? "always" : "never"}
           // Full-screen canvas: capped at 1.5x it looks the same and draws ~45% fewer pixels than 2x
           dpr={[1, 1.5]}
+          // Fixed to the screen, so it never moves: R3F needn't measure it again after every scroll
+          resize={{ scroll: false }}
         >
           <ambientLight intensity={1} />
           <directionalLight position={[10, 10, 5]} intensity={0} />

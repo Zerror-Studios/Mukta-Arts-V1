@@ -24,11 +24,13 @@ export default function LenisScroll({ children }) {
       lerp: 0.05, // how much of the remaining distance each frame covers; lower glides longer
       wheelMultiplier: 0.7,
       smoothWheel: true,
-      // Touch is eased too, so phones and tablets glide like the wheel and the scrubbed
-      // sections stay in step with the finger instead of the browser's own momentum
-      syncTouch: true,
-      syncTouchLerp: 0.08,
-      touchInertiaExponent: 1.5,
+      // Touch is left to the browser. Eased by Lenis (syncTouch), every swipe was cancelled and
+      // replayed from JavaScript a frame at a time, so the page trailed the finger, the momentum
+      // wasn't the phone's own, and any busy frame (the 3D canvases) stalled the scroll itself.
+      // The browser scrolls touch off the main thread, so it stays smooth while the page works.
+      // Lenis still follows that scroll, so ScrollTrigger and lenis.scrollTo keep working.
+      // (Horizontal drags that must not turn into a pan opt out with touch-action: pan-y.)
+      syncTouch: false,
       gestureOrientation: "vertical",
       anchors: true, // in-page #links glide through Lenis as well
       autoRaf: false, // driven by GSAP's ticker below

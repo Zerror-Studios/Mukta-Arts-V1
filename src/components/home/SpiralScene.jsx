@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useRef, useMemo, Suspense } from "react";
-import { Canvas, useFrame, extend } from "@react-three/fiber";
+import React, { useRef, useMemo, useEffect, Suspense } from "react";
+import { Canvas, useFrame, useThree, extend } from "@react-three/fiber";
 import { shaderMaterial, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { useGSAP } from "@gsap/react";
@@ -181,15 +181,33 @@ function placeCardOnSpiral(geometry, arcPos, uvWrittenMap, cardIdx, scale = 1) {
 // =============================================
 // SpiralCards — the 3D scene content
 // =============================================
-const SpiralCards = ({ progressRef }) => {
+const SpiralCards = ({ progressRef, invalidateRef }) => {
   const meshRefs = useRef([]);
   const textures = useTexture(images);
   const uvWritten = useRef({});
   const smoothP = useRef(0);
   const hoverStates = useRef(new Array(NUM_CARDS).fill(false));
   const hoverScales = useRef(new Array(NUM_CARDS).fill(1));
+  // Where each card was last laid along the spiral, and at what hover scale, so a card that hasn't
+  // moved isn't rebuilt and sent to the GPU again
+  const placed = useRef([]);
   // The nine posters go up to the GPU now, not on the first frame the spiral is scrolled to
   useGpuWarmup();
+
+  // The canvas only draws when asked (frameloop "demand"): by the scroll (SpiralScene hands it this),
+  // by a hover, and by itself while it is still easing after either. Coming back into view
+  // ("never" to "demand") it draws once straight away.
+  const invalidate = useThree((state) => state.invalidate);
+  const frameloop = useThree((state) => state.frameloop);
+  useEffect(() => {
+    invalidateRef.current = invalidate;
+    return () => {
+      invalidateRef.current = null;
+    };
+  }, [invalidate, invalidateRef]);
+  useEffect(() => {
+    if (frameloop === "demand") invalidate();
+  }, [frameloop, invalidate]);
 
   // Create one PlaneGeometry per card (shared would cause conflicts)
   const geometries = useMemo(() => {
@@ -205,10 +223,13 @@ const SpiralCards = ({ progressRef }) => {
     });
   }, []);
 
-  useFrame((_, delta) => {
-    // Smooth interpolation of scroll progress
+  useFrame((state, delta) => {
+    // Smooth interpolation of scroll progress; once it has caught up (well under a pixel) it lands
+    // exactly and the canvas stops drawing until the scroll moves again
     const target = progressRef.current;
     smoothP.current += (target - smoothP.current) * 0.1;
+    let easing = Math.abs(target - smoothP.current) > 1e-5;
+    if (!easing) smoothP.current = target;
     const p = smoothP.current;
 
     // Reference formula for arc offset:
@@ -216,12 +237,16 @@ const SpiralCards = ({ progressRef }) => {
     const arcOffset =
       p * (TOTAL_ARC + TOTAL_CARDS_LENGTH) - TOTAL_CARDS_LENGTH + 25;
 
-    // Smoothly interpolate hover scales
-    const lerpSpeed = 1 - Math.pow(0.001, delta);
+    // Smoothly interpolate hover scales. The first frame after the canvas has been idle reports all
+    // the time since its last one, so the step is capped or the hover would jump straight to full size.
+    const lerpSpeed = 1 - Math.pow(0.001, Math.min(delta, 1 / 30));
     for (let i = 0; i < NUM_CARDS; i++) {
       const targetScale = hoverStates.current[i] ? 1.1 : 1;
       hoverScales.current[i] += (targetScale - hoverScales.current[i]) * lerpSpeed;
+      if (Math.abs(targetScale - hoverScales.current[i]) > 1e-4) easing = true;
+      else hoverScales.current[i] = targetScale;
     }
+    if (easing) state.invalidate();
 
     for (let i = 0; i < NUM_CARDS; i++) {
       const mesh = meshRefs.current[i];
@@ -233,14 +258,13 @@ const SpiralCards = ({ progressRef }) => {
       mesh.visible = visible;
       if (!visible) continue;
 
-      // Deform mesh vertices to follow the spiral (with hover scale)
-      placeCardOnSpiral(
-        mesh.geometry,
-        Math.min(cardArcPos, TOTAL_ARC - 0.001),
-        uvWritten.current,
-        i,
-        hoverScales.current[i]
-      );
+      // Deform mesh vertices to follow the spiral (with hover scale), unless it is already there
+      const arcPos = Math.min(cardArcPos, TOTAL_ARC - 0.001);
+      const last = placed.current[i];
+      if (!last || last.arcPos !== arcPos || last.scale !== hoverScales.current[i]) {
+        placeCardOnSpiral(mesh.geometry, arcPos, uvWritten.current, i, hoverScales.current[i]);
+        placed.current[i] = { arcPos, scale: hoverScales.current[i] };
+      }
 
       // Set renderOrder higher for hovered cards so they appear on top
       mesh.renderOrder = hoverStates.current[i] ? 10 : 1;
@@ -267,10 +291,12 @@ const SpiralCards = ({ progressRef }) => {
             e.stopPropagation();
             hoverStates.current[i] = true;
             document.body.style.cursor = "pointer";
+            invalidate();
           }}
           onPointerOut={() => {
             hoverStates.current[i] = false;
             document.body.style.cursor = "auto";
+            invalidate();
           }}
         >
           <primitive object={geometries[i]} attach="geometry" />
@@ -293,6 +319,8 @@ export default function SpiralScene() {
   const progressRef = useRef(0);
 
   const timelineRef = useRef(null);
+  // Asks the canvas for a frame (it only draws on demand); set by SpiralCards once it is up
+  const invalidateRef = useRef(null);
   // The nine card textures load once the home intro has played; the canvas only draws near the screen
   const cardsOn = useAfterIntro();
   const inView = useInView(containerRef);
@@ -314,6 +342,9 @@ export default function SpiralScene() {
           end: "bottom -120%",
           scrub: true,
           onUpdate: (self) => {
+            // The spiral has moved on with the scroll: draw it
+            invalidateRef.current?.();
+
             if (self.progress > 0.95 && !filmsVisible) {
               filmsVisible = true;
 
@@ -406,15 +437,20 @@ export default function SpiralScene() {
 
         <Canvas
           className="spiral-canvas relative z-[1]"
-          frameloop={inView ? "always" : "never"}
+          // Only draws when the scroll or a hover changes something (see SpiralCards), not on every
+          // frame while it sits still on screen: on a phone that was a full-screen redraw at 60fps
+          // for nothing, competing with the scroll for the GPU
+          frameloop={inView ? "demand" : "never"}
           // Full-screen canvas: capped at 1.5x it looks the same and draws ~45% fewer pixels than 2x
           dpr={[1, 1.5]}
+          // R3F needn't measure it again after every scroll: nothing here uses where it sits on the page
+          resize={{ scroll: false }}
           camera={{ position: [0, 0, 22], fov: 52 }}
           gl={{ antialias: true, alpha: true }}
           style={{ background: "transparent" }}
         >
           <Suspense fallback={null}>
-            {cardsOn && <SpiralCards progressRef={progressRef} />}
+            {cardsOn && <SpiralCards progressRef={progressRef} invalidateRef={invalidateRef} />}
           </Suspense>
         </Canvas>
       </div>

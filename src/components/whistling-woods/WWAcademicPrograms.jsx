@@ -98,6 +98,9 @@ export default function WWAcademicPrograms({ rippleIntensity = DEFAULT_INTENSITY
         start: "top top",
         end: () => `+=${window.innerHeight * NUM_ITEMS}`,
         pin: true,
+        // Sets the pin a moment early on a fast flick, so it doesn't visibly jump as it catches the
+        // section (on phones the page scrolls ahead of the script)
+        anticipatePin: 1,
         scrub: 1,
         invalidateOnRefresh: true,
         onUpdate: (self) => {

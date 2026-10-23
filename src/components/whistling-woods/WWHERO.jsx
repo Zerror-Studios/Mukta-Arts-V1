@@ -34,7 +34,7 @@ const WWHERO = () => {
                 <div className="flex-1 flex items-center justify-center">
                     <h1
                         data-entrance="words"
-                        className="font-['SwitzerSB'] text-white uppercase text-center text-[clamp(2rem,9vw,5rem)] leading-[1.05]"
+                        className="font-['SwitzerSB'] text-white max-sm:mt-20 uppercase text-center text-[clamp(2rem,9vw,5rem)] leading-[1.05]"
                     >
                         Whistling Woods International
                     </h1>

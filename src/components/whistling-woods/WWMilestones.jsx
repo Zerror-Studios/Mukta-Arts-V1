@@ -205,6 +205,24 @@ const WWMilestones = () => {
         }
     };
 
+    // Skip: glides past the rest of the years to the top of the next section (Where Our Alumni
+    // Work), which starts where this one ends. Same ease as the skip on Subhash Ghai's timeline.
+    const handleSkip = () => {
+        const el = sectionRef.current;
+        if (!el) return;
+        const y = el.getBoundingClientRect().top + window.scrollY + el.offsetHeight;
+
+        if (!window.lenis) {
+            smoothScrollTo(y);
+            return;
+        }
+        window.lenis.scrollTo(y, {
+            duration: 1.6,
+            easing: (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2),
+            force: true,
+        });
+    };
+
     const paragraphs = UNIQUE_DATA[active]?.text.split('\n\n') || [];
 
     return (
@@ -371,6 +389,25 @@ const WWMilestones = () => {
                         })}
                     </div>
                 </div>
+
+                {/* Skip, pinned to the bottom centre of the screen while the wheel turns */}
+                <button
+                    type="button"
+                    onClick={handleSkip}
+                    className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-30 group flex items-center gap-2 px-5 py-2.5  border border-white/30 bg-white/5 backdrop-blur-sm font-['SwitzerM'] text-[12px] md:text-[13px]  tracking-wider whitespace-nowrap text-white cursor-pointer transition-colors duration-300 hover:bg-white hover:border-white hover:text-[#1B123D] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+                >
+                    Skip Milestones
+                    <svg
+                        aria-hidden="true"
+                        viewBox="0 0 12 12"
+                        className="w-2.5 h-2.5 transition-transform duration-300 group-hover:translate-y-0.5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                    >
+                        <path d="M6 1v10M2 7l4 4 4-4" />
+                    </svg>
+                </button>
             </div>
 
             <style

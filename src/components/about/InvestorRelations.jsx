@@ -47,7 +47,7 @@ const DocRow = ({ doc, onView, compact = false }) => {
       }`}
     >
       <div className="flex items-start gap-3 min-w-0 flex-1">
-        <span className="mt-0.5 grid place-items-center w-9 h-9 shrink-0 rounded-[3px] bg-[#1B123D]/[0.06] text-[#1B123D]">
+        <span className="mt-0.5 grid place-items-center w-9 h-9 shrink-0 rounded-[3px] bg-[black]/[0.06] text-[black]">
           <Icon strokeWidth={1.5} className="w-4.5 h-4.5" />
         </span>
         <div className="min-w-0">
@@ -64,7 +64,7 @@ const DocRow = ({ doc, onView, compact = false }) => {
           <button
             type="button"
             onClick={() => onView(doc)}
-            className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-[3px] border border-[#1B123D]/25 text-[#1B123D] text-xs font-semibold tracking-wide hover:border-[#1B123D] hover:bg-[#1B123D]/[0.04] transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1B123D]"
+            className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-[3px] border border-[black] text-[black] text-xs font-semibold tracking-wide hover:border-[black] hover:bg-[black]/[0.04] transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[black]"
           >
             <Eye strokeWidth={1.75} className="w-4 h-4" />
             View
@@ -74,7 +74,7 @@ const DocRow = ({ doc, onView, compact = false }) => {
           href={doc.href}
           download={fileName(doc.href)}
           aria-label={`Download ${doc.title}`}
-          className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-[3px] bg-[#1B123D] hover:bg-[#2A1D5C] text-white text-xs font-semibold tracking-wide transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1B123D]"
+          className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-[3px] bg-[black] hover:bg-[black] text-white text-xs font-semibold tracking-wide transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[black]"
         >
           <Download strokeWidth={1.75} className="w-4 h-4" />
           Download
@@ -145,8 +145,8 @@ const Section = ({ section, defaultOpen, isFirst, onView }) => {
                   onClick={() => setYearIndex(i)}
                   className={`h-8 px-3 rounded-full text-xs font-semibold tabular-nums tracking-wide border transition-colors cursor-pointer ${
                     i === yearIndex
-                      ? "bg-[#1B123D] border-[#1B123D] text-white"
-                      : "border-black/15 text-[#444] hover:border-[#1B123D] hover:text-[#1B123D]"
+                      ? "bg-[black] border-[black] text-white"
+                      : "border-black/15 text-[#444] hover:border-[black] hover:text-[black]"
                   }`}
                 >
                   {yearLabel(year.title)}
@@ -200,10 +200,10 @@ const UnclaimedDividend = ({ onView }) => {
     <div className="mt-4">
       <Button onClick={() => setIsOpen(!isOpen)} aria-expanded={isOpen}>
         {unclaimedDividend.title}
-        <ChevronDown
+        {/* <ChevronDown
           strokeWidth={2}
           className={`w-4 h-4 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
-        />
+        /> */}
       </Button>
       <div ref={contentRef} className="overflow-hidden">
         <div className="pt-[20px]">
@@ -216,7 +216,7 @@ const UnclaimedDividend = ({ onView }) => {
                   href={unclaimedDividend.introLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-black underline underline-offset-2 break-all hover:text-[#1B123D]"
+                  className="text-black underline underline-offset-2 break-all hover:text-[black]"
                 >
                   {unclaimedDividend.introLink.replace(/^https?:\/\//, "")}
                 </a>
@@ -279,7 +279,7 @@ const PdfViewer = ({ doc, onClose }) => {
             <a
               href={doc.href}
               download={fileName(doc.href)}
-              className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-[3px] bg-[#1B123D] hover:bg-[#2A1D5C] text-white text-xs font-semibold tracking-wide transition-colors"
+              className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-[3px] bg-[black] hover:bg-[black] text-white text-xs font-semibold tracking-wide transition-colors"
             >
               <Download strokeWidth={1.75} className="w-4 h-4" />
               <span className="max-sm:hidden">Download</span>
@@ -289,7 +289,7 @@ const PdfViewer = ({ doc, onClose }) => {
               type="button"
               onClick={onClose}
               aria-label="Close viewer"
-              className="grid place-items-center w-9 h-9 rounded-[3px] border border-black/15 text-black hover:bg-black/[0.04] transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1B123D]"
+              className="grid place-items-center w-9 h-9 rounded-[3px] border border-black/15 text-black hover:bg-black transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[black]"
             >
               <X strokeWidth={1.75} className="w-4.5 h-4.5" />
             </button>
@@ -368,8 +368,8 @@ const InvestorRelations = () => {
                   onClick={() => setActiveId(category.id)}
                   className={`shrink-0 inline-flex items-center gap-2 h-10 px-4  text-sm font-medium border transition-colors cursor-pointer ${
                     selected
-                      ? "bg-[#1B123D] border-[#1B123D] text-white"
-                      : "border-black/15 text-[#333] hover:border-[#1B123D] hover:text-[#1B123D]"
+                      ? "bg-[black] border-[black] text-white"
+                      : "border-black/15 text-[#333] hover:border-[black] hover:text-[black]"
                   }`}
                 >
                   {category.title}

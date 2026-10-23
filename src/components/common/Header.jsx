@@ -30,6 +30,10 @@ const Header = () => {
   const pathname = usePathname();
   const isTransitioningRef = useRef(false);
 
+  // The menu link for the page we're on stays in its hover state (without a trailing slash, so
+  // "/about/" still matches "/about")
+  const currentPath = pathname.length > 1 ? pathname.replace(/\/$/, '') : pathname;
+
   const { contextSafe } = useGSAP({ scope: containerRef });
 
   const createTimeline = contextSafe(() => {
@@ -279,26 +283,35 @@ const Header = () => {
                   <div
                     className={`flex flex-col gap-1 ml-6 md:ml-8 overflow-hidden transition-all duration-500 ease-in-out ${openDropdown === index ? 'max-h-80 opacity-100 mt-4 mb-2' : 'max-h-0 opacity-0 mt-0 mb-0'}`}
                   >
-                    {item.dropdown.map((subItem, subIndex) => (
-                      <div key={subIndex} className="overflow-hidden">
-                        <a
-                          href={subItem.url}
-                          onClick={(e) => handleLinkClick(e, subItem.url)}
-                          className="block w-fit group menu-subitem-text translate-y-full"
-                        >
-                          <span className="relative inline-block text-white/70 group-hover:text-white transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-skew-x-12 group-hover:translate-x-5 text-lg md:text-xl font-light transform origin-left">
-                            <span className="absolute -left-4 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></span>
-                            {subItem.name}
-                          </span>
-                        </a>
-                      </div>
-                    ))}
+                    {item.dropdown.map((subItem, subIndex) => {
+                      const isCurrent = subItem.url === currentPath;
+                      return (
+                        <div key={subIndex} className="overflow-hidden">
+                          <a
+                            href={subItem.url}
+                            onClick={(e) => handleLinkClick(e, subItem.url)}
+                            aria-current={isCurrent ? 'page' : undefined}
+                            className="block w-fit group menu-subitem-text translate-y-full"
+                          >
+                            <span className={`relative inline-block ${isCurrent ? 'text-white -skew-x-12 translate-x-5' : 'text-white/70'} group-hover:text-white transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-skew-x-12 group-hover:translate-x-5 text-lg md:text-xl font-light transform origin-left`}>
+                              <span className={`absolute -left-4 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-white rounded-full ${isCurrent ? 'opacity-100' : 'opacity-0'} group-hover:opacity-100 transition-opacity duration-500`}></span>
+                              {subItem.name}
+                            </span>
+                          </a>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               ) : (
-                <a href={item.url} onClick={(e) => handleLinkClick(e, item.url)} className="py-2 md:py-1 block overflow-hidden group">
+                <a
+                  href={item.url}
+                  onClick={(e) => handleLinkClick(e, item.url)}
+                  aria-current={item.url === currentPath ? 'page' : undefined}
+                  className="py-2 md:py-1 block overflow-hidden group"
+                >
                   <div className="menu-item-text translate-y-full text-white">
-                    <h4 className="inline-block font-light! transform origin-left transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-skew-x-12 group-hover:translate-x-4">
+                    <h4 className={`inline-block font-light! transform origin-left transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-skew-x-12 group-hover:translate-x-4 ${item.url === currentPath ? '-skew-x-12 translate-x-4' : ''}`}>
                       {item.name}
                     </h4>
                   </div>

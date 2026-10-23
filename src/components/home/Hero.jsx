@@ -162,7 +162,10 @@ const Hero = () => {
   );
 
   return (
-    <section ref={heroRef} className="relative w-full h-[100svh] overflow-x-hidden  bg-white px-5 py-20  sm:px-10 sm:py-10 md:max-lg:pt-20 text-black overflow-hidden flex flex-col items-center justify-between">
+    // touch-pan-y: on touch screens the browser scrolls the page with vertical swipes only, so a
+    // sideways swipe stays with the page and turns the model (HeadphonesModel listens on the window)
+    // instead of being taken over as a pan and cancelled. Pinch zoom is kept.
+    <section ref={heroRef} className="relative w-full h-[100svh] overflow-x-hidden  bg-white px-5 py-20  sm:px-10 sm:py-10 md:max-lg:pt-20 text-black overflow-hidden flex flex-col items-center justify-between touch-pan-y touch-pinch-zoom">
 
       {/* Huge Background Text */}
       <div className="  w-full  text-center flex justify-start   items-start z-0 select-none pointer-events-none">

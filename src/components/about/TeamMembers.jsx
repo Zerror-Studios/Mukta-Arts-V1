@@ -78,22 +78,26 @@ const TeamMembers = () => {
         start: "top top",
         end: `+=${team.length * 150}`, // Scrolling length to get through all members
         pin: true,
+        // Sets the pin a moment early on a fast flick, so it doesn't visibly jump as it catches the
+        // section (on phones the page scrolls ahead of the script)
+        anticipatePin: 1,
         scrub: 1,
         onUpdate: (self) => {
           const progress = self.progress;
           const newIndex = Math.round(progress * (team.length - 1));
 
-          // Draw the line and indicator smoothly and continuously based on raw scroll progress
+          // Draw the line and indicator smoothly and continuously based on raw scroll progress.
+          // Both by transform (the line is scaled down its full height), so no scroll frame
+          // makes the browser lay the section out again.
           const inner = namesInnerRef.current;
-          const itemHeight = inner?.firstElementChild?.offsetHeight || 48;
-          const trackHeight = lineTrackRef.current ? lineTrackRef.current.offsetHeight : (team.length - 1) * itemHeight;
-          const currentLineHeight = progress * trackHeight;
-          gsap.set(indicatorRef.current, { y: currentLineHeight });
-          gsap.set(lineFillRef.current, { height: currentLineHeight });
+          const trackHeight = lineTrackRef.current?.offsetHeight ?? 0;
+          gsap.set(indicatorRef.current, { y: progress * trackHeight });
+          gsap.set(lineFillRef.current, { scaleY: progress });
 
           if (newIndex === current) return;
           current = newIndex;
           setActiveIndex(newIndex);
+          const itemHeight = inner?.firstElementChild?.offsetHeight || 48;
 
           // Auto-scroll the names list up if it goes beyond the visible container
           if (inner && inner.parentElement) {
@@ -150,8 +154,8 @@ const TeamMembers = () => {
             {/* Bold solid line that draws down */}
             <div
               ref={lineFillRef}
-              className="absolute top-0 left-1/2 -translate-x-1/2 w-[2px] bg-black"
-              style={{ height: "0px" }}
+              className="absolute top-0 left-1/2 -translate-x-1/2 w-[2px] h-full origin-top bg-black"
+              style={{ transform: "scaleY(0)" }}
             ></div>
 
             {/* Indicator Square */}
