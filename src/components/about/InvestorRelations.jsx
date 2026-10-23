@@ -235,7 +235,7 @@ const PdfViewer = ({ doc, onClose }) => {
   const closeRef = useRef(null);
 
   useEffect(() => {
-    // The page stays put behind the viewer
+    
     window.lenis?.stop();
     const prevOverflow = document.documentElement.style.overflow;
     document.documentElement.style.overflow = "hidden";
