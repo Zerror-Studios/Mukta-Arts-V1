@@ -4,6 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import useScrollReveal from "@/hooks/useScrollReveal";
 import useInfiniteDragSlider from "@/hooks/useInfiniteDragSlider";
+import useInView from "@/hooks/useInView";
 
 // 2560px copies of the photos in W2/ (up to 7952px and 6MB there), so Next's resizer works from a small file
 const W2 = "/img/final/WW/W2/web/";
@@ -54,6 +55,11 @@ const WWlast = () => {
     // Heading reveal as the section enters
     useScrollReveal(sectionRef);
 
+    // Native lazy loading only looks ahead vertically, so tiles sliding in from the clipped
+    // right edge started loading as they came into view (and on mobile Safari often never did).
+    // Once the section is a screen or so away, every tile is fetched instead.
+    const loadImages = useInView(sectionRef, "100%", true);
+
     // Auto-scrolling strip that glides after a drag and eases back into its own speed
     // (same speed as before: 7 seconds per image, whatever the image count)
     useInfiniteDragSlider(containerRef, trackRef, {
@@ -92,6 +98,7 @@ const WWlast = () => {
                                 src={item.src}
                                 alt={index < carouselItems.length ? item.alt : ""}
                                 fill
+                                loading={loadImages ? "eager" : "lazy"}
                                 sizes="(max-width: 768px) 80vw, 40vw"
                                 className="object-cover"
                                 quality={90}
