@@ -63,9 +63,6 @@ const AboutEcosystem = () => {
 
       const x = e.clientX - rect.left - imageWidth / 2;
       const y = e.clientY - rect.top - imageHeight / 2;
-
-      // Calculate a slight rotation based on mouse X position relative to the screen width
-      // This gives a value between -1 and 1, which we multiply by 15 for max 15 degrees rotation
       const normalizedX = (e.clientX / window.innerWidth) * 2 - 1;
       const rotation = normalizedX * 12;
 
