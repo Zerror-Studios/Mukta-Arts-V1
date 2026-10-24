@@ -2,7 +2,7 @@
 import React from 'react';
 import { usePathname } from 'next/navigation';
 import Button from '@/components/common/Button';
-import { siteConfig } from '@/config/site';
+import { SITE } from '@/lib/seo/site';
 // A plain import, not next/dynamic: the lazy wrapper remounted the canvas once the model loaded,
 // and R3F's unmount throws away the WebGL context of the canvas it then reuses
 import HeadphonesCanvas from '@/components/home/HeadphonesModel';
@@ -20,7 +20,7 @@ const FOOTER_LINKS = [
 const SOCIALS = [
   {
     label: "Instagram",
-    href: siteConfig.socials.instagram,
+    href: SITE.social.instagram,
     size: 22,
     icon: (
       <>
@@ -32,7 +32,7 @@ const SOCIALS = [
   },
   {
     label: "LinkedIn",
-    href: siteConfig.socials.linkedin,
+    href: SITE.social.linkedin,
     size: 22,
     icon: (
       <>
@@ -44,7 +44,7 @@ const SOCIALS = [
   },
   {
     label: "YouTube",
-    href: siteConfig.socials.youtube,
+    href: SITE.social.youtube,
     size: 24,
     icon: (
       <>
@@ -55,7 +55,7 @@ const SOCIALS = [
   },
   {
     label: "Facebook",
-    href: siteConfig.socials.facebook,
+    href: SITE.social.facebook,
     size: 22,
     icon: <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>,
   },

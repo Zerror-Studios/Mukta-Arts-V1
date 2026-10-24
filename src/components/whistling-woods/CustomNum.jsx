@@ -95,18 +95,19 @@ const CustomNum = () => {
     }, { scope: containerRef });
 
     return (
-        <section ref={containerRef} className="bg-[#FAFAFA] py-24 md:py-32 lg:py-40 px-4 md:px-8 lg:px-10  overflow-hidden">
+        <section ref={containerRef} className=" py-24 md:py-32 lg:py-40 px-4 md:px-8 lg:px-10  overflow-hidden">
             <div className=" mx-auto">
 
                 {/* Scroll Reveal Text */}
-                <div className="mb-24 md:mb-36 lg:mb-44 flex justify-center max-w-[80%] mx-auto">
+                <div className="mb-24 md:mb-36 lg:mb-44 flex justify-center max-w-[95%] sm:max-w-[80%] mx-auto">
                     <h5
                         ref={textRef}
                         className="text-[28px] md:text-4xl lg:text-[2.75rem] text-center w-full leading-[1.3] font-medium tracking-tight"
                     >
+                        {/* The space after each word is not drawn (end of an inline-block), but the HTML reads as a sentence */}
                         {textContent.split(" ").map((word, index) => (
                             <span key={index} className="word inline-block mr-[0.25em]">
-                                {word}
+                                {word}{" "}
                             </span>
                         ))}
                     </h5>
@@ -125,7 +126,8 @@ const CustomNum = () => {
                                         {stat.prefix}
                                     </span>
                                 )}
-                                <span className="stat-num" data-target={stat.target}>0</span>
+                                {/* The final value, so it reads without JS; the scroll animation counts up from 0 */}
+                                <span className="stat-num" data-target={stat.target}>{stat.target.toLocaleString('en-US')}</span>
                                 {stat.suffix}
                             </h4>
                             <div className="pr-4">

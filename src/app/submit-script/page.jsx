@@ -1,10 +1,13 @@
 import SubmitScriptPage from "@/components/submit-script/SubmitScriptPage";
 import LocationInfo from "@/components/submit-script/LocationInfo";
-import { createPageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/seo/JsonLd";
+import { buildMetadata, PAGES } from "@/lib/seo/metadata";
+import pageSchema from "@/lib/seo/schema/submit-script.json";
 
 const page = () => {
     return (
         <>
+            <JsonLd data={pageSchema} />
             {/* Large files go through Vercel Blob when a store is connected, otherwise straight to the API route */}
             <SubmitScriptPage blobUploads={Boolean(process.env.BLOB_READ_WRITE_TOKEN)} />
             <LocationInfo />
@@ -14,6 +17,4 @@ const page = () => {
 
 export default page;
 
-export async function generateMetadata(_props, parent) {
-    return createPageMetadata("/submit-script", await parent);
-}
+export const metadata = buildMetadata(PAGES.submitScript);

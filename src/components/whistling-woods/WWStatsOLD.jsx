@@ -112,14 +112,15 @@ const WWStats = () => {
             <div className=" mx-auto">
 
                 {/* Scroll Reveal Text */}
-                <div className="mb-16 md:mb-36 lg:mb-44 flex justify-center max-w-[80%] mx-auto">
+                <div className="mb-16 md:mb-36 lg:mb-44 flex justify-center max-w-[95%] sm:max-w-[80%] mx-auto">
                     <h5
                         ref={textRef}
                         className="text-[28px] md:text-4xl lg:text-[2.75rem] max-sm:text-[1.5rem]! max-sm:leading-[1.3]! text-center w-full  leading-[1.3] font-medium tracking-tight"
                     >
+                        {/* The space after each word is not drawn (end of an inline-block), but the HTML reads as a sentence */}
                         {textContent.split(" ").map((word, index) => (
                             <span key={index} className="word inline-block mr-[0.25em]">
-                                {word}
+                                {word}{" "}
                             </span>
                         ))}
                     </h5>
@@ -138,7 +139,8 @@ const WWStats = () => {
                                         {stat.prefix}
                                     </span>
                                 )}
-                                <span className="stat-num" data-target={stat.target}>0</span>
+                                {/* The final value, so it reads without JS; the scroll animation counts up from 0 */}
+                                <span className="stat-num" data-target={stat.target}>{stat.target.toLocaleString('en-US')}</span>
                                 {stat.suffix}
                             </h4>
                             <p className="text-[#555] text-[14px] md:text-[15px] max-sm:text-[13px]! max-sm:leading-snug! leading-relaxed pr-0 md:pr-4">

@@ -1,4 +1,6 @@
-import { createPageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/seo/JsonLd";
+import { buildMetadata, PAGES } from "@/lib/seo/metadata";
+import pageSchema from "@/lib/seo/schema/about.json";
 import AboutHero from "@/components/about/AboutHero";
 import MissionVision from "@/components/about/MissionVision";
 import TeamMembers from "@/components/about/TeamMembers";
@@ -10,6 +12,7 @@ import CareerMilestones from "@/components/subhash-ghai/CareerMilestones";
 const AboutPage = () => {
   return (
     <>
+      <JsonLd data={pageSchema} />
       <AboutHero />
       <MissionVision />
       <TeamMembers />
@@ -21,6 +24,4 @@ const AboutPage = () => {
 
 export default AboutPage;
 
-export async function generateMetadata(_props, parent) {
-  return createPageMetadata("/about", await parent);
-}
+export const metadata = buildMetadata(PAGES.about);

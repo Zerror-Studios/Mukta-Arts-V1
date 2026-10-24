@@ -72,7 +72,9 @@ const data = [
         website: "https://www.whistlingwoods.net/",
         color1: "#c02690",
         color2: "#2d346b",
-        BOTTOMIMG: "/img/final/home/web/WWI_Philosophy_Lockup_Transparent.webp"
+        BOTTOMIMG: "/img/final/home/web/WWI_Philosophy_Lockup_Transparent.webp",
+        // The lockup is text ("With one philosophy: Do what you love"), so it is read out
+        BOTTOMIMG_ALT: "Whistling Woods International philosophy: Do what you love"
     },
 ];
 
@@ -147,8 +149,9 @@ const CompanyRow = ({ item, index, isOpen, isDimmed, onToggle, rowRef }) => {
                 style={{ background: swatch(item) }}
             />
 
-            {/* `!` because the global h2 size in fonts.css is unlayered and would win over the utilities */}
-            <h2 className="text-[clamp(1.625rem,7.2vw,2.5rem)]! leading-[1.1]! font-bold tracking-tight">
+            {/* `!` because the global h2 size in fonts.css is unlayered and would win over the utilities.
+                A heading for screen readers (role), but not an <h2>: the desktop list below already has the names as h2s */}
+            <div role="heading" aria-level="2" className="h2 text-[clamp(1.625rem,7.2vw,2.5rem)]! leading-[1.1]! font-bold tracking-tight">
                 <button
                     type="button"
                     id={buttonId}
@@ -168,7 +171,7 @@ const CompanyRow = ({ item, index, isOpen, isDimmed, onToggle, rowRef }) => {
                         <Plus strokeWidth={1.5} className={`relative w-5 h-5 transition-transform duration-500 ease-out ${isOpen ? "rotate-45" : ""}`} />
                     </span>
                 </button>
-            </h2>
+            </div>
 
             {/* invisible while closed, so its links are not tabbed to */}
             <div
@@ -206,8 +209,7 @@ const CompanyRow = ({ item, index, isOpen, isDimmed, onToggle, rowRef }) => {
                         <img
                             data-panel-item
                             src={item.BOTTOMIMG}
-                            alt=""
-                            aria-hidden="true"
+                            alt={item.BOTTOMIMG_ALT || ""}
                             loading="lazy"
                             decoding="async"
                             className="mt-2 w-full max-w-[80%] h-auto object-contain object-left"
@@ -430,7 +432,7 @@ const ElderDesktop = () => {
                             <img loading="lazy" src={item.image} alt={item.title} decoding="async" className="w-full h-full object-cover" />
                         </div>
                         <div>
-                            <h3 className="text-white font-semibold text-sm md:text-lg lg:text-xl mb-1">{item.title}</h3>
+                            <div className="text-white font-semibold text-sm md:text-lg lg:text-xl mb-1">{item.title}</div>
                             <p className="text-white/70 text-[10px] md:text-sm line-clamp-3 leading-snug">{item.shortDesc}</p>
 
                             <div className="flex justify-between items-center mt-2 md:mt-4 relative z-[9999]">
@@ -513,8 +515,7 @@ const ElderDesktop = () => {
                                 {activeItem.BOTTOMIMG && (
                                     <img
                                         src={activeItem.BOTTOMIMG}
-                                        alt=""
-                                        aria-hidden="true"
+                                        alt={activeItem.BOTTOMIMG_ALT || ""}
                                         loading="lazy"
                                         decoding="async"
                                         className="panel-reveal mt-8 md:mt-12 w-full max-w-[80%] mx-auto h-auto object-contain object-left"

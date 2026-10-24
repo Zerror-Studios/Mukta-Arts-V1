@@ -56,6 +56,10 @@ function CameraModel({ url, modelRef }) {
     );
 }
 
+// drei's "studio" preset, served from this site, not drei's preset CDN (raw.githack.com): the camera
+// can't appear until its lighting has loaded, and on phones that proxy is often too slow for it to show
+const ENV_URL = "/hdri/studio_small_03_1k.hdr";
+
 // The camera group's scale, and where it ends up beside the copy on wide screens
 const CAMERA_SCALE = 0.05;
 const WIDE_END = { x: 2, y: -2.5, scale: CAMERA_SCALE };
@@ -64,10 +68,14 @@ const WIDE_END = { x: 2, y: -2.5, scale: CAMERA_SCALE };
 const WIDE_ASPECT = 1.2;
 // Share of that space the camera may fill, so it never touches the text
 const SLOT_FILL = 0.9;
+// Phones draw the camera at this share of its usual size, from where it starts to where it settles
+const PHONE_SCALE = 0.75;
+// Same test as HeadphonesModel's PHONE query: narrow, or a phone on its side
+const isPhone = (size) => size.width < 768 || size.height <= 500;
 
 // Where the camera ends up on a portrait screen: centred in the gap between the title and the
-// copy (measured from the page), as large as fits. Its size comes from the model's own bounds.
-function slotEnd(group, model, camera, size, titleEl, bodyEl, sectionEl) {
+// copy (measured from the page), as large as fits times `shrink`. Its size comes from the model's own bounds.
+function slotEnd(group, model, camera, size, titleEl, bodyEl, sectionEl, shrink) {
     const section = sectionEl.getBoundingClientRect();
     const top = titleEl.getBoundingClientRect().bottom - section.top;
     const bottom = bodyEl.getBoundingClientRect().top - section.top;
@@ -85,7 +93,7 @@ function slotEnd(group, model, camera, size, titleEl, bodyEl, sectionEl) {
     const height = (box.max.y - box.min.y) / s;
     const width = Math.max(box.max.x - box.min.x, box.max.z - box.min.z) / s;
 
-    const scale = Math.min((gap * SLOT_FILL * unit) / height, (size.width * SLOT_FILL * unit) / width, CAMERA_SCALE);
+    const scale = Math.min((gap * SLOT_FILL * unit) / height, (size.width * SLOT_FILL * unit) / width, CAMERA_SCALE) * shrink;
     const centreY = (size.height / 2 - (top + gap / 2)) * unit;
     return { x: 0, y: centreY - (minY + height / 2) * scale, scale };
 }
@@ -98,12 +106,15 @@ function AnimatedCameraGroup({ titleRef, bodyRef, sectionRef }) {
 
     useGSAP(() => {
         const group = groupRef.current;
+        let start = CAMERA_SCALE;
         let end = WIDE_END;
         const measure = () => {
             const { camera, size } = getThree();
+            const shrink = isPhone(size) ? PHONE_SCALE : 1;
+            start = CAMERA_SCALE * shrink;
             end = size.width / size.height >= WIDE_ASPECT
-                ? WIDE_END
-                : slotEnd(group, modelRef.current, camera, size, titleRef.current, bodyRef.current, sectionRef.current);
+                ? { ...WIDE_END, scale: WIDE_END.scale * shrink }
+                : slotEnd(group, modelRef.current, camera, size, titleRef.current, bodyRef.current, sectionRef.current, shrink);
         };
 
         // Initial state
@@ -123,7 +134,10 @@ function AnimatedCameraGroup({ titleRef, bodyRef, sectionRef }) {
         });
 
         tl.to(group.position, { x: () => end.x, y: () => end.y, z: 0, duration: 1 }, 0)
-            .to(group.scale, { x: () => end.scale, y: () => end.scale, z: () => end.scale, duration: 1 }, 0)
+            // From an explicit start, so a resize between phone and desktop size changes that too
+            .fromTo(group.scale,
+                { x: () => start, y: () => start, z: () => start },
+                { x: () => end.scale, y: () => end.scale, z: () => end.scale, duration: 1 }, 0)
             .to(group.rotation, { y: -Math.PI / 1.3 - Math.PI * 2, duration: 1 }, 0)
             .to({}, { duration: 3 }); // pad to 4.0 total duration
     });
@@ -317,7 +331,7 @@ export default function OldCamera() {
                                 the whole page while they load, and no tap on it (Elder's dropdowns just above)
                                 does anything until they finish */}
                             <Suspense fallback={null}>
-                                <Environment preset="studio" />
+                                <Environment files={ENV_URL} />
                                 <AnimatedCameraGroup titleRef={titleRef} bodyRef={bodyRef} sectionRef={sectionRef} />
                             </Suspense>
 

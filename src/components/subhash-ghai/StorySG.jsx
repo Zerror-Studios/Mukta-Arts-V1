@@ -28,11 +28,11 @@ const StorySG = () => {
                 <p data-reveal="lines" className="text-white/90 text-sm md:text-base tracking-wide mb-6 font-['SwitzerR']">
                     A Journey That Began With Cinema And Grew Into A Legacy
                 </p>
-                <h4 data-reveal="lines" className=" text-white font-['SwitzerM']">
+                <h5 data-reveal="lines" className=" text-white font-['SwitzerM'] ">
                     As the founder of Mukta Arts, he created a body of work that helped define mainstream
                     Hindi cinema, with films such as Karz, Hero, Ram Lakhan, Saudagar, Pardes and Taal
                     becoming cultural touchstones for generations.
-                </h4>
+                </h5>
             </div>
 
             {/* Bottom Grid Section */}

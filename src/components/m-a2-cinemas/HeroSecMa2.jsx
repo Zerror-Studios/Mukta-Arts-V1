@@ -12,28 +12,31 @@ const HeroSecMa2 = () => {
     useEntrance(containerRef);
 
     return (
-        <section ref={containerRef} className="relative w-full h-screen min-h-[700px] flex flex-col bg-black overflow-hidden">
+        // Phones grow with the content (svh avoids jumps from the mobile URL bar) instead of clipping it
+        <section ref={containerRef} className="relative w-full min-h-svh md:h-screen md:min-h-[700px] flex flex-col bg-black overflow-hidden">
             {/* Background Image */}
             <div className="absolute inset-0 w-full h-full z-0">
                 {/* Note: Update the src to your actual background image */}
                 {/* A 2560px copy of the 5760px original (/img/final/MA-2-Cinima.webp) */}
                 <img
                     src="/img/final/web/MA-2-Cinima.webp"
-                    alt="Mukta A2 Cinemas Background"
+                    alt="Mukta A2 Cinemas auditorium with rows of red seats"
                     fetchPriority="high"
 
                     className="object-cover w-full h-full object-center"
 
                 />
                 {/* Dark overlay to ensure text and logo readability */}
-                <div className="absolute inset-0 bg-black/50"></div>
+                <div className="absolute inset-0 bg-black/30 md:bg-black/50"></div>
+                {/* Phones only: darkens the lower part so the text reads over the photo */}
+                <div className="md:hidden absolute inset-x-0 bottom-0 h-[70%] bg-gradient-to-t from-black via-black/70 to-transparent pointer-events-none"></div>
             </div>
 
-            {/* Content Container */}
-            <div className="relative z-10 w-full h-full  mx-auto px-4 md:px-8 lg:px-16 flex flex-col justify-between py-12 md:py-20 lg:py-24">
+            {/* Content Container: on phones everything sits at the bottom, leaving the photo clear */}
+            <div className="relative z-10 w-full flex-1 md:h-full mx-auto px-4 md:px-8 lg:px-16 flex flex-col justify-end md:justify-between pt-32 pb-10 md:py-20 lg:py-24">
 
                 {/* Top Spacer & Center Logo */}
-                <div className="flex-1 flex items-center justify-center">
+                <div className="flex-1 flex items-center justify-center max-md:flex-none max-md:justify-start max-md:mb-6">
                     <div className="relative">
                         {/* Note: Update the src to your actual Whistling Woods logo */}
                         {/* <Image
@@ -42,24 +45,25 @@ const HeroSecMa2 = () => {
                             fill
                             className="object-contain"
                         /> */}
-                        <h2 data-entrance="words" className='text-white uppercase max-sm:text-center'>Mukta A2 Cinemas</h2>
+                        {/* `!` because the global h2 size in fonts.css is unlayered and would win over the utilities */}
+                        <h1 data-entrance="words" className='h2 text-white uppercase max-md:text-[clamp(2.6rem,11vw,4rem)]! max-md:leading-none!'>Mukta A2 Cinemas</h1>
                     </div>
                 </div>
 
                 {/* Bottom Section */}
-                <div className="w-full max-sm:pb-10">
+                <div className="w-full">
                     {/* Divider Line */}
-                    <div data-entrance="line" className="w-full h-[1px] bg-white/30 mb-10 md:mb-12"></div>
+                    <div data-entrance="line" className="w-full h-[1px] bg-white/30 mb-6 md:mb-12"></div>
 
-                    {/* Content Columns */}
-                    <div className="flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-8">
+                    {/* Content Columns (on phones: both paragraphs, then the button) */}
+                    <div className="flex flex-col lg:flex-row justify-between items-start gap-4 md:gap-12 lg:gap-8">
 
                         {/* Left Side: Description and Button */}
-                        <div className="flex flex-col gap-8 max-w-[440px] ">
-                            <p data-entrance="lines" className="text-white text-[15px] md:text-[17px] leading-[1.6] ">
+                        <div className="flex flex-col gap-8 max-w-[440px] max-md:contents">
+                            <p data-entrance="lines" className="text-white text-[15px] md:text-[17px] leading-[1.6] max-md:text-[15px]! max-md:leading-[1.6]!">
                                 Mukta A2 Cinemas is the exhibition arm of Mukta Arts, founded with a vision to make the big-screen experience accessible to audiences across India.
                             </p>
-                            <div data-entrance="rise ">
+                            <div data-entrance="rise" className="max-md:order-last max-md:mt-4">
                                 <Button onDark href="https://muktaa2cinemas.in/" external>
                                     Visit Our Website
                                 </Button>
@@ -68,7 +72,7 @@ const HeroSecMa2 = () => {
 
                         {/* Right Side: Description */}
                         <div className="flex flex-col gap-3.5 text-white max-w-[440px] lg:min-w-[400px] ">
-                            <p data-entrance="lines" className="text-white text-[15px] md:text-[17px] leading-[1.6]">
+                            <p data-entrance="lines" className="text-white max-md:text-white/75 text-[15px] md:text-[17px] leading-[1.6] max-md:text-[15px]! max-md:leading-[1.6]!">
                                 Built around the idea of offering quality cinema at affordable prices, the brand has grown into a diverse cinema exhibition network spanning established and emerging markets.
                             </p>
                         </div>

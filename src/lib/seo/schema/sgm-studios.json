@@ -1,0 +1,62 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://www.muktaarts.com/sgm-studios#webpage",
+      "url": "https://www.muktaarts.com/sgm-studios",
+      "name": "SGM Studios | Animation & Original IP by Mukta Arts",
+      "description": "SGM Studios is the animation and visual storytelling arm of Mukta Arts, creating original, culturally rooted IP for film, series and new-age entertainment.",
+      "isPartOf": {
+        "@id": "https://www.muktaarts.com/#website"
+      },
+      "inLanguage": "en-IN",
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://www.muktaarts.com/opengraph-image"
+      },
+      "breadcrumb": {
+        "@id": "https://www.muktaarts.com/sgm-studios#breadcrumb"
+      },
+      "about": {
+        "@id": "https://www.muktaarts.com/sgm-studios#sgm"
+      },
+      "mainEntity": {
+        "@id": "https://www.muktaarts.com/sgm-studios#sgm"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://www.muktaarts.com/sgm-studios#sgm",
+      "name": "SGM Studios",
+      "url": "https://www.muktaarts.com/sgm-studios",
+      "parentOrganization": {
+        "@id": "https://www.muktaarts.com/#organization"
+      },
+      "description": "Animation and visual storytelling arm of Mukta Arts, developing original, culturally rooted IP for film, series and new-age entertainment.",
+      "knowsAbout": [
+        "Animation",
+        "Original IP",
+        "Franchise development"
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.muktaarts.com/sgm-studios#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.muktaarts.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "SGM Studios",
+          "item": "https://www.muktaarts.com/sgm-studios"
+        }
+      ]
+    }
+  ]
+}

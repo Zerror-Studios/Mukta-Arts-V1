@@ -113,7 +113,7 @@ const Category = ({ category, index, isOpen, onToggle }) => {
         className="group w-full grid grid-cols-[2rem_minmax(0,1fr)_auto] md:grid-cols-[4rem_minmax(0,1fr)_minmax(0,1fr)_auto] items-center gap-x-4 md:gap-x-8 py-7 md:py-10 text-left cursor-pointer outline-none focus-visible:bg-[#1B123D]/[0.04]"
       >
         <h4
-          className={`font-mono text-[11px] md:text-xs  tabular-nums transition-colors ${
+          className={`font-mono text-[11px] md:text-xs max-sm:mb-auto  tabular-nums transition-colors max-md:text-black ${
             isOpen ? "text-[#1B123D]" : "text-neutral-400"
           }`}
         >
@@ -122,14 +122,14 @@ const Category = ({ category, index, isOpen, onToggle }) => {
 
         <span className="block min-w-0">
           <h4
-            className={`block font-['SwitzerB'] text-[30px] md:text-[48px] lg:text-[60px] leading-none tracking-tight transition-colors duration-300 ${
+            className={`block font-['SwitzerB'] text-[30px] md:text-[48px] lg:text-[60px] leading-none tracking-tight transition-colors duration-300 max-md:text-black ${
               isOpen ? "text-black" : "text-neutral-400 group-hover:text-black"
             }`}
           >
             {category.title}
           </h4>
           {/* The meaning sits under the name on phones */}
-          <p className="md:hidden block mt-2 text-[14px] leading-snug text-[#555]">{category.about}</p>
+          <p className="md:hidden block mt-2 text-[14px] leading-snug text-black">{category.about}</p>
         </span>
 
         <p className="hidden md:block text-[15px] lg:text-[16px] leading-relaxed text-[#555] max-w-[34ch]">
@@ -175,9 +175,9 @@ const Category = ({ category, index, isOpen, onToggle }) => {
                 <p className="block text-[18px] md:text-[20px] font-medium tracking-tight leading-tight text-black group-hover/item:text-[#1B123D] transition-colors duration-300">
                   {item.name}
                 </p>
-                <p className="block mt-1.5 text-[13px] md:text-[14px] leading-snug text-[#666]">
+                <p className="block mt-1.5 text-[13px] md:text-[14px] leading-snug text-[#666] max-md:text-black">
                   {parts.slice(0, -1).join(", ")}
-                  {parts.length > 1 && <span className="text-neutral-400"> · </span>}
+                  {parts.length > 1 && <span className="text-neutral-400 max-md:text-black"> · </span>}
                   {parts.at(-1)}
                 </p>
               </li>
@@ -203,7 +203,7 @@ export default function PropertiesSection() {
     <section
       ref={sectionRef}
       aria-labelledby="a2-properties-heading"
-      className="relative w-full bg-white text-black py-24 md:py-32 lg:py-40 px-4 md:px-8 lg:px-10"
+      className="relative w-full bg-white text-black sm:py-24 md:py-32 lg:py-40 px-4 md:px-8 lg:px-10"
     >
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14 md:mb-20">
@@ -217,7 +217,7 @@ export default function PropertiesSection() {
             Cinema Properties
           </h2>
         </div>
-        <p data-reveal="rise" className="text-[#555]  max-w-[380px] ">
+        <p data-reveal="rise" className="text-[#555] max-md:text-black  max-w-[380px] ">
           {total} cinemas in {propertiesCategories.length} categories. Open a category to see its cinemas and
           where they are.
         </p>

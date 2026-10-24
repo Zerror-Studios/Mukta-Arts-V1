@@ -2,7 +2,8 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import useEmblaCarousel from "embla-carousel-react";
 import gsap from "gsap";
 
 // Each award shows the client's own photo of who won it: the Whistling Woods campus, the Mukta A2
@@ -90,11 +91,36 @@ let arr = [
   }
 ];
 
+const pad = (n) => String(n).padStart(2, "0");
+
+const mobileArrowClass =
+  "w-10 h-10 rounded-full border border-black/20 text-black flex items-center justify-center transition-colors cursor-pointer hover:bg-[#1B123D] hover:text-white disabled:opacity-30 disabled:pointer-events-none";
+
 export default function CardsShowcase() {
   // Initialize with the most recent card (arr[0]) at the front of the visual stack
   const [cardOrder, setCardOrder] = useState(arr.map((_, i) => arr.length - 1 - i));
   const cursorRef = useRef(null);
   const [isHovering, setIsHovering] = useState(false);
+
+  // Phones get a flat swipeable carousel instead of the 3D stack, which is too cramped to read there
+  const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start", containScroll: "trimSnaps" });
+  const [slide, setSlide] = useState(0);
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(true);
+
+  const onSelect = useCallback((api) => {
+    setSlide(api.selectedScrollSnap());
+    setCanPrev(api.canScrollPrev());
+    setCanNext(api.canScrollNext());
+  }, []);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    emblaApi.on("select", onSelect).on("reInit", onSelect);
+    return () => {
+      emblaApi.off("select", onSelect).off("reInit", onSelect);
+    };
+  }, [emblaApi, onSelect]);
 
   useEffect(() => {
     // Create smooth interpolators for x and y
@@ -154,13 +180,66 @@ export default function CardsShowcase() {
         <h2 className="text-[12vw] md:text-[8vw] font-semibold tracking-tighter text-black">Honours.</h2>
       </div>
 
-      {/* 3D Container: on phones the stack is scaled down, so its box is shorter to match */}
+      {/* Phones: one award per slide, swiped or stepped with the arrows, the next card peeking in */}
+      <div className="md:hidden">
+        <div ref={emblaRef}>
+          <div className="flex touch-pan-y pl-6">
+            {arr.map((item, i) => (
+              <div
+                key={i}
+                className="shrink-0 grow-0 basis-[82vw] mr-4 last:mr-6 flex flex-col text-white"
+                style={{ backgroundColor: item.clr }}
+              >
+                <div className="relative aspect-[4/3] m-4 mb-0">
+                  <Image
+                    src={item.img}
+                    alt={item.title}
+                    fill
+                    sizes="80vw"
+                    draggable={false}
+                    className="object-cover rounded-sm select-none pointer-events-none"
+                  />
+                </div>
+                <div className="flex flex-col items-start p-5">
+                  {item.year && (
+                    <span className="px-3 py-1 bg-white/20 rounded-full text-xs font-semibold tracking-wider">
+                      {item.year}
+                    </span>
+                  )}
+                  <p className="mt-3 text-xl font-semibold leading-tight">{item.title}</p>
+                  <p className="mt-2 text-sm text-white/90">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between px-6 mt-6">
+          <p className="font-mono text-sm tracking-widest text-[#555] tabular-nums">
+            {pad(slide + 1)} / {pad(arr.length)}
+          </p>
+          <div className="flex items-center gap-3">
+            <button type="button" aria-label="Previous award" className={mobileArrowClass} disabled={!canPrev} onClick={() => emblaApi?.scrollPrev()}>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button type="button" aria-label="Next award" className={mobileArrowClass} disabled={!canNext} onClick={() => emblaApi?.scrollNext()}>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* 3D Container (tablet and up) */}
       <div
-        className="relative w-full h-[45vh] md:h-[65vh] flex items-center justify-center"
+        className="relative w-full h-[65vh] hidden md:flex items-center justify-center"
         style={{ perspective: "1500px" }}
       >
         <div
-          className="relative w-full max-w-6xl h-[70vh] md:h-full shrink-0 max-sm:scale-[0.6] flex items-center justify-center"
+          className="relative w-full max-w-6xl h-full shrink-0 flex items-center justify-center"
           style={{ transformStyle: "preserve-3d" }}
         >
           {arr.map((item, originalIndex) => {

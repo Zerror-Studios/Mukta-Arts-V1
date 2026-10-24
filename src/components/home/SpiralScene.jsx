@@ -32,6 +32,10 @@ const CARD_ASPECT = 843 / 629; // poster ratio (height/width) of the 629×843 fi
 const CARD_HEIGHT = CARD_ARC_LENGTH * CARD_ASPECT; // ≈ 6.7
 const TOTAL_CARDS_LENGTH = (NUM_CARDS - 1) * CARD_SPACING + CARD_SLOT_LENGTH; // 63.3
 const SEGMENTS_X = 116; // horizontal subdivisions per card mesh
+const MOBILE_BREAKPOINT = 768; // canvas narrower than this (px) counts as a phone
+const MOBILE_CARD_SCALE = 0.75; // card width and height on phones, centred in the same slots
+const MOBILE_CARD_SPACING = 4.5; // arc length between card starts on phones: the 3.75-wide cards keep the desktop gap ratio
+const MOBILE_CARDS_LENGTH = (NUM_CARDS - 1) * MOBILE_CARD_SPACING + CARD_SLOT_LENGTH;
 
 // Film posters (13 cards) — Kalicharan and Meri Jung aren't in compressed/, so they come from /img/films.
 // WebP copies (web/ folders) of those JPEGs, at the same size
@@ -199,15 +203,21 @@ const SpiralCards = ({ progressRef, invalidateRef }) => {
   // ("never" to "demand") it draws once straight away.
   const invalidate = useThree((state) => state.invalidate);
   const frameloop = useThree((state) => state.frameloop);
+  // Smaller, closer-set cards on phones; follows the canvas width, so it switches on resize / rotation too
+  const isPhone = useThree((state) => state.size.width < MOBILE_BREAKPOINT);
+  const sizeScale = isPhone ? MOBILE_CARD_SCALE : 1;
+  const spacing = isPhone ? MOBILE_CARD_SPACING : CARD_SPACING;
+  const cardsLength = isPhone ? MOBILE_CARDS_LENGTH : TOTAL_CARDS_LENGTH;
   useEffect(() => {
     invalidateRef.current = invalidate;
     return () => {
       invalidateRef.current = null;
     };
   }, [invalidate, invalidateRef]);
+  // Also redraws when the cards switch between phone and desktop size
   useEffect(() => {
     if (frameloop === "demand") invalidate();
-  }, [frameloop, invalidate]);
+  }, [frameloop, invalidate, isPhone]);
 
   // Create one PlaneGeometry per card (shared would cause conflicts)
   const geometries = useMemo(() => {
@@ -234,8 +244,8 @@ const SpiralCards = ({ progressRef, invalidateRef }) => {
 
     // Reference formula for arc offset:
     //   offset = p * (TOTAL_ARC + TOTAL_CARDS_LENGTH) - TOTAL_CARDS_LENGTH + 25
-    const arcOffset =
-      p * (TOTAL_ARC + TOTAL_CARDS_LENGTH) - TOTAL_CARDS_LENGTH + 25;
+    // with the phone's shorter run of cards on phones, so it still enters and leaves at the same scroll
+    const arcOffset = p * (TOTAL_ARC + cardsLength) - cardsLength + 25;
 
     // Smoothly interpolate hover scales. The first frame after the canvas has been idle reports all
     // the time since its last one, so the step is capped or the hover would jump straight to full size.
@@ -252,18 +262,19 @@ const SpiralCards = ({ progressRef, invalidateRef }) => {
       const mesh = meshRefs.current[i];
       if (!mesh) continue;
 
-      const cardArcPos = arcOffset + CARD_SPACING * i;
+      const cardArcPos = arcOffset + spacing * i;
       const visible = p < 0.999 && cardArcPos > 0 && cardArcPos < TOTAL_ARC;
 
       mesh.visible = visible;
       if (!visible) continue;
 
-      // Deform mesh vertices to follow the spiral (with hover scale), unless it is already there
+      // Deform mesh vertices to follow the spiral (with hover and phone scale), unless it is already there
       const arcPos = Math.min(cardArcPos, TOTAL_ARC - 0.001);
+      const scale = hoverScales.current[i] * sizeScale;
       const last = placed.current[i];
-      if (!last || last.arcPos !== arcPos || last.scale !== hoverScales.current[i]) {
-        placeCardOnSpiral(mesh.geometry, arcPos, uvWritten.current, i, hoverScales.current[i]);
-        placed.current[i] = { arcPos, scale: hoverScales.current[i] };
+      if (!last || last.arcPos !== arcPos || last.scale !== scale) {
+        placeCardOnSpiral(mesh.geometry, arcPos, uvWritten.current, i, scale);
+        placed.current[i] = { arcPos, scale };
       }
 
       // Set renderOrder higher for hovered cards so they appear on top
@@ -430,7 +441,7 @@ export default function SpiralScene() {
 
         <div className=" NAMEDIV1 absolute top-0 left-0 z-[-1]  w-full h-full flex justify-center items-center">
           {/* Word for word from the content doc; the bold runs are bold there too */}
-          <h5 className="w-[90vw] sm:w-2/3 text-center font-['SwitzerR'] text-balance">
+          <h5 className="w-[90vw] sm:w-2/3 text-center  text-balance max-sm:text-justify">
             Mukta Arts is the vision of Subhash Ghai, one of India's most celebrated filmmakers, who founded the company in 1978. What started with landmark films like Karz, Ram Lakhan, Khalnayak and Pardes has grown into an entertainment group spanning production, exhibition, animation and education. Through Whistling Woods International, Mukta A2 Cinemas and SGM Studios, the group continues to shape how stories are made, taught and experienced across India. 
           </h5>
         </div>

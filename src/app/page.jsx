@@ -1,7 +1,9 @@
 import { preload } from "react-dom";
 import Hero from "@/components/home/Hero";
 import VideoSection from "@/components/home/VideoSection";
-import { createPageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/seo/JsonLd";
+import { buildMetadata, PAGES } from "@/lib/seo/metadata";
+import pageSchema from "@/lib/seo/schema/home.json";
 import Elder from "@/components/home/Elder";
 import SpiralScene from "@/components/home/SpiralScene";
 import CardsShowcase from "@/components/home/CardsShowcase";
@@ -17,6 +19,7 @@ const HomePage = () => {
 
   return (
     <>
+      <JsonLd data={pageSchema} />
       <Hero />
       <VideoSection />
       <SpiralScene />
@@ -33,6 +36,4 @@ const HomePage = () => {
 
 export default HomePage;
 
-export async function generateMetadata(_props, parent) {
-  return createPageMetadata("/", await parent);
-}
+export const metadata = buildMetadata(PAGES.home);

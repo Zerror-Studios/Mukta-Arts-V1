@@ -223,7 +223,7 @@ export default function FilmsComponent() {
   return (
     <section
       ref={containerRef}
-      className=" mx-auto px-4 sm:px-6 pt-[20vh] lg:px-8 py-16 min-h-screen bg-white text-black"
+      className=" mx-auto px-4 sm:px-6 sm:pt-[20vh] lg:px-8 py-16 min-h-screen bg-white text-black"
       style={{ fontFamily: "'Helvetica Neue', Helvetica, Arial, sans-serif" }}
     >
       {/* Page Title */}

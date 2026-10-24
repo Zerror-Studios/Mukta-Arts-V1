@@ -230,7 +230,7 @@ const Header = () => {
       {/* Side Menu Overlay */}
       <div
         ref={menuOverlayRef}
-        className={`fixed top-0 right-0 w-full md:w-[70vw] lg:w-[50vw] h-[100svh] bg-[#1B123D] translate-x-full pointer-events-auto flex flex-col justify-center px-8 md:px-14 lg:px-20 z-50 ${isMenuOpen ? 'shadow-2xl' : ''}`}
+        className={`fixed top-0 right-0 w-full md:w-[70vw] lg:w-[50vw] h-[100vh] bg-[#1B123D] translate-x-full pointer-events-auto flex flex-col justify-center px-8 md:px-14 lg:px-20 z-50 ${isMenuOpen ? 'shadow-2xl' : ''}`}
       >
 
         <div className="flex flex-col w-full relative mt-[20vh] mb-auto  gap-2">

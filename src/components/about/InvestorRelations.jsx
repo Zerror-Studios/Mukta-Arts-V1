@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown, Eye, Download, FileText, FileSpreadsheet, X } from "lucide-react";
 import { gsap, MOTION_REDUCED } from "@/lib/motion";
@@ -26,6 +26,19 @@ const countDocs = (category) =>
 const yearLabel = (title) => title.replace(/^Annual General Meeting\s*-\s*/i, "AGM ");
 
 const fileName = (href) => decodeURIComponent(href.split("/").pop());
+
+// Phones, upright or on their side, start with every section closed. Keep in step with the
+// `phone` variant in globals.css.
+const PHONE = "(max-width: 767.98px), (max-height: 500px)";
+
+// Known only in the browser: the server, and the page while it hydrates, assume a larger screen
+const subscribePhone = (onChange) => {
+  const query = window.matchMedia(PHONE);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+};
+const useIsPhone = () =>
+  useSyncExternalStore(subscribePhone, () => window.matchMedia(PHONE).matches, () => false);
 
 // Browsers that can show a PDF inside the page; phones mostly can't, so there it opens on its own
 const canEmbedPdf = () =>
@@ -87,7 +100,9 @@ const DocRow = ({ doc, onView, compact = false }) => {
 /* ---------- a section of documents (optionally split into years) ---------- */
 
 const Section = ({ section, defaultOpen, isFirst, onView }) => {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
+  // Follows defaultOpen until the visitor opens or closes it
+  const [toggled, setToggled] = useState(null);
+  const isOpen = toggled ?? defaultOpen;
   const [yearIndex, setYearIndex] = useState(0);
   const contentRef = useRef(null);
   const mounted = useRef(false);
@@ -116,7 +131,7 @@ const Section = ({ section, defaultOpen, isFirst, onView }) => {
     <div className={`border-b border-[#c2c2c2] ${isFirst ? "border-t" : ""}`}>
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setToggled(!isOpen)}
         aria-expanded={isOpen}
         className="w-full flex justify-between items-center gap-6 py-5 md:py-6 text-left focus:outline-none group cursor-pointer"
       >
@@ -306,6 +321,7 @@ const InvestorRelations = () => {
   const sectionRef = useRef(null);
   const [activeId, setActiveId] = useState(investorCategories[0].id);
   const [viewing, setViewing] = useState(null);
+  const isPhone = useIsPhone();
   useScrollReveal(sectionRef);
 
   const active = investorCategories.find((c) => c.id === activeId);
@@ -379,7 +395,7 @@ const InvestorRelations = () => {
             })}
           </div>
 
-          {/* Keyed by category, so each tab starts with its first section open */}
+          {/* Keyed by category, so each tab starts with its first section open (all closed on phones) */}
           <div key={active.id} role="tabpanel" aria-label={active.title}>
             {active.intro && (
               <p className="text-[#555] text-[15px]! md:text-[16px]! leading-relaxed! max-w-3xl mb-8">{active.intro}</p>
@@ -391,7 +407,7 @@ const InvestorRelations = () => {
                   key={section.title}
                   section={section}
                   isFirst={index === 0}
-                  defaultOpen={index === 0}
+                  defaultOpen={index === 0 && !isPhone}
                   onView={onView}
                 />
               ) : (

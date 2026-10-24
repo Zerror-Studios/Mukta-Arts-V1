@@ -1,4 +1,4 @@
-import { createPageMetadata } from "@/lib/seo";
+import { noindexMetadata } from "@/lib/seo/metadata";
 
 const ContactPage = () => {
   return (
@@ -10,6 +10,4 @@ const ContactPage = () => {
 
 export default ContactPage;
 
-export async function generateMetadata(_props, parent) {
-  return createPageMetadata("/contact", await parent);
-}
+export const metadata = noindexMetadata("Contact");

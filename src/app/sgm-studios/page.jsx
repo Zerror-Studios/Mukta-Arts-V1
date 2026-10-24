@@ -1,11 +1,14 @@
 import HeroSMG from "@/components/smg/HeroSMG";
 import SGMIntro from "@/components/smg/SGMIntro";
 import WWAcademicPrograms from "@/components/whistling-woods/WWAcademicPrograms";
-import { createPageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/seo/JsonLd";
+import { buildMetadata, PAGES } from "@/lib/seo/metadata";
+import pageSchema from "@/lib/seo/schema/sgm-studios.json";
 
 const SGMStudiosPage = () => {
     return (
         <>
+            <JsonLd data={pageSchema} />
             <HeroSMG />
             <SGMIntro />
             <WWAcademicPrograms />
@@ -15,6 +18,4 @@ const SGMStudiosPage = () => {
 
 export default SGMStudiosPage;
 
-export async function generateMetadata(_props, parent) {
-    return createPageMetadata("/sgm-studios", await parent);
-}
+export const metadata = buildMetadata(PAGES.sgmStudios);

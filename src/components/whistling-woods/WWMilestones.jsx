@@ -240,7 +240,7 @@ const WWMilestones = () => {
                         ? 'sticky top-0 overflow-hidden'
                         : 'relative overflow-hidden pb-10'
                 }
-                style={SCROLL_DRIVEN ? { height: '100svh', minHeight: isMobile ? undefined : 680 } : undefined}
+                style={SCROLL_DRIVEN ? { height: '100vh', minHeight: isMobile ? undefined : 680 } : undefined}
             >
                 {/* Dynamic Milestone Background Crossfade */}
                 <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none ">

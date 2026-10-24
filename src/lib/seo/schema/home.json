@@ -1,0 +1,138 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://www.muktaarts.com/#webpage",
+      "url": "https://www.muktaarts.com/",
+      "name": "Mukta Arts Ltd | Subhash Ghai's Film & Entertainment Group",
+      "description": "Founded by Subhash Ghai in 1978, Mukta Arts is the group behind Karz, Ram Lakhan and Pardes, Whistling Woods International, Mukta A2 Cinemas and SGM Studios.",
+      "isPartOf": {
+        "@id": "https://www.muktaarts.com/#website"
+      },
+      "inLanguage": "en-IN",
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://www.muktaarts.com/opengraph-image"
+      },
+      "about": {
+        "@id": "https://www.muktaarts.com/#organization"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://www.muktaarts.com/subhash-ghai#person",
+      "name": "Subhash Ghai",
+      "url": "https://www.muktaarts.com/subhash-ghai",
+      "jobTitle": "Founder and Executive Chairman, Mukta Arts Limited",
+      "worksFor": {
+        "@id": "https://www.muktaarts.com/#organization"
+      },
+      "description": "Indian filmmaker who has written and directed 19 films, including Karz, Hero, Karma, Ram Lakhan, Saudagar, Khalnayak, Pardes and Taal. Founder of Mukta Arts (1978) and Whistling Woods International (2006).",
+      "knowsAbout": [
+        "Film direction",
+        "Screenwriting",
+        "Film production",
+        "Film education"
+      ],
+      "award": [
+        "Filmfare Award for Best Director (Saudagar)",
+        "Filmfare Award for Best Screenplay (Pardes)",
+        "IIFA Award for Outstanding Contribution to Indian Cinema (2015)",
+        "Star Screen Lifetime Achievement Award"
+      ],
+      "sameAs": [
+        "https://en.wikipedia.org/wiki/Subhash_Ghai"
+      ]
+    },
+    {
+      "@type": "CollegeOrUniversity",
+      "@id": "https://www.muktaarts.com/whistling-woods#wwi",
+      "name": "Whistling Woods International",
+      "alternateName": "WWI",
+      "url": "https://www.whistlingwoods.net/",
+      "foundingDate": "2006",
+      "founder": {
+        "@id": "https://www.muktaarts.com/subhash-ghai#person"
+      },
+      "parentOrganization": {
+        "@id": "https://www.muktaarts.com/#organization"
+      },
+      "description": "Institute for film, communication and creative arts in Film City, Mumbai, founded by Subhash Ghai in 2006, offering programmes in filmmaking, media and communication, acting, music, design, animation and game design, and fashion and costume design.",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Film City Complex, Goregaon (East)",
+        "addressLocality": "Mumbai",
+        "addressRegion": "Maharashtra",
+        "addressCountry": "IN"
+      },
+      "sameAs": [
+        "https://en.wikipedia.org/wiki/Whistling_Woods_International",
+        "https://www.whistlingwoods.net/"
+      ],
+      "department": [
+        {
+          "@type": "EducationalOrganization",
+          "name": "School of Filmmaking"
+        },
+        {
+          "@type": "EducationalOrganization",
+          "name": "School of Media & Communication"
+        },
+        {
+          "@type": "EducationalOrganization",
+          "name": "Actors' Studio"
+        },
+        {
+          "@type": "EducationalOrganization",
+          "name": "School of Music"
+        },
+        {
+          "@type": "EducationalOrganization",
+          "name": "School of Design"
+        },
+        {
+          "@type": "EducationalOrganization",
+          "name": "School of Animation & Game Design"
+        },
+        {
+          "@type": "EducationalOrganization",
+          "name": "School of Fashion & Costume Design"
+        },
+        {
+          "@type": "EducationalOrganization",
+          "name": "WWI – IIM Mumbai"
+        }
+      ]
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2",
+      "name": "Mukta A2 Cinemas",
+      "url": "https://muktaa2cinemas.in/",
+      "parentOrganization": {
+        "@id": "https://www.muktaarts.com/#organization"
+      },
+      "description": "Cinema exhibition arm of Mukta Arts, offering quality cinema at affordable prices across India, with cinemas in Bahrain and Saudi Arabia.",
+      "sameAs": [
+        "https://en.wikipedia.org/wiki/Mukta_A2_Cinemas",
+        "https://muktaa2cinemas.in/"
+      ]
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://www.muktaarts.com/sgm-studios#sgm",
+      "name": "SGM Studios",
+      "url": "https://www.muktaarts.com/sgm-studios",
+      "parentOrganization": {
+        "@id": "https://www.muktaarts.com/#organization"
+      },
+      "description": "Animation and visual storytelling arm of Mukta Arts, developing original, culturally rooted IP for film, series and new-age entertainment.",
+      "knowsAbout": [
+        "Animation",
+        "Original IP",
+        "Franchise development"
+      ]
+    }
+  ]
+}

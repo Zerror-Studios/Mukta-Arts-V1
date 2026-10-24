@@ -7,14 +7,14 @@ import {
     RiYoutubeFill,
     RiFacebookFill,
 } from '@remixicon/react';
-import { siteConfig } from '@/config/site';
+import { SITE } from '@/lib/seo/site';
 import useScrollReveal from '@/hooks/useScrollReveal';
 
 const socials = [
-    { label: 'Instagram', href: siteConfig.socials.instagram, Icon: RiInstagramLine },
-    { label: 'LinkedIn', href: siteConfig.socials.linkedin, Icon: RiLinkedinFill },
-    { label: 'YouTube', href: siteConfig.socials.youtube, Icon: RiYoutubeFill },
-    { label: 'Facebook', href: siteConfig.socials.facebook, Icon: RiFacebookFill },
+    { label: 'Instagram', href: SITE.social.instagram, Icon: RiInstagramLine },
+    { label: 'LinkedIn', href: SITE.social.linkedin, Icon: RiLinkedinFill },
+    { label: 'YouTube', href: SITE.social.youtube, Icon: RiYoutubeFill },
+    { label: 'Facebook', href: SITE.social.facebook, Icon: RiFacebookFill },
 ];
 
 // Same grid as the form above: the map in the one-third label column, the office

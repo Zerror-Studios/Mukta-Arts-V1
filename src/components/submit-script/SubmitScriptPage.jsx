@@ -454,9 +454,9 @@ const SubmitScriptPage = ({ blobUploads = false }) => {
             <div className=" mx-auto max-sm:pt-[3vh]">
                 {/* Header */}
                 <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-10 sm:mb-16 md:mb-24 gap-6 sm:gap-8">
-                    <h2 data-entrance="words" className="text-5xl sm:text-6xl md:text-7xl lg:text-[7.5rem] font-medium tracking-tighter text-black leading-[1] lg:leading-[0.95]">
-                        Script<br />Submission
-                    </h2>
+                    <h1 data-entrance="words" className="h2 text-5xl sm:text-6xl md:text-7xl lg:text-[7.5rem] font-medium tracking-tighter text-black leading-[1] lg:leading-[0.95]">
+                        Script{" "}<br />Submission
+                    </h1>
                     <p data-entrance="lines" className="text-[#555] text-sm sm:text-base md:text-lg max-w-md leading-relaxed lg:pb-3">
                         Submit your original screenplay to Mukta Arts and give your story the opportunity to be discovered and considered by our creative team.
                     </p>

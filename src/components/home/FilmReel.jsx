@@ -58,11 +58,13 @@ export default function FilmReel() {
                     {LOOP_CONTENT.map((item, i) => (
                         <div
                             key={i}
+                            // Only the first set is read out; the rest are copies for the seamless loop
+                            aria-hidden={i >= CONTENT.length || undefined}
                             className="flex flex-col items-center justify-center min-w-[200px] md:min-w-[280px] h-[120px] md:h-[160px] px-4 md:px-8 rounded-sm bg-black/50 bg-cover bg-center"
                             // The photo sits under a dark overlay for text readability
                             style={loadImages ? { backgroundImage: `linear-gradient(rgb(0 0 0 / 0.5), rgb(0 0 0 / 0.5)), url("${encodeURI(item.image)}")` } : undefined}
                         >
-                            <h3 className="text-[#f97316] text-3xl! md:text-5xl! leading-none! font-bold tracking-tight whitespace-nowrap drop-shadow-md">{item.value}</h3>
+                            <div className="text-[#f97316] text-3xl! md:text-5xl! leading-none! font-bold tracking-tight whitespace-nowrap drop-shadow-md">{item.value}</div>
                             <p className="mt-1 md:mt-2 text-white text-xs md:text-base font-semibold uppercase tracking-wide whitespace-nowrap drop-shadow-md">{item.label}</p>
                         </div>
                     ))}

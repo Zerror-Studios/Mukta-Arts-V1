@@ -57,6 +57,12 @@ const team = [
   },
 ];
 
+// Phones, upright or on their side, see the whole board at once (the Chairman first, full width,
+// then the directors in a grid); anything bigger pins the section and scrolls through them.
+// Keep DESK in step with the `phone` variant in globals.css.
+const DESK = "(min-width: 768px) and (min-height: 501px)";
+const [chairman, ...directors] = team;
+
 const TeamMembers = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const sectionRef = useRef(null);
@@ -68,50 +74,53 @@ const TeamMembers = () => {
   // Heading reveal as the section enters
   useScrollReveal(sectionRef);
 
-  // Pinned while the visitor scrolls through the directors
+  // Pinned while the visitor scrolls through the directors (not on phones)
   useGSAP(
     () => {
-      let current = 0;
+      const mm = gsap.matchMedia();
+      mm.add(DESK, () => {
+        let current = 0;
 
-      ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: "top top",
-        end: `+=${team.length * 150}`, // Scrolling length to get through all members
-        pin: true,
-        // Sets the pin a moment early on a fast flick, so it doesn't visibly jump as it catches the
-        // section (on phones the page scrolls ahead of the script)
-        anticipatePin: 1,
-        scrub: 1,
-        onUpdate: (self) => {
-          const progress = self.progress;
-          const newIndex = Math.round(progress * (team.length - 1));
+        ScrollTrigger.create({
+          trigger: sectionRef.current,
+          start: "top top",
+          end: `+=${team.length * 150}`, // Scrolling length to get through all members
+          pin: true,
+          // Sets the pin a moment early on a fast flick, so it doesn't visibly jump as it catches the
+          // section (on touch screens the page scrolls ahead of the script)
+          anticipatePin: 1,
+          scrub: 1,
+          onUpdate: (self) => {
+            const progress = self.progress;
+            const newIndex = Math.round(progress * (team.length - 1));
 
-          // Draw the line and indicator smoothly and continuously based on raw scroll progress.
-          // Both by transform (the line is scaled down its full height), so no scroll frame
-          // makes the browser lay the section out again.
-          const inner = namesInnerRef.current;
-          const trackHeight = lineTrackRef.current?.offsetHeight ?? 0;
-          gsap.set(indicatorRef.current, { y: progress * trackHeight });
-          gsap.set(lineFillRef.current, { scaleY: progress });
+            // Draw the line and indicator smoothly and continuously based on raw scroll progress.
+            // Both by transform (the line is scaled down its full height), so no scroll frame
+            // makes the browser lay the section out again.
+            const inner = namesInnerRef.current;
+            const trackHeight = lineTrackRef.current?.offsetHeight ?? 0;
+            gsap.set(indicatorRef.current, { y: progress * trackHeight });
+            gsap.set(lineFillRef.current, { scaleY: progress });
 
-          if (newIndex === current) return;
-          current = newIndex;
-          setActiveIndex(newIndex);
-          const itemHeight = inner?.firstElementChild?.offsetHeight || 48;
+            if (newIndex === current) return;
+            current = newIndex;
+            setActiveIndex(newIndex);
+            const itemHeight = inner?.firstElementChild?.offsetHeight || 48;
 
-          // Auto-scroll the names list up if it goes beyond the visible container
-          if (inner && inner.parentElement) {
-            const targetY = newIndex * itemHeight;
-            const containerHeight = inner.parentElement.offsetHeight;
-            const maxShift = Math.max(0, inner.offsetHeight - containerHeight);
-            // Keep the active name centred in the window
-            gsap.to(inner, {
-              y: -Math.min(maxShift, Math.max(0, targetY - (containerHeight - itemHeight) / 2)),
-              duration: 0.3,
-              ease: "power2.out",
-            });
-          }
-        },
+            // Auto-scroll the names list up if it goes beyond the visible container
+            if (inner && inner.parentElement) {
+              const targetY = newIndex * itemHeight;
+              const containerHeight = inner.parentElement.offsetHeight;
+              const maxShift = Math.max(0, inner.offsetHeight - containerHeight);
+              // Keep the active name centred in the window
+              gsap.to(inner, {
+                y: -Math.min(maxShift, Math.max(0, targetY - (containerHeight - itemHeight) / 2)),
+                duration: 0.3,
+                ease: "power2.out",
+              });
+            }
+          },
+        });
       });
     },
     { scope: sectionRef }
@@ -120,8 +129,9 @@ const TeamMembers = () => {
   const activePerson = team[activeIndex];
 
   return (
-    <section ref={sectionRef} className="relative w-full h-svh bg-[#FAFAFA] text-black overflow-hidden pt-[calc(5rem+8px)] pb-6 md:pt-[calc(7rem+8px)] lg:pb-12">
-      {/* Starts below the fixed header (5rem / 7rem tall) and shares its side padding */}
+    <section ref={sectionRef} className="relative w-full h-svh bg-[#FAFAFA] text-black overflow-hidden pt-[calc(5rem+8px)] pb-6 md:pt-[calc(7rem+8px)] lg:pb-12 phone:h-auto phone:overflow-visible phone:pt-4 phone:pb-10">
+      {/* Starts below the fixed header (5rem / 7rem tall) and shares its side padding; on phones
+          the section isn't pinned, so it just follows the one above */}
       <div className="w-full h-full px-6 md:px-8 flex flex-col lg:flex-row gap-5 lg:gap-16">
 
         {/* Left Column: Heading */}
@@ -132,8 +142,8 @@ const TeamMembers = () => {
           </h4>
         </div>
 
-        {/* Middle Column: Names List (a three-name scrolling window on phones, the full list from lg) */}
-        <div className="lg:w-4/12 relative h-[132px] lg:h-auto lg:self-start flex items-start shrink-0 sm:mt-8 ">
+        {/* Middle Column: Names List (a three-name scrolling window on tablets, the full list from lg) */}
+        <div className="lg:w-4/12 relative h-[132px] lg:h-auto lg:self-start flex items-start shrink-0 sm:mt-8 phone:hidden">
           {/* Scrollable Container (hidden overflow, controlled by GSAP) */}
           <div className="relative w-full h-full overflow-hidden">
             <div ref={namesInnerRef} className="w-full relative flex flex-col gap-2">
@@ -167,10 +177,10 @@ const TeamMembers = () => {
         </div>
 
         {/* Right Column: Person Info */}
-        <div className="lg:w-5/12 flex-1 flex flex-col lg:pl-12 relative min-h-0">
+        <div className="lg:w-5/12 flex-1 flex flex-col lg:pl-12 relative min-h-0 phone:hidden">
 
           {/* The slot takes whatever height the titles and button leave; inside it a 4:5 portrait
-              frame takes that height (narrowing to the column if needed), so phones get a portrait, not a crop */}
+              frame takes that height (narrowing to the column if needed), so tablets get a portrait, not a crop */}
           <div className="relative flex-1 min-h-0 mb-4 lg:mb-5">
             <div className="relative h-full max-w-full aspect-[4/5] overflow-hidden bg-black/5">
               <Image
@@ -199,6 +209,51 @@ const TeamMembers = () => {
             )}
           </div>
 
+        </div>
+
+        {/* Phones: the Chairman full width, then the directors two to a row (three on a phone
+            turned sideways), each with their photo, name and titles */}
+        <div className="hidden phone:block mt-3">
+          <article data-reveal="rise" className="flex flex-col sm:flex-row sm:items-end gap-5 sm:gap-8">
+            <div className="relative w-full sm:w-2/5 aspect-[4/5] overflow-hidden bg-black/5 shrink-0">
+              <Image
+                src={chairman.image}
+                alt={chairman.name}
+                fill
+                sizes="(min-width: 640px) 40vw, 90vw"
+                className="object-cover object-[50%_20%]"
+              />
+            </div>
+            <div>
+              <h5 className="text-[24px]! leading-[1.15]! text-black tracking-tight mb-2">{chairman.name}</h5>
+              <div className="text-[#555] mb-5">
+                {chairman.titles.map((title) => (
+                  <p key={title} className="text-[13px]! leading-[1.45]!">{title}</p>
+                ))}
+              </div>
+              <Button href={chairman.profile}>View Full Profile</Button>
+            </div>
+          </article>
+
+          <ul className="grid grid-cols-2 sm:grid-cols-3 gap-x-3 gap-y-8 mt-10 pt-10 border-t border-black/10">
+            {directors.map((person) => (
+              <li key={person.name} data-reveal="rise">
+                <div className="relative aspect-[4/5] overflow-hidden bg-black/5 mb-3">
+                  <Image
+                    src={person.image}
+                    alt={person.name}
+                    fill
+                    sizes="(min-width: 640px) 30vw, 45vw"
+                    className="object-cover object-[50%_20%]"
+                  />
+                </div>
+                <h5 className="text-[15px]! leading-[1.25]! text-black mb-1">{person.name}</h5>
+                {person.titles.map((title) => (
+                  <p key={title} className="text-[12px]! leading-[1.4]! text-[#555]">{title}</p>
+                ))}
+              </li>
+            ))}
+          </ul>
         </div>
 
       </div>

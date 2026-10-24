@@ -103,13 +103,13 @@ export default function WWSchools() {
             style={{ color: school.color }}
             className="grid grid-cols-12 gap-x-4 gap-y-5 md:gap-x-8 border-t border-black/10 py-8 md:py-10 lg:py-12"
           >
-            <h2 className="col-span-3 md:col-span-2 font-['SwitzerL'] text-[3rem] md:text-[4.5rem] leading-[0.9] tracking-tighter tabular-nums">
+            <span className="h2 col-span-3 md:col-span-2 font-['SwitzerL'] text-[3rem] md:text-[4.5rem] leading-[0.9] tracking-tighter tabular-nums">
               {school.id}
-            </h2>
+            </span>
 
-            <h4 className="col-span-9 md:col-span-10 lg:col-span-5 tracking-tight text-balance">
+            <h3 className="h4 col-span-9 md:col-span-10 lg:col-span-5 tracking-tight text-balance">
               {school.name}
-            </h4>
+            </h3>
 
             <div className="col-span-12 md:col-start-3 md:col-span-10 lg:col-start-auto lg:col-span-5 lg:pt-2">
               {school.description ? (

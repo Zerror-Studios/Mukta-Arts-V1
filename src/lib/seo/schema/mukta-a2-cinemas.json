@@ -1,0 +1,660 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://www.muktaarts.com/mukta-a2-cinemas#webpage",
+      "url": "https://www.muktaarts.com/mukta-a2-cinemas",
+      "name": "Mukta A2 Cinemas | Affordable Multiplexes Across India",
+      "description": "Mukta A2 Cinemas, the exhibition arm of Mukta Arts, runs affordable cinemas across India, from Mumbai's New Excelsior to Hyderabad, Bahrain and Saudi Arabia.",
+      "isPartOf": {
+        "@id": "https://www.muktaarts.com/#website"
+      },
+      "inLanguage": "en-IN",
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://www.muktaarts.com/opengraph-image"
+      },
+      "breadcrumb": {
+        "@id": "https://www.muktaarts.com/mukta-a2-cinemas#breadcrumb"
+      },
+      "about": {
+        "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+      },
+      "mainEntity": {
+        "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2",
+      "name": "Mukta A2 Cinemas",
+      "url": "https://muktaa2cinemas.in/",
+      "parentOrganization": {
+        "@id": "https://www.muktaarts.com/#organization"
+      },
+      "description": "Cinema exhibition arm of Mukta Arts, offering quality cinema at affordable prices across India, with cinemas in Bahrain and Saudi Arabia.",
+      "sameAs": [
+        "https://en.wikipedia.org/wiki/Mukta_A2_Cinemas",
+        "https://muktaa2cinemas.in/"
+      ]
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://www.muktaarts.com/mukta-a2-cinemas#properties",
+      "name": "Mukta A2 Cinemas properties",
+      "numberOfItems": 33,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Jaihind",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Mumbai",
+              "addressRegion": "Maharashtra",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Operational (run by Mukta A2 Cinemas)"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Nakshatra Mall",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Banswara",
+              "addressRegion": "Rajasthan",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Operational (run by Mukta A2 Cinemas)"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Vizag Central Mall",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Visakhapatnam",
+              "addressRegion": "Andhra Pradesh",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Operational (run by Mukta A2 Cinemas)"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, SFC Mall",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Sangli",
+              "addressRegion": "Maharashtra",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Operational (run by Mukta A2 Cinemas)"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Peoples Mall",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Bhopal",
+              "addressRegion": "Madhya Pradesh",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Operational (run by Mukta A2 Cinemas)"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Topiwala Centre",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Mumbai",
+              "addressRegion": "Maharashtra",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Operational (run by Mukta A2 Cinemas)"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Orion",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Mumbai",
+              "addressRegion": "Maharashtra",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Operational (run by Mukta A2 Cinemas)"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Babyloon",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Bhilai",
+              "addressRegion": "Chhattisgarh",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Operational (run by Mukta A2 Cinemas)"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Rajyash Rise",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Ahmedabad",
+              "addressRegion": "Gujarat",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Operational (run by Mukta A2 Cinemas)"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 10,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, TRP Bopal",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Ahmedabad",
+              "addressRegion": "Gujarat",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Operational (run by Mukta A2 Cinemas)"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 11,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Rani Padmani Mall",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Chittorgarh",
+              "addressRegion": "Rajasthan",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Operational (run by Mukta A2 Cinemas)"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 12,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Vinuss One",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Samastipur",
+              "addressRegion": "Bihar",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Operational (run by Mukta A2 Cinemas)"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 13,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Parv Plaza",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Behror",
+              "addressRegion": "Rajasthan",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Operational (run by Mukta A2 Cinemas)"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 14,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Triveni Grande",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Kalyan",
+              "addressRegion": "Maharashtra",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Operational (run by Mukta A2 Cinemas)"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 15,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Emperor Mall",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Vadodara",
+              "addressRegion": "Gujarat",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Operational (run by Mukta A2 Cinemas)"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 16,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Citi Centre",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Bettiah",
+              "addressRegion": "Bihar",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Operational (run by Mukta A2 Cinemas)"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 17,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Srinivasa",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Karimnagar",
+              "addressRegion": "Telangana",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Managed for partners"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 18,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Giriraj Cinema",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Navsari",
+              "addressRegion": "Gujarat",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Managed for partners"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 19,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, RSS Square",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Kadapa",
+              "addressRegion": "Andhra Pradesh",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Managed for partners"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 20,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Aamrakunj",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Ahmedabad",
+              "addressRegion": "Gujarat",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Managed for partners"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 21,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Ratnanjali",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Ahmedabad",
+              "addressRegion": "Gujarat",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Managed for partners"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 22,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Orbit Plaza",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Surat",
+              "addressRegion": "Gujarat",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Managed for partners"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 23,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, SN Mall",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Karimnagar",
+              "addressRegion": "Telangana",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Managed for partners"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 24,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Bharatmata",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Mumbai",
+              "addressRegion": "Maharashtra",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Managed for partners"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 25,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Star Mall",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Gurugram",
+              "addressRegion": "Haryana",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Managed for partners"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 26,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Signature Mall",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Mehsana",
+              "addressRegion": "Gujarat",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Managed for partners"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 27,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, New Excelsior",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Mumbai",
+              "addressRegion": "Maharashtra",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Managed for partners"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 28,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Sri Sai Ram 70 MM",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Khammam",
+              "addressRegion": "Telangana",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Joint venture"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 29,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Konark Theatre",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Hyderabad",
+              "addressRegion": "Telangana",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Joint venture"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 30,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, MJR Mall",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Hyderabad",
+              "addressRegion": "Telangana",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Joint venture"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 31,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, VMR Mall",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Visakhapatnam",
+              "addressRegion": "Andhra Pradesh",
+              "addressCountry": "IN"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "Joint venture"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 32,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Juffair Mall",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Manama",
+              "addressCountry": "BH"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "International"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 33,
+          "item": {
+            "@type": "MovieTheater",
+            "name": "Mukta A2 Cinemas, Noir Cinemas",
+            "address": {
+              "@type": "PostalAddress",
+              "addressCountry": "SA"
+            },
+            "parentOrganization": {
+              "@id": "https://www.muktaarts.com/mukta-a2-cinemas#a2"
+            },
+            "description": "International"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.muktaarts.com/mukta-a2-cinemas#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.muktaarts.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Mukta A2 Cinemas",
+          "item": "https://www.muktaarts.com/mukta-a2-cinemas"
+        }
+      ]
+    }
+  ]
+}

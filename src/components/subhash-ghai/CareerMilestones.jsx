@@ -3,13 +3,20 @@
 import React, { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Draggable } from "gsap/Draggable";
 import { useGSAP } from "@gsap/react";
 import useScrollReveal from "@/hooks/useScrollReveal";
 import { smoothScrollTo } from "@/lib/smoothScroll";
 
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
+  gsap.registerPlugin(ScrollTrigger, Draggable);
 }
+
+// Phones, upright or on their side, can also drag the track sideways. Keep in step with the
+// `phone` variant in globals.css.
+const PHONE = "(max-width: 767.98px), (max-height: 500px)";
+// How far ahead a flick carries on release, in seconds of its speed
+const FLICK = 0.3;
 
 // Film posters are the client's own, the compressed copies of /img/final/home/all (Gautam Govinda, Krodhi,
 // Vidhaata and Meri Jung have no client poster yet). Event photos are web-sized copies of /img/final/about_Img/AB2.
@@ -312,6 +319,15 @@ export default function CareerMilestones() {
         }
       };
 
+      // The card whose centre is nearest a point along the track
+      const closestTo = (pos) => {
+        let closest = 0;
+        for (let i = 1; i < n; i++) {
+          if (Math.abs(centers[i] - pos) < Math.abs(centers[closest] - pos)) closest = i;
+        }
+        return closest;
+      };
+
       measure();
       setActive(0);
 
@@ -336,12 +352,7 @@ export default function CareerMilestones() {
             const p = this.progress();
             gsap.set(progressLineRef.current, { scaleX: p });
 
-            const pos = centers[0] + p * (centers[n - 1] - centers[0]);
-            let closest = 0;
-            for (let i = 1; i < n; i++) {
-              if (Math.abs(centers[i] - pos) < Math.abs(centers[closest] - pos)) closest = i;
-            }
-            setActive(closest);
+            setActive(closestTo(centers[0] + p * (centers[n - 1] - centers[0])));
           },
         }
       );
@@ -388,6 +399,89 @@ export default function CareerMilestones() {
         });
       });
 
+      // On phones the track can be dragged sideways as well. The drag scrolls the page to the
+      // matching point, so the dots, the progress line and the next section all stay in step.
+      // The track follows the finger directly (the scrub's lag is skipped), and on release it
+      // glides on to the card the flick was heading for, setting off at the finger's speed.
+      // Vertical swipes are left to the browser, and the drag only works while the timeline is pinned.
+      const mm = gsap.matchMedia();
+      mm.add(PHONE, () => {
+        const st = trackTween.scrollTrigger;
+        if (!st) return;
+
+        let dragging = false;
+        let startScroll = 0;
+        let startIndex = 0;
+        let pointerOrigin = 0;
+        let lastX = 0;
+        let lastTime = 0;
+        let velocity = 0; // track px per second
+        let glide;
+
+        const scrollPerPx = () => (st.end - st.start) / (centers[n - 1] - centers[0] || 1);
+
+        const scrollNow = (y) => {
+          if (window.lenis) window.lenis.scrollTo(y, { immediate: true, force: true });
+          else window.scrollTo({ top: y, behavior: "instant" });
+          ScrollTrigger.update();
+          st.getTween()?.progress(1);
+        };
+
+        const [drag] = Draggable.create(document.createElement("div"), {
+          trigger: track.parentElement,
+          type: "x",
+          onPress() {
+            // A touch catches a glide still running
+            glide?.kill();
+            dragging = st.isActive;
+            startScroll = st.scroll();
+            startIndex = Math.max(activeIndex, 0);
+            pointerOrigin = lastX = this.x;
+            lastTime = performance.now();
+            velocity = 0;
+          },
+          onDrag() {
+            if (!dragging) return;
+            const now = performance.now();
+            if (now > lastTime) velocity = ((this.x - lastX) / (now - lastTime)) * 1000;
+            lastX = this.x;
+            lastTime = now;
+            const y = startScroll - (this.x - pointerOrigin) * scrollPerPx();
+            scrollNow(gsap.utils.clamp(st.start, st.end, y));
+          },
+          onRelease() {
+            if (!dragging) return;
+            dragging = false;
+            const moved = this.x - pointerOrigin;
+            if (Math.abs(moved) < 4) return;
+            // A finger that stopped before lifting carries nothing
+            if (performance.now() - lastTime > 100) velocity = 0;
+
+            const pos = centers[0] + trackTween.progress() * (centers[n - 1] - centers[0]);
+            let target = closestTo(pos - velocity * FLICK);
+            // A deliberate drag always moves on at least one card
+            if (target === startIndex && Math.abs(moved) > 24) target = startIndex + (moved < 0 ? 1 : -1);
+            target = gsap.utils.clamp(0, n - 1, target);
+
+            // power3.out sets off at 3 × distance / duration, so this duration matches the finger
+            const speed = Math.abs(velocity);
+            const dist = Math.abs(centers[target] - pos);
+            const scroll = { y: st.scroll() };
+            glide = gsap.to(scroll, {
+              y: st.start + (centers[target] - centers[0]) * scrollPerPx(),
+              duration: gsap.utils.clamp(0.35, 1, speed > 50 ? (3 * dist) / speed : 0.6),
+              ease: "power3.out",
+              onUpdate: () => scrollNow(scroll.y),
+            });
+          },
+        });
+
+        return () => {
+          glide?.kill();
+          drag.kill();
+        };
+      });
+
       return () => {
         jumpToRef.current = null;
         skipRef.current = null;
@@ -401,7 +495,7 @@ export default function CareerMilestones() {
       ref={containerRef}
       // --ph is the image height: it leaves room for the header, footer and card copy,
       // so the whole section always fits one screen (svh avoids mobile URL-bar jumps)
-      className="relative h-svh w-full bg-[#F8F9FA] overflow-hidden text-black select-none flex flex-col [--ph:min(48svh,calc(100svh-380px))] md:[--ph:min(48svh,calc(100svh-420px))] short:[--ph:calc(100svh-190px)]"
+      className="relative h-screen w-full bg-[#F8F9FA] overflow-hidden text-black select-none flex flex-col [--ph:min(48svh,calc(100svh-380px))] md:[--ph:min(48svh,calc(100svh-420px))] short:[--ph:calc(100svh-190px)]"
     >
       {/* Oversized outlined year behind the track */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">

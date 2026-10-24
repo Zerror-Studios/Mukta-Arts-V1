@@ -11,7 +11,8 @@
    Taller ones (a tablet held upright) stack it. Keep in step with footerScaleFor in Home > HeadphonesModel. */
 @custom-variant wide (@media (min-width: 1024px) and (orientation: landscape));
 
-/* Phones, upright or on their side. Keep in step with PHONE in About > FilmLegacy. */
+/* Phones, upright or on their side. Keep in step with PHONE in About > FilmLegacy,
+   About > InvestorRelations and Subhash Ghai > CareerMilestones, and DESK in About > TeamMembers. */
 @custom-variant phone {
   @media (max-width: 767.98px), (max-height: 500px) {
     @slot;

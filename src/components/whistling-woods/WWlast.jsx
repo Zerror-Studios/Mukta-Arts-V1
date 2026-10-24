@@ -10,37 +10,37 @@ const W2 = "/img/final/WW/W2/web/";
 
 // Campaign portraits interleaved with film stills
 const carouselItems = [
-    "WHISTLING WOODS CAMPAIGN 09.04.webp",
-    "110.webp",
-    "WHISTLING WOODS CAMPAIGN 09.04_1.webp",
-    "1L0.webp",
-    "WHISTLING WOODS CAMPAIGN 09.04_2.webp",
-    "220.webp",
-    "WHISTLING WOODS CAMPAIGN 09.04_3.webp",
-    "30.webp",
-    "WHISTLING WOODS CAMPAIGN 09.04_4.webp",
-    "330.webp",
-    "WHISTLING WOODS CAMPAIGN 09.04_5.webp",
-    "440.webp",
-    "WHISTLING WOODS CAMPAIGN 09.04_6.webp",
-    "50.webp",
-    "WHISTLING WOODS CAMPAIGN 09.04_7.webp",
-    "55..tiff0.webp",
-    "WHISTLING WOODS CAMPAIGN 09.04_8.webp",
-    "6L0.webp",
-    "WHISTLING WOODS CAMPAIGN 09.04_9.webp",
-    "7L0.webp",
-    "WHISTLING WOODS CAMPAIGN 09.04_10.webp",
-    "90.webp",
-    "WHISTLING WOODS CAMPAIGN 09.04_11.webp",
-    "WHISTLING WOODS CAMPAIGN 09.04_12.webp",
-    "WHISTLING WOODS CAMPAIGN 09.04_13.webp",
-    "WHISTLING WOODS CAMPAIGN 09.04_14.webp",
-    "WHISTLING WOODS CAMPAIGN 09.04_15.webp",
-    "WHISTLING WOODS CAMPAIGN 09.04_16.webp",
-    "WHISTLING WOODS CAMPAIGN 09.04_17.webp",
-    "WHISTLING WOODS CAMPAIGN 09.04_18.webp",
-].map((file) => ({ src: encodeURI(W2 + file) }));
+    { file: "WHISTLING WOODS CAMPAIGN 09.04.webp", alt: "Whistling Woods International student in a purple college hoodie on campus" },
+    { file: "110.webp", alt: "Student watching a film in a darkened cinema auditorium" },
+    { file: "WHISTLING WOODS CAMPAIGN 09.04_1.webp", alt: "Smiling Whistling Woods student sitting on the campus steps" },
+    { file: "1L0.webp", alt: "Drummer playing a drum kit on a warmly lit stage" },
+    { file: "WHISTLING WOODS CAMPAIGN 09.04_2.webp", alt: "Whistling Woods students studying together on the campus lawn" },
+    { file: "220.webp", alt: "Student reading between bookshelves in the library" },
+    { file: "WHISTLING WOODS CAMPAIGN 09.04_3.webp", alt: "Students talking around a table in the Whistling Woods library" },
+    { file: "30.webp", alt: "Dancer rehearsing alone on a spotlit stage" },
+    { file: "WHISTLING WOODS CAMPAIGN 09.04_4.webp", alt: "Whistling Woods students working on sketches together in a common room" },
+    { file: "330.webp", alt: "Student at work in a dimly lit costume workshop" },
+    { file: "WHISTLING WOODS CAMPAIGN 09.04_5.webp", alt: "Student reading a script beside production vehicles" },
+    { file: "440.webp", alt: "Student drawing on a tablet with a stylus" },
+    { file: "WHISTLING WOODS CAMPAIGN 09.04_6.webp", alt: "Student sitting on white amphitheatre steps on campus" },
+    { file: "50.webp", alt: "Student reading a book on the campus steps at golden hour" },
+    { file: "WHISTLING WOODS CAMPAIGN 09.04_7.webp", alt: "Whistling Woods student in a college T-shirt and jacket, standing outdoors" },
+    { file: "55..tiff0.webp", alt: "Performer alone on a spotlit stage in front of empty theatre seats" },
+    { file: "WHISTLING WOODS CAMPAIGN 09.04_8.webp", alt: "Student presenting at a whiteboard in a classroom" },
+    { file: "6L0.webp", alt: "Student film crew working on set under red light" },
+    { file: "WHISTLING WOODS CAMPAIGN 09.04_9.webp", alt: "Whistling Woods student with a tablet and backpack on the campus basketball court" },
+    { file: "7L0.webp", alt: "Student in a Whistling Woods hoodie looking out over a harbour" },
+    { file: "WHISTLING WOODS CAMPAIGN 09.04_10.webp", alt: "Students filming in a green screen studio" },
+    { file: "90.webp", alt: "Student building a costume piece in a workshop" },
+    { file: "WHISTLING WOODS CAMPAIGN 09.04_11.webp", alt: "Whistling Woods student standing by the campus lockers" },
+    { file: "WHISTLING WOODS CAMPAIGN 09.04_12.webp", alt: "Fashion design student among garments on mannequins" },
+    { file: "WHISTLING WOODS CAMPAIGN 09.04_13.webp", alt: "Music student playing an acoustic guitar in a studio" },
+    { file: "WHISTLING WOODS CAMPAIGN 09.04_14.webp", alt: "Dance student posing under studio lights in front of a mural" },
+    { file: "WHISTLING WOODS CAMPAIGN 09.04_15.webp", alt: "Whistling Woods student in front of a comic-style mural" },
+    { file: "WHISTLING WOODS CAMPAIGN 09.04_16.webp", alt: "Student recording outdoor sound with headphones and a field recorder" },
+    { file: "WHISTLING WOODS CAMPAIGN 09.04_17.webp", alt: "Student holding a camera on campus at night" },
+    { file: "WHISTLING WOODS CAMPAIGN 09.04_18.webp", alt: "Whistling Woods student holding books in the library" },
+].map(({ file, alt }) => ({ src: encodeURI(W2 + file), alt }));
 
 // Same widths as before, taller frames (capped by the screen height on short laptops)
 const itemSize =
@@ -62,12 +62,12 @@ const WWlast = () => {
     });
 
     return (
-        <section ref={sectionRef} className="relative w-full pt-20 md:pt-32 pb-12 md:pb-16 overflow-hidden bg-[#FAFAFA]">
+        <section ref={sectionRef} className="relative w-full sm:pt-20 md:pt-32 pb-12 md:pb-16 overflow-hidden bg-[#FAFAFA]">
             <div className=" px-4 md:px-8 mb-12 md:mb-24 ">
                 <div className="flex flex-col lg:flex-row justify-between items-start gap-5 md:gap-8 lg:gap-16 ">
-                    <h4 data-reveal="words" className="text-5xl capitalize md:text-7xl lg:text-[5.5rem] font-bold tracking-tighter text-black max-w-3xl leading-[1.05]">
+                    <h2 data-reveal="words" className="text-5xl capitalize md:text-7xl lg:text-[5.5rem] font-bold tracking-tighter text-black max-w-3xl leading-[1.05]">
                         whistling woods <br /> gallery
-                    </h4>
+                    </h2>
 
                 </div>
             </div>
@@ -84,11 +84,13 @@ const WWlast = () => {
                     {[...carouselItems, ...carouselItems].map((item, index) => (
                         <div
                             key={index}
+                            // The second set is only there for the loop, so it is hidden from screen readers and has no alt
+                            aria-hidden={index >= carouselItems.length || undefined}
                             className={`relative flex-shrink-0 ${itemSize}`}
                         >
                             <Image
                                 src={item.src}
-                                alt={`Hero image ${index}`}
+                                alt={index < carouselItems.length ? item.alt : ""}
                                 fill
                                 sizes="(max-width: 768px) 80vw, 40vw"
                                 className="object-cover"

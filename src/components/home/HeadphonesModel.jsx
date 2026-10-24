@@ -643,8 +643,8 @@ export default function HeadphonesCanvas({ footerOnly = false }) {
     // would be resized mid-scroll, reallocating its drawing buffer and changing the camera's aspect
     // so the logo jumped in size and place. 100vh is the screen with the bar away, which never
     // changes; with the bar showing, the bit below the screen is simply out of sight.
-    <div id="hero-logo-canvas" className={`fixed top-0 inset-x-0 h-screen z-10 pointer-events-none flex items-center justify-center ${footerOnly ? 'opacity-0' : ''}`}>
-      <div id="3d-canvas-container" className="w-full h-full pointer-events-none">
+    <div id="hero-logo-canvas" className={`fixed top-0 inset-x-0 h-svh z-10 pointer-events-none flex items-center justify-center ${footerOnly ? 'opacity-0' : ''}`}>
+      <div id="3d-canvas-container" className="w-full h-full pointer-events-none ">
         <Canvas
           key={contextKey}
           onCreated={handleCreated}

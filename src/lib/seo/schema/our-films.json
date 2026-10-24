@@ -1,0 +1,680 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "@id": "https://www.muktaarts.com/our-films#webpage",
+      "url": "https://www.muktaarts.com/our-films",
+      "name": "Mukta Arts Films | Karz, Ram Lakhan, Pardes, Taal & More",
+      "description": "Explore 50+ films from the house of Mukta Arts and Subhash Ghai, from Kalicharan and Karz to Khalnayak, Pardes, Taal, National Award winner Iqbal and more.",
+      "isPartOf": {
+        "@id": "https://www.muktaarts.com/#website"
+      },
+      "inLanguage": "en-IN",
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://www.muktaarts.com/opengraph-image"
+      },
+      "breadcrumb": {
+        "@id": "https://www.muktaarts.com/our-films#breadcrumb"
+      },
+      "about": {
+        "@id": "https://www.muktaarts.com/#organization"
+      },
+      "mainEntity": {
+        "@id": "https://www.muktaarts.com/our-films#films"
+      }
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://www.muktaarts.com/our-films#films",
+      "name": "Films by Mukta Arts",
+      "numberOfItems": 52,
+      "itemListOrder": "https://schema.org/ItemListOrderAscending",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@type": "Movie",
+            "name": "Kalicharan",
+            "datePublished": "1976",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "Movie",
+            "name": "Vishwanath",
+            "datePublished": "1978",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "Movie",
+            "name": "Gautam Govinda",
+            "datePublished": "1979",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "Movie",
+            "name": "Karz",
+            "datePublished": "1980",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "Movie",
+            "name": "Krodhi",
+            "datePublished": "1981",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "item": {
+            "@type": "Movie",
+            "name": "Vidhaata",
+            "datePublished": "1982",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "item": {
+            "@type": "Movie",
+            "name": "Hero",
+            "datePublished": "1983",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
+          "item": {
+            "@type": "Movie",
+            "name": "Meri Jung",
+            "datePublished": "1985",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
+          "item": {
+            "@type": "Movie",
+            "name": "Karma",
+            "datePublished": "1986",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 10,
+          "item": {
+            "@type": "Movie",
+            "name": "Uttar Dakshin",
+            "datePublished": "1987",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 11,
+          "item": {
+            "@type": "Movie",
+            "name": "Ram Lakhan",
+            "datePublished": "1989",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 12,
+          "item": {
+            "@type": "Movie",
+            "name": "Saudagar",
+            "datePublished": "1991",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 13,
+          "item": {
+            "@type": "Movie",
+            "name": "Prem Deewane",
+            "datePublished": "1992",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 14,
+          "item": {
+            "@type": "Movie",
+            "name": "Pyar Ki Ganga Bahe",
+            "datePublished": "1993",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 15,
+          "item": {
+            "@type": "Movie",
+            "name": "Khalnayak",
+            "datePublished": "1993",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 16,
+          "item": {
+            "@type": "Movie",
+            "name": "Trimurti",
+            "datePublished": "1995",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 17,
+          "item": {
+            "@type": "Movie",
+            "name": "Jaan",
+            "datePublished": "1996",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 18,
+          "item": {
+            "@type": "Movie",
+            "name": "Pardes",
+            "datePublished": "1997",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 19,
+          "item": {
+            "@type": "Movie",
+            "name": "Shyam Ghanshyam",
+            "datePublished": "1998",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 20,
+          "item": {
+            "@type": "Movie",
+            "name": "Taal",
+            "datePublished": "1999",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 21,
+          "item": {
+            "@type": "Movie",
+            "name": "Rahul",
+            "datePublished": "2001",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 22,
+          "item": {
+            "@type": "Movie",
+            "name": "Yaadein",
+            "datePublished": "2001",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 23,
+          "item": {
+            "@type": "Movie",
+            "name": "Badhaai Ho Badhaai",
+            "datePublished": "2002",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 24,
+          "item": {
+            "@type": "Movie",
+            "name": "Ek Aur Ek Gyarah",
+            "datePublished": "2003",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 25,
+          "item": {
+            "@type": "Movie",
+            "name": "Jogger’s Park",
+            "datePublished": "2003",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 26,
+          "item": {
+            "@type": "Movie",
+            "name": "Aitraaz",
+            "datePublished": "2004",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 27,
+          "item": {
+            "@type": "Movie",
+            "name": "Kisna",
+            "datePublished": "2005",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 28,
+          "item": {
+            "@type": "Movie",
+            "name": "Iqbal",
+            "datePublished": "2005",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 29,
+          "item": {
+            "@type": "Movie",
+            "name": "Shaadi Se Pehle",
+            "datePublished": "2006",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 30,
+          "item": {
+            "@type": "Movie",
+            "name": "36 China Town",
+            "datePublished": "2006",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 31,
+          "item": {
+            "@type": "Movie",
+            "name": "Apna Sapna Money Money",
+            "datePublished": "2006",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 32,
+          "item": {
+            "@type": "Movie",
+            "name": "Good Boy Bad Boy",
+            "datePublished": "2007",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 33,
+          "item": {
+            "@type": "Movie",
+            "name": "Bombay to Bangkok",
+            "datePublished": "2008",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 34,
+          "item": {
+            "@type": "Movie",
+            "name": "Valu",
+            "datePublished": "2008",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 35,
+          "item": {
+            "@type": "Movie",
+            "name": "Black and White",
+            "datePublished": "2008",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 36,
+          "item": {
+            "@type": "Movie",
+            "name": "Sanai Choughade",
+            "datePublished": "2008",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 37,
+          "item": {
+            "@type": "Movie",
+            "name": "Yuvvraaj",
+            "datePublished": "2008",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 38,
+          "item": {
+            "@type": "Movie",
+            "name": "Paying Guests",
+            "datePublished": "2009",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 39,
+          "item": {
+            "@type": "Movie",
+            "name": "Right Yaaa Wrong",
+            "datePublished": "2010",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 40,
+          "item": {
+            "@type": "Movie",
+            "name": "Hello Darling",
+            "datePublished": "2010",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 41,
+          "item": {
+            "@type": "Movie",
+            "name": "Nouka Dubi / Kashmakash",
+            "datePublished": "2011",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 42,
+          "item": {
+            "@type": "Movie",
+            "name": "Love Express",
+            "datePublished": "2011",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 43,
+          "item": {
+            "@type": "Movie",
+            "name": "Cycle Kick",
+            "datePublished": "2011",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 44,
+          "item": {
+            "@type": "Movie",
+            "name": "Samhita",
+            "datePublished": "2013",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 45,
+          "item": {
+            "@type": "Movie",
+            "name": "Nimbehuli",
+            "datePublished": "2014",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 46,
+          "item": {
+            "@type": "Movie",
+            "name": "Kaanchi",
+            "datePublished": "2014",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 47,
+          "item": {
+            "@type": "Movie",
+            "name": "Double Di Trouble",
+            "datePublished": "2014",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 48,
+          "item": {
+            "@type": "Movie",
+            "name": "Vijeta",
+            "datePublished": "2020",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 49,
+          "item": {
+            "@type": "Movie",
+            "name": "Gandhi: A Perspective",
+            "datePublished": "2020",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 50,
+          "item": {
+            "@type": "Movie",
+            "name": "36 Farmhouse",
+            "datePublished": "2022",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 51,
+          "item": {
+            "@type": "Movie",
+            "name": "Jaanki",
+            "datePublished": "2023",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 52,
+          "item": {
+            "@type": "Movie",
+            "name": "Tu Me Ani Amaira",
+            "datePublished": "2025",
+            "productionCompany": {
+              "@id": "https://www.muktaarts.com/#organization"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.muktaarts.com/our-films#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.muktaarts.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Mukta Arts Productions",
+          "item": "https://www.muktaarts.com/our-films"
+        }
+      ]
+    }
+  ]
+}

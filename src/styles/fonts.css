@@ -187,13 +187,17 @@ body {
 
 
 
-h2 {
+/* .h2 / .h4 give another tag the same look, so a heading's level can change for SEO
+   (an h2 promoted to the page's h1, a number that should not be a heading) without it moving */
+h2,
+.h2 {
   font-size: 5rem;
   line-height: 5.2rem;
   font-family: 'SwitzerSB';
 }
 
-h4 {
+h4,
+.h4 {
   font-size: 3rem;
   line-height: 3.2rem;
   font-family: 'SwitzerSB';
@@ -213,21 +217,23 @@ p {
 
 
 @media (max-width: 650px) {
-  h2 {
-    font-size: 3rem;
-    line-height: 3.2rem;
+  h2,
+  .h2 {
+    font-size: 2.9rem;
+    line-height: 3rem;
     font-family: 'SwitzerSB';
   }
 
-  h4 {
+  h4,
+  .h4 {
     font-size: 2rem;
     line-height: 2.2rem;
     font-family: 'SwitzerSB';
   }
 
   h5 {
-    font-size: 1.8rem;
-    line-height: 1.8rem;
+    font-size: 1.6rem;
+    line-height: 1.6rem;
     font-family: 'SwitzerSB';
   }
 

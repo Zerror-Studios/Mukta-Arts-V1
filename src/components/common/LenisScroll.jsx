@@ -55,7 +55,22 @@ export default function LenisScroll({ children }) {
 
     // Lenis watches the page's size itself (autoResize), so no resize listener is needed
 
+    // Opened at a #section (e.g. /about#investor-relations, where the old site's investor pages
+    // redirect): the browser's own jump happens before the pinned sections are laid out, so go to
+    // the section again once the page has loaded and ScrollTrigger has measured it
+    const hashId = decodeURIComponent(window.location.hash.slice(1));
+    const goToHash = () =>
+      requestAnimationFrame(() => {
+        const target = hashId && document.getElementById(hashId);
+        if (target) instance.scrollTo(target, { immediate: true, force: true });
+      });
+    if (hashId) {
+      if (document.readyState === "complete") goToHash();
+      else window.addEventListener("load", goToHash, { once: true });
+    }
+
     return () => {
+      window.removeEventListener("load", goToHash);
       gsap.ticker.remove(raf);
       instance.destroy();
       lenis.current = null;

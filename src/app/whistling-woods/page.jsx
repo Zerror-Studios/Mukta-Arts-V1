@@ -5,11 +5,14 @@ import WWStats from "@/components/whistling-woods/WWStatsOLD";
 import WWMilestones from "@/components/whistling-woods/WWMilestones";
 import WWQuotes from "@/components/whistling-woods/WWQuotes";
 import WWSchools from "@/components/whistling-woods/WWSchools";
-import { createPageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/seo/JsonLd";
+import { buildMetadata, PAGES } from "@/lib/seo/metadata";
+import pageSchema from "@/lib/seo/schema/whistling-woods.json";
 
 const page = () => {
     return (
         <>
+            <JsonLd data={pageSchema} />
             <WWHERO />
             {/* WWI intro and its six stats */}
             <WWStats />
@@ -27,6 +30,4 @@ const page = () => {
 
 export default page;
 
-export async function generateMetadata(_props, parent) {
-    return createPageMetadata("/whistling-woods", await parent);
-}
+export const metadata = buildMetadata(PAGES.whistlingWoods);

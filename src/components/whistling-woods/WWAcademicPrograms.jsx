@@ -20,6 +20,7 @@ const programsData = [
     description: "01",
     mainImage: "/img/final/sgm_Last/1.webp",
     thumbImage: "/img/final/sgm_Last/1.webp",
+    thumbAlt: "SGM Studios animation background: a sunlit office with wooden windows",
   },
   {
     id: "02",
@@ -27,6 +28,7 @@ const programsData = [
     description: "02",
     mainImage: "/img/final/sgm_Last/web/2.webp",
     thumbImage: "/img/final/sgm_Last/web/2.webp",
+    thumbAlt: "SGM Studios animation background: a stream running through a green forest",
   },
   {
     id: "03",
@@ -34,6 +36,7 @@ const programsData = [
     description: "03",
     mainImage: "/img/final/sgm_Last/web/3.webp",
     thumbImage: "/img/final/sgm_Last/web/3.webp",
+    thumbAlt: "SGM Studios animation background: a city at night seen from above",
   },
   {
     id: "04",
@@ -41,6 +44,7 @@ const programsData = [
     description: "04",
     mainImage: "/img/final/sgm_Last/web/4.webp",
     thumbImage: "/img/final/sgm_Last/web/4.webp",
+    thumbAlt: "SGM Studios animation background: light breaking through a dark forest canopy",
   },
   {
     id: "05",
@@ -48,6 +52,7 @@ const programsData = [
     description: "05",
     mainImage: "/img/final/sgm_Last/5.webp",
     thumbImage: "/img/final/sgm_Last/5.webp",
+    thumbAlt: "SGM Studios animation background: green hills under a blue sky",
   },
   {
     id: "06",
@@ -55,6 +60,7 @@ const programsData = [
     description: "06",
     mainImage: "/img/final/sgm_Last/6.webp",
     thumbImage: "/img/final/sgm_Last/6.webp",
+    thumbAlt: "SGM Studios animation background: a mountain market street hung with prayer flags",
   },
   {
     id: "07",
@@ -62,6 +68,7 @@ const programsData = [
     description: "07",
     mainImage: "/img/final/sgm_Last/7.webp",
     thumbImage: "/img/final/sgm_Last/7.webp",
+    thumbAlt: "SGM Studios animation background: an open-plan office with mountain views",
   },
   {
     id: "08",
@@ -69,6 +76,7 @@ const programsData = [
     description: "08",
     mainImage: "/img/final/sgm_Last/8.webp",
     thumbImage: "/img/final/sgm_Last/8.webp",
+    thumbAlt: "SGM Studios animation background: riders crossing a mountain valley",
   },
 ];
 
@@ -238,7 +246,7 @@ export default function WWAcademicPrograms({ rippleIntensity = DEFAULT_INTENSITY
                 {/* 42px thumbnails of up-to-8000px sources: Next serves them ~96px wide */}
                 <Image
                   src={item.thumbImage}
-                  alt=""
+                  alt={item.thumbAlt || ""}
                   width={42}
                   height={28}
                   className="h-full w-full object-cover"
