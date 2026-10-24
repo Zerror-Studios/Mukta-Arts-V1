@@ -41,7 +41,8 @@ const carouselItems = [
     { file: "WHISTLING WOODS CAMPAIGN 09.04_16.webp", alt: "Student recording outdoor sound with headphones and a field recorder" },
     { file: "WHISTLING WOODS CAMPAIGN 09.04_17.webp", alt: "Student holding a camera on campus at night" },
     { file: "WHISTLING WOODS CAMPAIGN 09.04_18.webp", alt: "Whistling Woods student holding books in the library" },
-].map(({ file, alt }) => ({ src: encodeURI(W2 + file), alt }));
+// Left unencoded: next/image encodes the src itself, and a pre-encoded one (%20 -> %2520) 404s on Vercel's optimizer
+].map(({ file, alt }) => ({ src: W2 + file, alt }));
 
 // Same widths as before, taller frames (capped by the screen height on short laptops)
 const itemSize =
