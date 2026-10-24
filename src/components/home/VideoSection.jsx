@@ -15,8 +15,28 @@ const VideoSection = () => {
     useEffect(() => {
         const video = videoRef.current;
         if (!video || !videoOn) return;
-        if (inView) video.play().catch(() => {});
-        else video.pause();
+        if (!inView) {
+            video.pause();
+            return;
+        }
+
+        // iPhones in Low Power Mode refuse to start any video on their own, even a muted one:
+        // start it on the visitor's first tap instead (a tap lets it play)
+        let cancelled = false;
+        const events = ["touchend", "click"];
+        const stopWaiting = () => events.forEach((type) => window.removeEventListener(type, playOnTap));
+        const playOnTap = () => {
+            stopWaiting();
+            video.play().catch(() => {});
+        };
+        video.play().catch((err) => {
+            if (cancelled || err.name !== "NotAllowedError") return;
+            events.forEach((type) => window.addEventListener(type, playOnTap, { passive: true }));
+        });
+        return () => {
+            cancelled = true;
+            stopWaiting();
+        };
     }, [inView, videoOn]);
 
     return (
