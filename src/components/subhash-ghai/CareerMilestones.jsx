@@ -538,7 +538,7 @@ export default function CareerMilestones() {
       </header>
 
       {/* Horizontal track */}
-      <div className="relative z-10 flex-1 flex items-center min-h-0">
+      <div className="relative z-10 flex-1 flex items-center min-h-0 ">
         <div
           ref={scrollTrackRef}
           className="relative flex items-start gap-6 sm:gap-10 md:gap-16 short:gap-8 w-max will-change-transform"
@@ -608,7 +608,7 @@ export default function CareerMilestones() {
       </div>
 
       {/* Timeline footer */}
-      <footer className="relative z-20 px-6 md:px-8 pt-[16px] pb-[max(44px,env(safe-area-inset-bottom))] md:pb-[36px] short:pt-[8px] short:pb-[12px]">
+      <footer className="relative  z-20 px-6 md:px-8  pt-[16px] max-sm:pb-[150px] pb-[max(44px,env(safe-area-inset-bottom))] md:pb-[36px] short:pt-[8px] short:pb-[12px]">
         <div className="relative h-[16px] mb-[8px]">
           {milestonesData.map((m, i) =>
             decadeLabelIndexes.includes(i) ? (

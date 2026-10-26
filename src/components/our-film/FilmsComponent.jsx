@@ -201,10 +201,12 @@ export default function FilmsComponent() {
       targetLeft = containerWidth - px - targetWidth;
       targetTop = (window.innerHeight - targetHeight) / 2;
     } else {
-      targetWidth = Math.min(600, containerWidth - px * 2);
+      // Below md WorkHero leads with the poster, inside its px-6 gutter and under its pt-24
+      const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
+      targetWidth = Math.min(600, containerWidth - rem * 1.5 * 2);
       targetHeight = targetWidth * (5 / 4);
       targetLeft = (containerWidth - targetWidth) / 2;
-      targetTop = window.innerHeight * 0.3;
+      targetTop = rem * 6;
     }
 
     gsap.to(clone, {

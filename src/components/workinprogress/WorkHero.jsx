@@ -80,26 +80,26 @@ const WorkHero = () => {
     }, []);
 
     return (
-        <div className="w-full min-h-screen bg-white text-black flex flex-col md:flex-row items-center justify-center px-10 gap-12 mx-auto overflow-hidden">
+        <div className="w-full min-h-screen bg-white text-black flex flex-col md:flex-row items-center justify-start md:justify-center px-6 md:px-10 max-md:pt-24 max-md:pb-16 short:py-24 gap-8 md:gap-12 mx-auto overflow-hidden">
 
             {/* Left Column - Text Content */}
-            <div className="flex-1 w-full max-w-2xl flex flex-col justify-center work-hero-text opacity-0 max-sm:mt-[10vh]">
-                {/* Title Area */}
-                <div className="flex mb-12 ">
+            <div className="md:flex-1 w-full max-w-[600px] md:max-w-2xl flex flex-col justify-center work-hero-text opacity-0">
+                {/* Title Area: on phones the year drops under a title too long to share its line */}
+                <div className="flex mb-12 max-md:mb-6 max-md:flex-wrap max-md:items-baseline max-md:gap-x-3 max-md:gap-y-1">
                     {/* Using tracking and scale to mimic the condensed font look without needing a custom font */}
-                    <h2 className=" uppercase font-bold! text-black "
+                    <h2 className=" uppercase font-bold! text-black max-md:text-[clamp(2.2rem,10vw,4rem)]! max-md:leading-none!"
                     >
                         {title}
                     </h2>
                     {year && (
-                        <h5 className="text-3xl md:text-5xl font-bold ml-6 lg:ml-8 mb-4 text-black ">
+                        <h5 className="text-3xl md:text-5xl font-bold md:ml-6 lg:ml-8 md:mb-4 text-black ">
                             ({year})
                         </h5>
                     )}
                 </div>
 
                 {/* Paragraphs */}
-                <div className="max-w-[90%] work-hero-text opacity-0">
+                <div className="md:max-w-[90%] work-hero-text opacity-0">
                     {description.split(/\n\s*\n/).filter(Boolean).map((para, i) => (
                         <p key={i} className="mb-4">
                             {para}
@@ -108,8 +108,8 @@ const WorkHero = () => {
                 </div>
             </div>
 
-            {/* Right Column - Image */}
-            <div className="flex-1 w-full flex justify-center md:justify-end items-center max-sm:mt-0 sm:mt-12 md:mt-0">
+            {/* Right Column - Image. First on phones, where the film grid's transition lands the poster */}
+            <div className="md:flex-1 w-full flex justify-center md:justify-end items-center max-md:order-first">
                 <div className="relative w-full max-w-[600px] aspect-[4/5] bg-gray-100 shadow-2xl">
                     {/* Fallback image as standard img tag to avoid Next.js domain config issues for external URLs */}
                     <img

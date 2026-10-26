@@ -131,7 +131,7 @@ export default function WWAcademicPrograms(props) {
 function ProgramsList() {
   return (
     <section
-      className="hidden flex-col gap-2 phone:flex"
+      className="hidden flex-col gap-2 px-2 pb-2 phone:flex"
       style={{ backgroundColor: BG }}
     >
       {programsData.map((item) => (
@@ -252,7 +252,7 @@ function ProgramsScroll({ rippleIntensity = DEFAULT_INTENSITY }) {
 
       {/* ---------------- Right: description ---------------- */}
       {/* mobile: header row above the image (progress + number) | md+: right of image */}
-      <div className="pointer-events-none relative order-1 z-20 flex w-full items-center justify-between md:absolute md:right-[7vw] md:top-1/2 md:block md:w-[17vw] md:-translate-y-1/2">
+      <div className="pointer-events-none relative order-1 z-20 flex w-full items-center  justify-between md:absolute md:right-[7vw] md:top-1/2 md:block md:w-[17vw] md:-translate-y-1/2">
         {/* mobile progress (thumbnail rail is hidden below md) */}
         <div className="pointer-events-auto flex items-center gap-1 md:hidden">
           {programsData.map((item, i) => (
