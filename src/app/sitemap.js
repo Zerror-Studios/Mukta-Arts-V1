@@ -1,5 +1,6 @@
 import { PAGES } from "@/lib/seo/metadata";
 import { abs } from "@/lib/seo/site";
+import { getFilmSlugs } from "@/sanity/lib/queries";
 
 /**
  * Served at /sitemap.xml.
@@ -22,12 +23,25 @@ const SETTINGS = {
   "/terms-and-conditions": { changeFrequency: "yearly", priority: 0.3 },
 };
 
-export default function sitemap() {
-  return Object.values(PAGES)
+// Built on every request so a film added in the studio is listed straight away
+export const dynamic = "force-dynamic";
+
+export default async function sitemap() {
+  const pages = Object.values(PAGES)
     .filter((p) => !p.noindexUntilLive)
     .map((p) => ({
       url: abs(p.path),
       lastModified: LASTMOD,
       ...SETTINGS[p.path],
     }));
+
+  // Film detail pages; their last edit in Sanity is a real content change, so it is safe as lastmod
+  const films = (await getFilmSlugs()).map((film) => ({
+    url: abs(`/our-films/${film.slug}`),
+    lastModified: film._updatedAt.slice(0, 10),
+    changeFrequency: "yearly",
+    priority: 0.6,
+  }));
+
+  return [...pages, ...films];
 }
