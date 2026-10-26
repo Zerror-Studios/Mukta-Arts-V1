@@ -24,6 +24,10 @@ export default function SiteLayout({ children }) {
     return () => clearTimeout(timeout);
   }, [pathname]);
 
+  // Sanity Studio (/admin and its sub-routes) fills the screen and scrolls its own panes, so it
+  // gets none of the site's header, footer or Lenis scrolling (which would swallow the wheel)
+  if (pathname.startsWith('/admin')) return children;
+
   return (
     <ViewTransitions>
       <LenisScroll>

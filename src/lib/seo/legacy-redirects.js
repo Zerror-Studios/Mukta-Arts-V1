@@ -17,6 +17,19 @@ const FILMS = new Set([
   "tu me ani amaira",
 ]);
 
+// The film's new page is /our-films/<slug>, with the slugs as set in Sanity (scripts/seed-films.mjs).
+// Renaming a slug in the studio breaks its redirect here, so the two have to change together.
+const FILM_SLUG_EXCEPTIONS = { "kashmakash": "nouka-dubi" };
+const filmSlug = (name) => FILM_SLUG_EXCEPTIONS[name] || name.replace(/'/g, "").replace(/ /g, "-");
+
+// A news story naming exactly one of these films goes to that film's page; any other film story to the list.
+// Kept short on purpose: names like "hero" or "rahul" are common words and would pull in unrelated stories.
+const STORY_FILMS = {
+  "jaanki": /jaana?ki/, "36-farmhouse": /36 farmhouse/, "khalnayak": /khalnayak/, "karma": /\bkarma\b/,
+  "pardes": /pardes/, "karz": /\bkarz\b/, "ram-lakhan": /ram lakhan/, "tu-me-ani-amaira": /amaira/,
+  "vijeta": /vijeta/, "taal": /\btaal\b/, "yaadein": /yaadein/,
+};
+
 const IR_KEYS = [
   "investorsrelation", "annual-reports", "annual-returns", "board-meetings", "shareholding-pattern",
   "corporate-governance", "secretarial-compliance", "related-party", "postal-ballots", "members-meetings",
@@ -59,12 +72,15 @@ export function legacyDestination(pathname) {
   if (n.startsWith("/aboutus/") || n.startsWith("/rahul-puri") || n.startsWith("/achievements") || n.includes("we believe that less")) return "/about";
 
   const base = n.split("/").pop().replace(/\.php$/, "").replace(/-/g, " ");
-  if (n.startsWith("/movies/") || FILMS.has(base)) return "/our-films";
+  if (FILMS.has(base)) return `/our-films/${filmSlug(base)}`;
+  if (n.startsWith("/movies/")) return "/our-films";
   if (n.startsWith("/education/") || /whistling|wwi|convocation|5th veda|tiss|scholarship/.test(n)) return "/whistling-woods";
-  if (n.startsWith("/network/exhibition") || /mukta ?a2|muktaa2|a2 cinema|cinemas? (opens|re opens|reopens)/.test(spaced)) return "/mukta-a2-cinemas";
+  if (n.startsWith("/network/exhibition") || /mukta ?a2|muktaa2|a2 cinema|cinemas a2|cinemas? (opens|re opens|reopens)/.test(spaced)) return "/mukta-a2-cinemas";
   if (/sgm|animation/.test(n)) return "/sgm-studios";
   if (n.startsWith("/contact") || n.startsWith("/connect1")) return "/submit-script";
   if (/^\/(subhash-ghai|sg-gallery|sg-celebrities|flashback-subhash-ghai|music-videos)/.test(n) || n.includes("subhash")) return "/subhash-ghai";
-  if (/jaanaki|jaanki|36 farmhouse|khalnayak|karma|pardes|karz|ram lakhan|amaira|vijeta|film/.test(spaced)) return "/our-films";
+  const named = Object.keys(STORY_FILMS).filter((slug) => STORY_FILMS[slug].test(spaced));
+  if (named.length === 1) return `/our-films/${named[0]}`;
+  if (named.length || /film/.test(spaced)) return "/our-films";
   return "/about";
 }
