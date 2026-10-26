@@ -48,14 +48,15 @@ const canEmbedPdf = () =>
 
 /* ---------- one document ---------- */
 
-// `compact` keeps the buttons under the title, for the narrow column beside the contact details
+// `compact` keeps the buttons under the title, for the narrow column beside the contact details.
+// On phones the buttons shrink to bare icons beside the title.
 const DocRow = ({ doc, onView, compact = false }) => {
   const isPdf = doc.type === "pdf";
   const Icon = doc.type.startsWith("xls") ? FileSpreadsheet : FileText;
 
   return (
     <li
-      className={`group/row flex flex-col gap-3 py-4 border-b border-black/10 last:border-b-0 ${
+      className={`group/row flex flex-col gap-3 py-4 border-b border-black/10 last:border-b-0 phone:flex-row phone:items-center ${
         compact ? "" : "sm:flex-row sm:items-center sm:gap-6"
       }`}
     >
@@ -72,25 +73,26 @@ const DocRow = ({ doc, onView, compact = false }) => {
         </div>
       </div>
 
-      <div className={`flex items-center gap-2 pl-12 shrink-0 ${compact ? "" : "sm:pl-0"}`}>
+      <div className={`flex items-center gap-2 pl-12 shrink-0 phone:gap-1 phone:pl-0 ${compact ? "" : "sm:pl-0"}`}>
         {isPdf && (
           <button
             type="button"
             onClick={() => onView(doc)}
-            className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-[3px] border border-[black] text-[black] text-xs font-semibold tracking-wide hover:border-[black] hover:bg-[black]/[0.04] transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[black]"
+            aria-label={`View ${doc.title}`}
+            className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-[3px] border border-[black] text-[black] text-xs font-semibold tracking-wide hover:border-[black] hover:bg-[black]/[0.04] transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[black] phone:w-9 phone:px-0 phone:justify-center phone:border-0"
           >
-            <Eye strokeWidth={1.75} className="w-4 h-4" />
-            View
+            <Eye strokeWidth={1.75} className="w-4 h-4 phone:w-5 phone:h-5" />
+            <span className="phone:hidden">View</span>
           </button>
         )}
         <a
           href={doc.href}
           download={fileName(doc.href)}
           aria-label={`Download ${doc.title}`}
-          className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-[3px] bg-[black] hover:bg-[black] text-white text-xs font-semibold tracking-wide transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[black]"
+          className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-[3px] bg-[black] hover:bg-[black] text-white text-xs font-semibold tracking-wide transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[black] phone:w-9 phone:px-0 phone:justify-center phone:bg-transparent phone:hover:bg-[black]/[0.04] phone:text-black"
         >
-          <Download strokeWidth={1.75} className="w-4 h-4" />
-          Download
+          <Download strokeWidth={1.75} className="w-4 h-4 phone:w-5 phone:h-5" />
+          <span className="phone:hidden">Download</span>
         </a>
       </div>
     </li>
@@ -335,7 +337,7 @@ const InvestorRelations = () => {
 
 
   return (
-    <section  ref={sectionRef} id="investor-relations" className="w-full bg-[#FAFAFA] py-24 md:py-32 px-4 md:px-8">
+    <section  ref={sectionRef} id="investor-relations" className="w-full bg-[#FAFAFA] sm:py-24 md:py-32 px-4 md:px-8">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
         {/* Left: heading and contact for investor grievances */}
         <div className="lg:col-span-4">

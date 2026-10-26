@@ -621,7 +621,7 @@ export default function HeadphonesCanvas({ footerOnly = false }) {
   useEffect(() => {
     const updateScale = () => {
       if (window.innerWidth < 768) {
-        setModelScale(15); // scale down for mobile
+        setModelScale(18); // scale down for mobile
       } else if (window.innerWidth < 1024) {
         setModelScale(18); // scale down for tablet
       } else {

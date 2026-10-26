@@ -102,7 +102,7 @@ export default function CardsShowcase() {
   const cursorRef = useRef(null);
   const [isHovering, setIsHovering] = useState(false);
 
-  // Phones get a flat swipeable carousel instead of the 3D stack, which is too cramped to read there
+  // Phones and tablets get a flat swipeable carousel instead of the 3D stack, which is too cramped to read there
   const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start", containScroll: "trimSnaps" });
   const [slide, setSlide] = useState(0);
   const [canPrev, setCanPrev] = useState(false);
@@ -180,34 +180,35 @@ export default function CardsShowcase() {
         <h2 className="text-[12vw] md:text-[8vw] font-semibold tracking-tighter text-black">Honours.</h2>
       </div>
 
-      {/* Phones: one award per slide, swiped or stepped with the arrows, the next card peeking in */}
-      <div className="md:hidden">
-        <div ref={emblaRef}>
-          <div className="flex touch-pan-y pl-6">
+      {/* Phones and tablets: one award per slide, swiped or stepped with the arrows, the next card
+          peeking in. Each slide carries its own left gutter, so every card lands the same distance
+          from the edge, not just the first. A phone held sideways puts the photo beside the text so
+          the card fits the short screen without cropping the photo to a strip */}
+      <div className="lg:hidden">
+        <div ref={emblaRef} className="overflow-hidden">
+          <div className="flex touch-pan-y">
             {arr.map((item, i) => (
-              <div
-                key={i}
-                className="shrink-0 grow-0 basis-[82vw] mr-4 last:mr-6 flex flex-col text-white"
-                style={{ backgroundColor: item.clr }}
-              >
-                <div className="relative aspect-[4/3] m-4 mb-0">
-                  <Image
-                    src={item.img}
-                    alt={item.title}
-                    fill
-                    sizes="80vw"
-                    draggable={false}
-                    className="object-cover rounded-sm select-none pointer-events-none"
-                  />
-                </div>
-                <div className="flex flex-col items-start p-5">
-                  {item.year && (
-                    <span className="px-3 py-1 bg-white/20 rounded-full text-xs font-semibold tracking-wider">
-                      {item.year}
-                    </span>
-                  )}
-                  <p className="mt-3 text-xl font-semibold leading-tight">{item.title}</p>
-                  <p className="mt-2 text-sm text-white/90">{item.desc}</p>
+              <div key={i} className="shrink-0 grow-0 basis-[85vw] sm:basis-[60vw] pl-6 last:mr-6">
+                <div className="h-full flex flex-col short:flex-row text-white" style={{ backgroundColor: item.clr }}>
+                  <div className="relative aspect-[4/3] m-4 mb-0 short:w-[45%] short:shrink-0 short:mb-4 short:mr-0">
+                    <Image
+                      src={item.img}
+                      alt={item.title}
+                      fill
+                      sizes="(max-height: 500px) 30vw, (min-width: 640px) 60vw, 85vw"
+                      draggable={false}
+                      className="object-cover rounded-sm select-none pointer-events-none"
+                    />
+                  </div>
+                  <div className="flex flex-col items-start p-5 short:justify-center">
+                    {item.year && (
+                      <span className="px-3 py-1 bg-white/20 rounded-full text-xs font-semibold tracking-wider">
+                        {item.year}
+                      </span>
+                    )}
+                    <p className="mt-3 text-xl font-semibold leading-tight">{item.title}</p>
+                    <p className="mt-2 text-sm text-white/90">{item.desc}</p>
+                  </div>
                 </div>
               </div>
             ))}
@@ -233,9 +234,9 @@ export default function CardsShowcase() {
         </div>
       </div>
 
-      {/* 3D Container (tablet and up) */}
+      {/* 3D Container (laptop and up) */}
       <div
-        className="relative w-full h-[65vh] hidden md:flex items-center justify-center"
+        className="relative w-full h-[65vh] hidden lg:flex items-center justify-center"
         style={{ perspective: "1500px" }}
       >
         <div

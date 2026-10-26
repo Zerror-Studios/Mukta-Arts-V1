@@ -112,6 +112,11 @@ const Header = () => {
       duration: 1,
       ease: 'expo.inOut',
       onComplete: () => {
+        // Back to the top while the panel covers the screen. The next page makes its scroll
+        // triggers before the router resets the scroll, so they would read this page's position:
+        // every counter and reveal above it would play at once, out of sight.
+        window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+        window.lenis?.scrollTo(0, { immediate: true, force: true });
         router.push(href);
       }
     });

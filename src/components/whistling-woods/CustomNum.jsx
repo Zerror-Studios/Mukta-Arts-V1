@@ -127,7 +127,7 @@ const CustomNum = () => {
                                     </span>
                                 )}
                                 {/* The final value, so it reads without JS; the scroll animation counts up from 0 */}
-                                <span className="stat-num" data-target={stat.target}>{stat.target.toLocaleString('en-US')}</span>
+                                <h2 className="stat-num" data-target={stat.target}>{stat.target.toLocaleString('en-US')}</h2>
                                 {stat.suffix}
                             </h4>
                             <div className="pr-4">

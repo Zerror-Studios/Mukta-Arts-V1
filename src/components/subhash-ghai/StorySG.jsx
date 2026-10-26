@@ -60,7 +60,7 @@ const StorySG = () => {
                         will shape it.
                     </p>
 
-                    <div data-reveal="rise">
+                    <div data-reveal="rise" className='max-sm:mx-auto max-sm:text-center'>
                         {/* His own autograph (Autograph_1_11zon.webp with the paper made transparent), inverted to white ink */}
                         <img
                             src="/img/final/SG/S2/Autograph_transparent.webp"
@@ -70,7 +70,7 @@ const StorySG = () => {
                             loading="lazy"
                             decoding="async"
                         />
-                        <p className="text-white text-lg font-['SwitzerM'] tracking-wide">Subhash Ghai</p>
+                        <p className="text-white text-lg font-['SwitzerM']  tracking-wide">Subhash Ghai</p>
                     </div>
                 </div>
 

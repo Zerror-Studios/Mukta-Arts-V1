@@ -169,10 +169,10 @@ const Hero = () => {
 
       {/* Huge Background Text */}
       <div className="  w-full  text-center flex justify-start   items-start z-0 select-none pointer-events-none">
-        <h1 data-hero="title" data-entrance className=" text-[4rem] max-sm:mt-[5vh]  md:text-[min(15vw,240px)] lg:text-[min(16.5vw,240px)] font-extrabold sm:font-bold leading-none whitespace-nowrap text-black flex items-start">
+        <h1 data-hero="title" data-entrance className=" text-[4.2rem] max-sm:mt-[5vh]  md:text-[min(15vw,240px)] lg:text-[min(16.5vw,240px)] font-extrabold sm:font-bold leading-none whitespace-nowrap text-black flex items-start">
           {/* The space is not drawn (the h1 is a flex row), but it makes the heading read "Mukta Arts LTD" */}
-          <span className=' max-sm:tracking-tight!'>Mukta Arts</span>{" "}
-          <span className="font-['SwitzerSB'] text-[2rem] leading-[2.2rem] min-[651px]:text-[3rem] min-[651px]:leading-[3.2rem] font-normal mb-auto">
+          <span className=' '>Mukta Arts</span>{" "}
+          <span className="font-['SwitzerSB'] text-[1.3rem] leading-[2.2rem] min-[651px]:text-[3rem] min-[651px]:leading-[3.2rem] font-normal mb-auto">
             LTD
           </span>
         </h1>

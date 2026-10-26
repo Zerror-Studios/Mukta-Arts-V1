@@ -180,11 +180,13 @@ const SLIDES = [
     },
 ];
 
-// Points on the 4.0-long scroll timeline: when each slide comes in and goes out,
-// and when the background crossfades to the next slide's image (between the two)
-const SLIDE_IN = [0.8, 2.0, 3.2];
-const SLIDE_OUT = [1.5, 2.7];
-const BG_SWAP = [1.6, 2.8];
+// Points on the 4.0-long scroll timeline: when the first slide comes in, and when each slide
+// crossfades straight into the next one (copy and background image together)
+const SLIDE_IN = 0.8;
+const SLIDE_SWAP = [1.85, 2.95];
+// A long, eased crossfade through a soft blur, so one slide's copy melts into the next
+const TEXT_FADE = { duration: 0.4, ease: "sine.inOut" };
+const TEXT_BLUR = "blur(6px)";
 const BG_OPACITY = 0.35;
 
 export default function OldCamera() {
@@ -218,31 +220,26 @@ export default function OldCamera() {
         const bodies = bodyRefs.current;
         const bgs = bgRefs.current;
 
-        gsap.set([...roles, ...bodies], { opacity: 0, y: 30 });
+        gsap.set([...roles, ...bodies], { opacity: 0, y: 20, filter: TEXT_BLUR });
         gsap.set(buttonRef.current, { opacity: 0, y: 20 });
         gsap.set(bgs, { opacity: 0 });
         gsap.set(bgs[0], { scale: 0.95 });
 
-        // Reveal the first background image & button after 3D camera rotation finishes
-        tl.to(bgs[0], { opacity: BG_OPACITY, scale: 1, duration: 0.4 }, 0.8);
-        tl.to(buttonRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0.8);
+        // Reveal the first background image, slide & button after 3D camera rotation finishes
+        tl.to(bgs[0], { opacity: BG_OPACITY, scale: 1, duration: 0.4 }, SLIDE_IN);
+        tl.to(buttonRef.current, { opacity: 1, y: 0, duration: 0.3 }, SLIDE_IN);
+        tl.to([roles[0], bodies[0]], { opacity: 1, y: 0, filter: "blur(0px)", ...TEXT_FADE }, SLIDE_IN);
 
-        // Each slide's image takes over as its role and copy come in
-        BG_SWAP.forEach((at, i) => {
-            tl.to(bgs[i], { opacity: 0, duration: 0.4 }, at)
+        // The next slide (role under the name, copy at the bottom) fades in over the same stretch the
+        // current one fades out, so the copy never goes blank between them; its image takes over too
+        SLIDE_SWAP.forEach((at, i) => {
+            tl.to([roles[i], bodies[i]], { opacity: 0, y: -20, filter: TEXT_BLUR, ...TEXT_FADE }, at)
+                .to([roles[i + 1], bodies[i + 1]], { opacity: 1, y: 0, filter: "blur(0px)", ...TEXT_FADE }, at)
+                .to(bgs[i], { opacity: 0, duration: 0.4 }, at)
                 .to(bgs[i + 1], { opacity: BG_OPACITY, duration: 0.4 }, at);
         });
 
-        // The role under the name and the copy at the bottom change together
-        SLIDES.forEach((_, i) => {
-            const els = [roles[i], bodies[i]];
-            tl.to(els, { opacity: 1, y: 0, duration: 0.2 }, SLIDE_IN[i]);
-            if (SLIDE_OUT[i] !== undefined) {
-                tl.to(els, { opacity: 0, y: -20, duration: 0.2 }, SLIDE_OUT[i]);
-            }
-        });
-
-        tl.to({}, { duration: 0.6 }); // pad to 4.0
+        tl.set({}, {}, 4); // pad to 4.0
     }, { scope: containerRef });
 
     return (

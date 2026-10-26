@@ -36,6 +36,16 @@ const MOBILE_BREAKPOINT = 768; // canvas narrower than this (px) counts as a pho
 const MOBILE_CARD_SCALE = 0.75; // card width and height on phones, centred in the same slots
 const MOBILE_CARD_SPACING = 4.5; // arc length between card starts on phones: the 3.75-wide cards keep the desktop gap ratio
 const MOBILE_CARDS_LENGTH = (NUM_CARDS - 1) * MOBILE_CARD_SPACING + CARD_SLOT_LENGTH;
+// A phone's narrow view meets the first card only after ~60% of a screen of scrolling. Starting the cards
+// this much arc length further along puts it just under the bottom edge, so a slight scroll brings it in.
+const MOBILE_START_LEAD = 22;
+// MOBILE_BREAKPOINT as media queries, for the intro text's fade
+const PHONE = "(max-width: 767.98px)";
+const DESKTOP = "(min-width: 768px)";
+// How long the intro text takes to fade, in spiral runs (the whole scroll is 1). On phones it clears
+// within about a quarter screen of scrolling, as the cards come in.
+const TEXT_FADE = 0.5;
+const MOBILE_TEXT_FADE = 0.05;
 
 // Film posters (13 cards) — Kalicharan and Meri Jung aren't in compressed/, so they come from /img/films.
 // WebP copies (web/ folders) of those JPEGs, at the same size
@@ -208,6 +218,7 @@ const SpiralCards = ({ progressRef, invalidateRef }) => {
   const sizeScale = isPhone ? MOBILE_CARD_SCALE : 1;
   const spacing = isPhone ? MOBILE_CARD_SPACING : CARD_SPACING;
   const cardsLength = isPhone ? MOBILE_CARDS_LENGTH : TOTAL_CARDS_LENGTH;
+  const startLead = isPhone ? MOBILE_START_LEAD : 0;
   useEffect(() => {
     invalidateRef.current = invalidate;
     return () => {
@@ -244,8 +255,8 @@ const SpiralCards = ({ progressRef, invalidateRef }) => {
 
     // Reference formula for arc offset:
     //   offset = p * (TOTAL_ARC + TOTAL_CARDS_LENGTH) - TOTAL_CARDS_LENGTH + 25
-    // with the phone's shorter run of cards on phones, so it still enters and leaves at the same scroll
-    const arcOffset = p * (TOTAL_ARC + cardsLength) - cardsLength + 25;
+    // with the phone's shorter run of cards on phones, started a little further along (MOBILE_START_LEAD)
+    const arcOffset = p * (TOTAL_ARC + cardsLength) - cardsLength + 25 + startLead;
 
     // Smoothly interpolate hover scales. The first frame after the canvas has been idle reports all
     // the time since its last one, so the step is capped or the hover would jump straight to full size.
@@ -338,95 +349,99 @@ export default function SpiralScene() {
 
   useGSAP(
     () => {
-      // Initial states
-      gsap.set(".NAMEDIV2", { autoAlpha: 0, pointerEvents: "none" }); // Hide entirely initially
-      gsap.set(".spiral-canvas", { pointerEvents: "auto" });
-      gsap.set(".film-carousel-image", { y: "100vh" }); // Images outside screen
-      gsap.set(".film-text-content", { opacity: 0 }); // Text opacity 0
+      // Built again when the window crosses the phone width (resize / rotation), for the text's fade
+      const mm = gsap.matchMedia(containerRef.current);
+      mm.add({ phone: PHONE, desktop: DESKTOP }, (ctx) => {
+        // Initial states
+        gsap.set(".NAMEDIV2", { autoAlpha: 0, pointerEvents: "none" }); // Hide entirely initially
+        gsap.set(".spiral-canvas", { pointerEvents: "auto" });
+        gsap.set(".film-carousel-image", { y: "100vh" }); // Images outside screen
+        gsap.set(".film-text-content", { opacity: 0 }); // Text opacity 0
 
-      let filmsVisible = false;
+        let filmsVisible = false;
 
-      timelineRef.current = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: "bottom -120%",
-          scrub: true,
-          onUpdate: (self) => {
-            // The spiral has moved on with the scroll: draw it
-            invalidateRef.current?.();
+        timelineRef.current = gsap.timeline({
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top top",
+            end: "bottom -120%",
+            scrub: true,
+            onUpdate: (self) => {
+              // The spiral has moved on with the scroll: draw it
+              invalidateRef.current?.();
 
-            if (self.progress > 0.95 && !filmsVisible) {
-              filmsVisible = true;
+              if (self.progress > 0.95 && !filmsVisible) {
+                filmsVisible = true;
 
-              // Show the section container and allow clicks
-              gsap.set(".NAMEDIV2", { autoAlpha: 1, pointerEvents: "auto" });
-              gsap.set(".spiral-canvas", { pointerEvents: "none" });
+                // Show the section container and allow clicks
+                gsap.set(".NAMEDIV2", { autoAlpha: 1, pointerEvents: "auto" });
+                gsap.set(".spiral-canvas", { pointerEvents: "none" });
 
-              // Force Embla carousel to recalculate dimensions after visibility change
-              setTimeout(() => window.dispatchEvent(new Event('resize')), 50);
+                // Force Embla carousel to recalculate dimensions after visibility change
+                setTimeout(() => window.dispatchEvent(new Event('resize')), 50);
 
-              // Animate images sliding up from outside the screen
-              gsap.to(".film-carousel-image", {
-                y: "0",
-                stagger: 0.1,
-                duration: 0.8,
-                ease: "power3.out",
-                overwrite: "auto"
-              });
+                // Animate images sliding up from outside the screen
+                gsap.to(".film-carousel-image", {
+                  y: "0",
+                  stagger: 0.1,
+                  duration: 0.8,
+                  ease: "power3.out",
+                  overwrite: "auto"
+                });
 
-              // Animate text fading in
-              gsap.to(".film-text-content", {
-                opacity: 1,
-                stagger: 0.1,
-                duration: 0.8,
-                delay: 0.3,
-                ease: "power2.out",
-                overwrite: "auto"
-              });
-            } else if (self.progress <= 0.95 && filmsVisible) {
-              filmsVisible = false;
+                // Animate text fading in
+                gsap.to(".film-text-content", {
+                  opacity: 1,
+                  stagger: 0.1,
+                  duration: 0.8,
+                  delay: 0.3,
+                  ease: "power2.out",
+                  overwrite: "auto"
+                });
+              } else if (self.progress <= 0.95 && filmsVisible) {
+                filmsVisible = false;
 
-              // Reverse animations when scrolling back up
-              gsap.to(".film-text-content", {
-                opacity: 0,
-                duration: 0.3,
-                overwrite: "auto"
-              });
+                // Reverse animations when scrolling back up
+                gsap.to(".film-text-content", {
+                  opacity: 0,
+                  duration: 0.3,
+                  overwrite: "auto"
+                });
 
-              gsap.to(".film-carousel-image", {
-                y: "100vh",
-                duration: 0.5,
-                ease: "power3.in",
-                overwrite: "auto"
-              });
+                gsap.to(".film-carousel-image", {
+                  y: "100vh",
+                  duration: 0.5,
+                  ease: "power3.in",
+                  overwrite: "auto"
+                });
 
-              gsap.set(".NAMEDIV2", {
-                autoAlpha: 0,
-                pointerEvents: "none",
-                delay: 0.5
-              });
+                gsap.set(".NAMEDIV2", {
+                  autoAlpha: 0,
+                  pointerEvents: "none",
+                  delay: 0.5
+                });
 
-              gsap.set(".spiral-canvas", { pointerEvents: "auto", delay: 0.5 });
+                gsap.set(".spiral-canvas", { pointerEvents: "auto", delay: 0.5 });
+              }
             }
-          }
-        },
+          },
+        });
+
+        // 1. First, animate the 3D spiral from start to finish
+        // By tweening progressRef.current, the spiral completes before moving to the next animation.
+        timelineRef.current.to(progressRef, {
+          current: 1,
+          duration: 1,
+          ease: "none"
+        }, 'a1');
+
+        // 2. Alongside it, the intro text fades out; quickly on phones, where the cards come in sooner
+        timelineRef.current.to(".NAMEDIV1", {
+          opacity: 0,
+          y: -50,
+          duration: ctx.conditions.phone ? MOBILE_TEXT_FADE : TEXT_FADE
+        }, 'a1');
       });
-
-      // 1. First, animate the 3D spiral from start to finish
-      // By tweening progressRef.current, the spiral completes before moving to the next animation.
-      timelineRef.current.to(progressRef, {
-        current: 1,
-        duration: 1,
-        ease: "none"
-      }, 'a1');
-
-      // 2. THEN, after the spiral is completely finished, run the next animation
-      timelineRef.current.to(".NAMEDIV1", {
-        opacity: 0,
-        y: -50,
-        duration: 0.5
-      }, 'a1');
     },
     { scope: containerRef }
   );
@@ -441,7 +456,7 @@ export default function SpiralScene() {
 
         <div className=" NAMEDIV1 absolute top-0 left-0 z-[-1]  w-full h-full flex justify-center items-center">
           {/* Word for word from the content doc; the bold runs are bold there too */}
-          <h5 className="w-[90vw] sm:w-2/3 text-center  text-balance max-sm:text-justify">
+          <h5 className="w-[90vw] sm:w-2/3 text-center  text-balance ">
             Mukta Arts is the vision of Subhash Ghai, one of India's most celebrated filmmakers, who founded the company in 1978. What started with landmark films like Karz, Ram Lakhan, Khalnayak and Pardes has grown into an entertainment group spanning production, exhibition, animation and education. Through Whistling Woods International, Mukta A2 Cinemas and SGM Studios, the group continues to shape how stories are made, taught and experienced across India. 
           </h5>
         </div>
@@ -464,6 +479,14 @@ export default function SpiralScene() {
             {cardsOn && <SpiralCards progressRef={progressRef} invalidateRef={invalidateRef} />}
           </Suspense>
         </Canvas>
+
+        {/* Scroll hint: pinned with the screen above, so it shows for this whole section and no other */}
+        <p
+          aria-hidden="true"
+          className="pointer-events-none absolute bottom-[5%] left-1/2 -translate-x-1/2 z-[2] text-[14px]  text-black/60 whitespace-nowrap"
+        >
+          Scroll
+        </p>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useGSAP } from "@gsap/react";
@@ -19,6 +19,8 @@ const programsData = [
     title: "University Affiliation",
     description: "01",
     mainImage: "/img/final/sgm_Last/1.webp",
+    width: 1536,
+    height: 1024,
     thumbImage: "/img/final/sgm_Last/1.webp",
     thumbAlt: "SGM Studios animation background: a sunlit office with wooden windows",
   },
@@ -27,6 +29,8 @@ const programsData = [
     title: "Global Partnerships",
     description: "02",
     mainImage: "/img/final/sgm_Last/web/2.webp",
+    width: 3840,
+    height: 2160,
     thumbImage: "/img/final/sgm_Last/web/2.webp",
     thumbAlt: "SGM Studios animation background: a stream running through a green forest",
   },
@@ -35,6 +39,8 @@ const programsData = [
     title: "Industry Integration",
     description: "03",
     mainImage: "/img/final/sgm_Last/web/3.webp",
+    width: 3840,
+    height: 2160,
     thumbImage: "/img/final/sgm_Last/web/3.webp",
     thumbAlt: "SGM Studios animation background: a city at night seen from above",
   },
@@ -43,6 +49,8 @@ const programsData = [
     title: "SGM Studios 04",
     description: "04",
     mainImage: "/img/final/sgm_Last/web/4.webp",
+    width: 3840,
+    height: 2160,
     thumbImage: "/img/final/sgm_Last/web/4.webp",
     thumbAlt: "SGM Studios animation background: light breaking through a dark forest canopy",
   },
@@ -51,6 +59,8 @@ const programsData = [
     title: "SGM Studios 05",
     description: "05",
     mainImage: "/img/final/sgm_Last/5.webp",
+    width: 2384,
+    height: 1340,
     thumbImage: "/img/final/sgm_Last/5.webp",
     thumbAlt: "SGM Studios animation background: green hills under a blue sky",
   },
@@ -59,6 +69,8 @@ const programsData = [
     title: "SGM Studios 06",
     description: "06",
     mainImage: "/img/final/sgm_Last/6.webp",
+    width: 1536,
+    height: 1024,
     thumbImage: "/img/final/sgm_Last/6.webp",
     thumbAlt: "SGM Studios animation background: a mountain market street hung with prayer flags",
   },
@@ -67,6 +79,8 @@ const programsData = [
     title: "SGM Studios 07",
     description: "07",
     mainImage: "/img/final/sgm_Last/7.webp",
+    width: 1536,
+    height: 1024,
     thumbImage: "/img/final/sgm_Last/7.webp",
     thumbAlt: "SGM Studios animation background: an open-plan office with mountain views",
   },
@@ -75,6 +89,8 @@ const programsData = [
     title: "SGM Studios 08",
     description: "08",
     mainImage: "/img/final/sgm_Last/8.webp",
+    width: 1284,
+    height: 816,
     thumbImage: "/img/final/sgm_Last/8.webp",
     thumbAlt: "SGM Studios animation background: riders crossing a mountain valley",
   },
@@ -85,10 +101,56 @@ const IMAGES = programsData.map((p) => p.mainImage);
 const BG = "#FAFAFA"; // same light ground as the schools above, so the two read as one flow
 const DEFAULT_INTENSITY = 0.3; // ripple strength: 0 = off, 1 = strong. Kept low so this section is no busier than its neighbours
 
+// Phones get a plain list of the images; larger screens get the pinned WebGL scroll.
+// Keep DESK in step with the `phone` variant in globals.css.
+const DESK = "(min-width: 768px) and (min-height: 501px)";
+
+// Known only in the browser: the server, and the page while it hydrates, assume a phone,
+// so the canvas never starts loading on one
+const subscribeDesk = (onChange) => {
+  const query = window.matchMedia(DESK);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+};
+const useIsDesk = () =>
+  useSyncExternalStore(subscribeDesk, () => window.matchMedia(DESK).matches, () => false);
+
 /* -------------------------------------------------------------------------- */
 /*  SECTION                                                                   */
 /* -------------------------------------------------------------------------- */
-export default function WWAcademicPrograms({ rippleIntensity = DEFAULT_INTENSITY }) {
+export default function WWAcademicPrograms(props) {
+  return (
+    <>
+      <ProgramsList />
+      <ProgramsScroll {...props} />
+    </>
+  );
+}
+
+/* ---- phones: the images one under another ---- */
+function ProgramsList() {
+  return (
+    <section
+      className="hidden flex-col gap-2 phone:flex"
+      style={{ backgroundColor: BG }}
+    >
+      {programsData.map((item) => (
+        <Image
+          key={`list-${item.id}`}
+          src={item.mainImage}
+          alt={item.thumbAlt || ""}
+          width={item.width}
+          height={item.height}
+          sizes="100vw"
+          className="h-auto w-full"
+        />
+      ))}
+    </section>
+  );
+}
+
+/* ---- larger screens: pinned WebGL scroll ---- */
+function ProgramsScroll({ rippleIntensity = DEFAULT_INTENSITY }) {
   const sectionRef = useRef(null);
   const stRef = useRef(null);
   const targetRef = useRef(0); // float 0 .. n-1, driven by scroll
@@ -97,26 +159,30 @@ export default function WWAcademicPrograms({ rippleIntensity = DEFAULT_INTENSITY
   const [active, setActive] = useState(0);
   // Below the fold: the canvas, its three.js chunk and textures load once the page is idle
   const sceneOn = useAfterIntro();
+  const isDesk = useIsDesk();
 
-  /* ---- pin + scrub ---- */
+  /* ---- pin + scrub (not on phones, where this section is hidden) ---- */
   useGSAP(
     () => {
-      stRef.current = ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: "top top",
-        end: () => `+=${window.innerHeight * NUM_ITEMS}`,
-        pin: true,
-        // Sets the pin a moment early on a fast flick, so it doesn't visibly jump as it catches the
-        // section (on phones the page scrolls ahead of the script)
-        anticipatePin: 1,
-        scrub: 1,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          const p = self.progress * (NUM_ITEMS - 1);
-          targetRef.current = p;
-          invalidateRef.current?.();
-          setActive(Math.round(p));
-        },
+      const mm = gsap.matchMedia();
+      mm.add(DESK, () => {
+        stRef.current = ScrollTrigger.create({
+          trigger: sectionRef.current,
+          start: "top top",
+          end: () => `+=${window.innerHeight * NUM_ITEMS}`,
+          pin: true,
+          // Sets the pin a moment early on a fast flick, so it doesn't visibly jump as it catches the
+          // section (on touch screens the page scrolls ahead of the script)
+          anticipatePin: 1,
+          scrub: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            const p = self.progress * (NUM_ITEMS - 1);
+            targetRef.current = p;
+            invalidateRef.current?.();
+            setActive(Math.round(p));
+          },
+        });
       });
     },
     { scope: sectionRef }
@@ -161,13 +227,13 @@ export default function WWAcademicPrograms({ rippleIntensity = DEFAULT_INTENSITY
   return (
     <section
       ref={sectionRef}
-      className="relative flex h-svh w-full flex-col justify-center gap-5 overflow-hidden px-5 text-black sm:gap-6 sm:px-8 md:block md:h-screen md:p-0"
+      className="relative flex h-svh w-full flex-col justify-center gap-5 overflow-hidden px-5 text-black sm:gap-6 sm:px-8 md:block md:h-screen md:p-0 phone:hidden"
       style={{ backgroundColor: BG }}
     >
       {/* ---------------- Center: WebGL image ---------------- */}
       {/* full-bleed: fills the whole pinned section on every breakpoint; the gray shows until the images load */}
       <div className="absolute inset-0 z-10 h-full w-full overflow-hidden bg-[#e5e7eb]">
-        {sceneOn && (
+        {sceneOn && isDesk && (
           <ProgramsCanvas
             images={IMAGES}
             intensity={rippleIntensity}

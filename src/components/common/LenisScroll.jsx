@@ -1,18 +1,36 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
 import { usePathname } from "next/navigation";
 import { gsap, ScrollTrigger } from "@/lib/motion";
 import { isScrollLocked } from "@/lib/scrollLock";
 
+// Each new page starts at the top, and gets there before it makes its scroll triggers. This sits
+// before the page in the tree, so its layout effect runs ahead of the page's own (useGSAP). Next
+// only resets the scroll after them, so the triggers would measure from wherever the last page was
+// left: every reveal and counter above that point would play at once, out of sight (on phones,
+// the About page's numbers never counted and its sections stayed blank until a reload).
+function ScrollToTopOnNavigate() {
+  const pathname = usePathname();
+  const lastPathname = useRef(pathname);
+
+  useLayoutEffect(() => {
+    // A fresh load keeps the browser's own position (or its #section)
+    if (pathname === lastPathname.current) return;
+    lastPathname.current = pathname;
+
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    window.lenis?.scrollTo(0, { immediate: true, force: true });
+    // ScrollTrigger holds on to the last scroll position until the next scroll event
+    ScrollTrigger.update();
+  }, [pathname]);
+
+  return null;
+}
+
 export default function LenisScroll({ children }) {
   const lenis = useRef(null);
-  const pathname = usePathname();
-
-  useEffect(() => {
-    if (lenis.current) lenis.current.scrollTo(0, { immediate: true });
-  }, [pathname]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -78,5 +96,10 @@ export default function LenisScroll({ children }) {
     };
   }, []);
 
-  return <>{children}</>;
+  return (
+    <>
+      <ScrollToTopOnNavigate />
+      {children}
+    </>
+  );
 }

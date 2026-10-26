@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Volume2, VolumeX } from 'lucide-react';
 import useAfterIntro from '@/hooks/useAfterIntro';
 import useInView from '@/hooks/useInView';
 
@@ -11,6 +12,17 @@ const VideoSection = () => {
     const videoOn = useAfterIntro();
     // A full-screen video keeps decoding even when scrolled past: only play it near the screen
     const inView = useInView(sectionRef);
+    const [muted, setMuted] = useState(true);
+
+    // React does not keep the `muted` attribute in sync after the first render: set it on the element.
+    // The click counts as a tap, so a video Low Power Mode held back can start here too.
+    const toggleMute = () => {
+        const video = videoRef.current;
+        if (!video) return;
+        video.muted = !muted;
+        setMuted(!muted);
+        if (video.paused) video.play().catch(() => {});
+    };
 
     useEffect(() => {
         const video = videoRef.current;
@@ -48,11 +60,25 @@ const VideoSection = () => {
             <video
                 ref={videoRef}
                 src={videoOn ? "/video/video-web.mp4" : undefined}
+                poster="/video/video-poster.webp"
                 loop muted autoPlay playsInline
                 aria-label="Mukta Arts brand film"
                 className="sm:absolute sm:inset-0 w-full sm:h-full object-cover scale-[1.32] group-hover:scale-[1.36] transition-transform duration-700 ease-in-out"
             />
 
+            {videoOn && (
+                <button
+                    type="button"
+                    onClick={toggleMute}
+                    aria-label={muted ? "Unmute video" : "Mute video"}
+                    aria-pressed={!muted}
+                    className="absolute bottom-4 right-4 sm:bottom-8 sm:right-8 z-10 flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/40 text-white border border-white/30 backdrop-blur-sm cursor-pointer transition-colors duration-300 hover:bg-white hover:text-black"
+                >
+                    {muted
+                        ? <VolumeX strokeWidth={1.5} className="w-5 h-5" />
+                        : <Volume2 strokeWidth={1.5} className="w-5 h-5" />}
+                </button>
+            )}
 
 
 

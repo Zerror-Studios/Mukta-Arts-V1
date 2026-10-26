@@ -19,7 +19,7 @@ const HeroSG = () => {
         // One screen tall: the top padding clears the fixed header (5rem / 7rem), and the image takes
         // whatever height is left, so the title, stats and intro always fit. min-h-svh lets it grow on
         // very short screens instead of clipping; svh avoids jumps from the mobile URL bar.
-        <section ref={heroRef} className=" min-h-svh lg:h-svh lg:min-h-[640px] flex flex-col px-6 pt-[calc(5rem+12px)] pb-6 md:px-12 md:pt-[calc(7rem+8px)] md:pb-10 lg:px-10 relative overflow-hidden font-['SwitzerR']">
+        <section ref={heroRef} className=" h-svh lg:h-svh lg:min-h-[640px] flex flex-col px-6 pt-[calc(5rem+12px)] pb-6 md:px-12 md:pt-[calc(7rem+8px)] md:pb-10 lg:px-10 relative overflow-hidden font-['SwitzerR']">
 
             {/* Title Section: on phones it drops to the bottom with the text, leaving the face clear */}
             <div className="shrink-0 max-md:mt-auto mb-4 md:mb-8 lg:mb-0">

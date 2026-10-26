@@ -101,13 +101,16 @@ export default function WWSchools() {
             key={school.id}
             data-reveal="rise"
             style={{ color: school.color }}
-            className="grid grid-cols-12 gap-x-4 gap-y-5 md:gap-x-8 border-t border-black/10 py-8 md:py-10 lg:py-12"
+            className="grid grid-cols-12  gap-y-5 md:gap-x-8 border-t border-black/10 py-8 md:py-10 lg:py-12"
           >
-            <span className="h2 col-span-3 md:col-span-2 font-['SwitzerL'] text-[3rem] md:text-[4.5rem] leading-[0.9] tracking-tighter tabular-nums">
+            <span className="h2 col-span-3 max-sm:hidden md:col-span-2 max-sm:w-fit  text-[2.5rem]! md:text-[4.5rem]! leading-[0.9] tracking-tighter tabular-nums">
               {school.id}
             </span>
 
-            <h3 className="h4 col-span-9 md:col-span-10 lg:col-span-5 tracking-tight text-balance">
+            <h3 className="h4 col-span-9 max-sm:col-span-12 max-sm:w-full md:col-span-10 lg:col-span-5 tracking-tight text-balance">
+               <span className="h2 col-span-3 sm:hidden max-sm:pr-2  md:col-span-2 max-sm:w-fit  text-[2.1rem]! md:text-[4.5rem]! leading-[0.9] tracking-tighter tabular-nums">
+              {school.id}
+            </span>
               {school.name}
             </h3>
 

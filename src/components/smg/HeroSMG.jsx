@@ -12,7 +12,7 @@ const HeroSMG = () => {
 
     return (
         // Phones grow with the content (svh avoids jumps from the mobile URL bar) instead of clipping it
-        <section ref={containerRef} className="relative w-full min-h-svh md:h-screen md:min-h-[700px] flex flex-col bg-black overflow-hidden">
+        <section ref={containerRef} className="relative w-full h-screen md:h-screen md:min-h-[700px] flex flex-col bg-black overflow-hidden">
             {/* Background Image */}
             <div className="absolute inset-0 w-full h-full z-0">
                 {/* Note: Placeholder — replace with an SGM Studios still */}

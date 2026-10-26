@@ -21,7 +21,7 @@ const team = [
   {
     name: "Rahul Puri",
     titles: [
-      "Managing Director - Mukta Arts Ltd",
+      "MD - Mukta Arts Ltd",
       "Director - Academics - Whistling Woods International",
       "Director - Mukta A2 Cinemas Private Ltd",
     ],

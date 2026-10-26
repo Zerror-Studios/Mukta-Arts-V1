@@ -608,7 +608,7 @@ export default function CareerMilestones() {
       </div>
 
       {/* Timeline footer */}
-      <footer className="relative z-20 px-6 md:px-8 pt-[16px] pb-[max(24px,env(safe-area-inset-bottom))] md:pb-[36px] short:pt-[8px] short:pb-[12px]">
+      <footer className="relative z-20 px-6 md:px-8 pt-[16px] pb-[max(44px,env(safe-area-inset-bottom))] md:pb-[36px] short:pt-[8px] short:pb-[12px]">
         <div className="relative h-[16px] mb-[8px]">
           {milestonesData.map((m, i) =>
             decadeLabelIndexes.includes(i) ? (

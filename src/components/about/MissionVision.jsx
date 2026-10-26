@@ -59,7 +59,7 @@ const MissionVision = () => {
                   data-reveal="count"
                   data-count-to={stat.endValue}
                   data-count-suffix={stat.suffix}
-                  className="text-5xl lg:text-[4rem] font-normal text-black tracking-tight tabular-nums"
+                  className="text-5xl lg:text-[4rem] font-extrabold! text-black tracking-tight tabular-nums"
                 >
                   {`${stat.endValue}${stat.suffix}`}
                 </h3>
@@ -69,7 +69,7 @@ const MissionVision = () => {
                   </p>
                 )}
               </div>
-              <p className="text-[#555] text-base md:text-lg leading-relaxed mt-10 md:mt-auto pr-4">
+              <p className="text-[#555] text-base md:text-lg leading-relaxed mt-5 md:mt-auto pr-4">
                 {stat.text}
               </p>
             </div>
