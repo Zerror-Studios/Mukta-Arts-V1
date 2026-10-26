@@ -15,7 +15,7 @@ const LINKS = [
 export default function NotFound() {
   return (
     <section className="min-h-screen flex flex-col items-center justify-center gap-10 px-6 py-32 text-center bg-[#FAFAFA] text-[#1B123D]">
-      <h1 className="text-4xl sm:text-6xl">404 - Page Not Found</h1>
+      <h1 className="text-4xl sm:text-6xl">404 - Page Not Found .</h1>
       <nav aria-label="Suggested pages" className="flex flex-wrap justify-center gap-4">
         {LINKS.map(({ label, href }) => (
           <Button key={href} href={href}>
