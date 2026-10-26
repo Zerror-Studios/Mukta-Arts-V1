@@ -1,4 +1,5 @@
 import { get } from "@vercel/blob";
+import { createClient } from "next-sanity";
 import nodemailer from "nodemailer";
 import { NextResponse } from "next/server";
 import {
@@ -9,19 +10,28 @@ import {
   CERTIFICATE_TYPES,
   validateSubmission,
 } from "@/lib/scriptSubmission";
+import { apiVersion, dataset, projectId } from "@/sanity/env";
+import { saveScriptSubmission } from "@/sanity/lib/saveScriptSubmission";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
 /*
- * Emails a completed script submission to the client, with the pitch deck and SWA certificate attached.
+ * Saves a completed script submission in Sanity (Studio at /admin > Script Submissions, beside Films and Investor
+ * Relations), then emails it to the client with the pitch deck and SWA certificate attached.
+ * Saving is required: if it fails the writer is asked to try again, so every submission ends up in the Studio.
+ * The email is a notification on top; when it is not configured or fails, the submission still goes through.
  *
  * The form sends the files one of two ways:
  *   - multipart/form-data with the files themselves (used when no Blob store is configured, e.g. locally)
  *   - JSON with the pathnames of files the browser already uploaded to private Vercel Blob storage
- *     (see ./upload), which this route reads back and attaches. Needed on Vercel for files over 4.5 MB.
+ *     (see ./upload), which this route reads back. Needed on Vercel for files over 4.5 MB.
  *
  * Environment (.env locally, Vercel → Project → Settings → Environment Variables in production):
+ *   SANITY_API_WRITE_TOKEN    required. A Sanity API token with Editor rights (sanity.io/manage → API → Tokens),
+ *                             used to save submissions and their files. Or NEXT_PUBLIC_SANITY_API_WRITE_TOKEN; it
+ *                             is read at request time, so it stays on the server, but it must never be read
+ *                             in a component: a NEXT_PUBLIC_ value used there is copied into the browser code.
  *   EMAIL_USER, EMAIL_PASS    the sending mailbox (a Google Workspace / Gmail app password).
  *                             NEXT_PUBLIC_EMAIL_USER / NEXT_PUBLIC_EMAIL_PASS are read too, but a
  *                             NEXT_PUBLIC_ prefix is meant for values that are safe in the browser.
@@ -77,7 +87,6 @@ async function readBlobFile(file, allowedTypes, label) {
     filename: cleanName(file.name, pathname.split("/").pop()),
     contentType: result.blob.contentType,
     size: result.blob.size,
-    pathname,
     content: Buffer.from(await new Response(result.stream).arrayBuffer()),
   };
 }
@@ -112,7 +121,7 @@ async function readRequest(request) {
 const formatSize = (bytes) => (bytes >= 1024 * 1024 ? `${(bytes / 1024 / 1024).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`);
 
 // Grouped label/value rows shared by the HTML and plain-text versions of the email
-function buildSections(values, files, notAttached, submittedAt) {
+function buildSections(values, files, notAttached, submittedAt, studioUrl) {
   const v = Object.fromEntries(Object.entries(values).map(([key, value]) => [key, String(value ?? "").trim()]));
   const name = `${v.firstName} ${v.lastName}`;
   const genre = v.genre === "Other" ? `Other: ${v.genreOther}` : v.genre;
@@ -149,7 +158,7 @@ function buildSections(values, files, notAttached, submittedAt) {
         ...files.map((f) => [
           f.label,
           `${f.filename} (${formatSize(f.size)}), ${
-            notAttached.includes(f) ? `too large to attach; saved in Vercel Blob at ${f.pathname}` : "attached"
+            notAttached.includes(f) ? "too large to attach; open it from the submission in Sanity Studio" : "attached"
           }`,
         ]),
       ],
@@ -162,7 +171,13 @@ function buildSections(values, files, notAttached, submittedAt) {
         ["Details accurate, format followed", "Confirmed"],
       ],
     },
-    { title: "Submitted", rows: [["Received", submittedAt]] },
+    {
+      title: "Submitted",
+      rows: [
+        ["Received", submittedAt],
+        ["In Sanity Studio", studioUrl, studioUrl],
+      ],
+    },
   ];
 }
 
@@ -218,6 +233,49 @@ function renderText(sections, values) {
   return `${heading}\n${"=".repeat(heading.length)}\n\n${body}\n\nReply to this email to answer the writer directly.\n`;
 }
 
+// Emails a submission that is already saved in Sanity. Files that don't fit within the mail server's attachment
+// limit are left out, and the email links to the submission in the Studio, where both files are.
+async function emailSubmission({ user, pass, to, values, files, submittedAt, studioUrl }) {
+  const limit = (Number(process.env.SCRIPT_ATTACH_LIMIT_MB) || 24) * 1024 * 1024;
+  let total = 0;
+  const attachments = [];
+  const notAttached = [];
+  for (const file of files) {
+    if (total + file.size <= limit) {
+      total += file.size;
+      attachments.push({ filename: file.filename, content: file.content, contentType: file.contentType });
+    } else {
+      notAttached.push(file);
+    }
+  }
+
+  const name = `${values.firstName} ${values.lastName}`;
+  const received = new Intl.DateTimeFormat("en-IN", {
+    dateStyle: "long",
+    timeStyle: "short",
+    timeZone: "Asia/Kolkata",
+  }).format(submittedAt);
+  const sections = buildSections(values, files, notAttached, `${received} IST`, studioUrl);
+
+  const port = Number(process.env.SMTP_PORT) || 465;
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST || "smtp.gmail.com",
+    port,
+    secure: process.env.SMTP_SECURE ? process.env.SMTP_SECURE === "true" : port === 465,
+    auth: { user, pass },
+  });
+
+  await transporter.sendMail({
+    from: { name: "Mukta Arts website", address: process.env.EMAIL_FROM || user },
+    to,
+    replyTo: { name, address: values.email },
+    subject: `Script submission: "${values.title}" (${values.format}) from ${name}`.replace(/\s+/g, " "),
+    text: renderText(sections, values),
+    html: renderHtml(sections, values),
+    attachments,
+  });
+}
+
 export async function POST(request) {
   let data;
   try {
@@ -235,11 +293,9 @@ export async function POST(request) {
     return fail("Please correct the highlighted fields and submit again.", 422, { fields });
   }
 
-  const user = env("EMAIL_USER");
-  const pass = env("EMAIL_PASS");
-  const to = env("CLIENT_EMAIL");
-  if (!user || !pass || !to) {
-    console.error("[script-submission] Email is not configured: set EMAIL_USER, EMAIL_PASS and CLIENT_EMAIL.");
+  const sanityToken = env("SANITY_API_WRITE_TOKEN");
+  if (!sanityToken) {
+    console.error("[script-submission] SANITY_API_WRITE_TOKEN is not set, so submissions cannot be saved.");
     return fail("Submissions are not being accepted right now. Please try again later.", 503);
   }
 
@@ -251,53 +307,28 @@ export async function POST(request) {
     return fail(error instanceof UploadError ? error.message : "Your files could not be read. Please upload them again.");
   }
 
-  // Attach both files when the mail server can take them. A file over the limit that is in Blob storage
-  // stays there and the email says where to find it; one sent directly cannot be kept, so it is refused.
-  const limit = (Number(process.env.SCRIPT_ATTACH_LIMIT_MB) || 24) * 1024 * 1024;
-  let total = 0;
-  const attachments = [];
-  const notAttached = [];
-  for (const file of files) {
-    if (total + file.size <= limit) {
-      total += file.size;
-      attachments.push({ filename: file.filename, content: file.content, contentType: file.contentType });
-    } else if (file.pathname) {
-      notAttached.push(file);
-    } else {
-      return fail(`Your files are too large to send together. Keep them under ${Math.floor(limit / 1024 / 1024)} MB in total.`, 413);
-    }
+  const clean = Object.fromEntries(Object.entries(values).map(([key, value]) => [key, String(value ?? "").trim()]));
+  const submittedAt = new Date();
+
+  let savedId;
+  try {
+    const client = createClient({ projectId, dataset, apiVersion, token: sanityToken, useCdn: false });
+    savedId = await saveScriptSubmission(client, clean, files, submittedAt);
+  } catch (error) {
+    console.error("[script-submission] Saving to Sanity failed:", error);
+    return fail("Your submission could not be sent. Please try again in a few minutes.", 502);
   }
 
-  const clean = Object.fromEntries(Object.entries(values).map(([key, value]) => [key, String(value ?? "").trim()]));
-  const name = `${clean.firstName} ${clean.lastName}`;
-  const submittedAt = new Intl.DateTimeFormat("en-IN", {
-    dateStyle: "long",
-    timeStyle: "short",
-    timeZone: "Asia/Kolkata",
-  }).format(new Date());
-  const sections = buildSections(clean, files, notAttached, `${submittedAt} IST`);
-
-  try {
-    const port = Number(process.env.SMTP_PORT) || 465;
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || "smtp.gmail.com",
-      port,
-      secure: process.env.SMTP_SECURE ? process.env.SMTP_SECURE === "true" : port === 465,
-      auth: { user, pass },
-    });
-
-    await transporter.sendMail({
-      from: { name: "Mukta Arts website", address: process.env.EMAIL_FROM || user },
-      to,
-      replyTo: { name, address: clean.email },
-      subject: `Script submission: "${clean.title}" (${clean.format}) from ${name}`.replace(/\s+/g, " "),
-      text: renderText(sections, clean),
-      html: renderHtml(sections, clean),
-      attachments,
-    });
-  } catch (error) {
-    console.error("[script-submission] Sending failed:", error);
-    return fail("Your submission could not be sent. Please try again in a few minutes.", 502);
+  const user = env("EMAIL_USER");
+  const pass = env("EMAIL_PASS");
+  const to = env("CLIENT_EMAIL");
+  if (user && pass && to) {
+    try {
+      const studioUrl = `${new URL(request.url).origin}/admin/intent/edit/id=${savedId};type=scriptSubmission/`;
+      await emailSubmission({ user, pass, to, values: clean, files, submittedAt, studioUrl });
+    } catch (error) {
+      console.error(`[script-submission] Saved as ${savedId}, but the email could not be sent:`, error);
+    }
   }
 
   return NextResponse.json({ ok: true });

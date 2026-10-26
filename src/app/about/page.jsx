@@ -6,10 +6,16 @@ import MissionVision from "@/components/about/MissionVision";
 import TeamMembers from "@/components/about/TeamMembers";
 import InvestorRelations from "@/components/about/InvestorRelations";
 import CareerMilestones from "@/components/subhash-ghai/CareerMilestones";
+import { getInvestorRelations } from "@/sanity/lib/queries";
+
+// Rendered on every request so Investor Relations edits in the studio show on the next reload
+export const dynamic = "force-dynamic";
 
 // Hero, intro and stats, Board of Directors, Milestones & Films, Investor Relations.
 // Every section is light, so nothing blue sits against the blue footer.
-const AboutPage = () => {
+const AboutPage = async () => {
+  const { categories, page } = await getInvestorRelations();
+
   return (
     <>
       <JsonLd data={pageSchema} />
@@ -17,7 +23,11 @@ const AboutPage = () => {
       <MissionVision />
       <TeamMembers />
       <CareerMilestones />
-      <InvestorRelations />
+      <InvestorRelations
+        categories={categories}
+        contact={page?.contact}
+        unclaimedDividend={page?.unclaimedDividend}
+      />
     </>
   );
 };

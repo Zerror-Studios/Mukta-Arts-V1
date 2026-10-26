@@ -1,7 +1,8 @@
-// Investor Relations documents, hosted on this site (public/investor-relations/).
-// Generated from the muktaarts.com Investor Relations pages; the PDFs are compressed copies.
-// To add a document: put the file under public/investor-relations/ and add an entry here
-// ({ title, date?, href, size in bytes, type }).
+// The Investor Relations documents as first published (files in public/investor-relations/), generated from
+// the muktaarts.com Investor Relations pages; the PDFs are compressed copies.
+// No longer read by the site: the section now comes from Sanity (studio at /admin > Investor Relations),
+// and this file is only the source for the one-time import, scripts/seed-investor-relations.mjs.
+// Editing it changes nothing on the page.
 
 export const investorCategories = [
   {

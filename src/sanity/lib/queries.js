@@ -16,3 +16,30 @@ export const getFilmSlugs = () =>
 
 export const getFilm = (slug) =>
   fetchFresh(`*[${FILM_FILTER} && slug.current == $slug][0] { ${FILM_FIELDS} }`, { slug })
+
+// An entry still waiting for its file is skipped, so a half-filled document in the studio can't break the section.
+// href is this site's own address for the file, passed through to the Sanity CDN by the rewrite in next.config.mjs.
+const IR_DOCS = `coalesce(documents[defined(file.asset)] {
+  _key, title, date,
+  "href": "/investor-relations/files/" + file.asset->assetId + "." + file.asset->extension,
+  "fileName": file.asset->originalFilename,
+  "size": file.asset->size,
+  "type": file.asset->extension
+}, [])`
+
+// A section has either docs or years (each with its own docs), as the "Split by year" switch says
+export const getInvestorRelations = () =>
+  fetchFresh(`{
+    "categories": *[_type == "investorCategory"] | order(order asc, title asc) {
+      _id, title, intro,
+      "sections": coalesce(sections[] {
+        _key, title,
+        "docs": select(byYear != true => ${IR_DOCS}),
+        "years": select(byYear == true => coalesce(years[] { _key, title, "docs": ${IR_DOCS} }, []))
+      }, [])
+    },
+    "page": *[_id == "investorRelations"][0] {
+      "contact": { "name": contactName, "role": contactRole, "phone": contactPhone, "email": contactEmail },
+      "unclaimedDividend": unclaimedDividend { title, intro, link, "docs": ${IR_DOCS} }
+    }
+  }`)

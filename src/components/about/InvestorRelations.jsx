@@ -6,13 +6,16 @@ import { ChevronDown, Eye, Download, FileText, FileSpreadsheet, X } from "lucide
 import { gsap, MOTION_REDUCED } from "@/lib/motion";
 import useScrollReveal from "@/hooks/useScrollReveal";
 import Button from "@/components/common/Button";
-import { investorCategories, unclaimedDividend } from "@/data/investorRelations";
 
-// Every document lives on this site (public/investor-relations/), so viewing or downloading
-// one never sends the visitor to another website.
+// Tabs, contact details and documents all come from the Investor Relations documents in Sanity
+// (see about/page.jsx). Each file is served from this site's own address (/investor-relations/files/,
+// see next.config.mjs), so viewing or downloading one never sends the visitor to another website.
 
 const formatSize = (bytes) =>
   bytes >= 1e6 ? `${(bytes / 1e6).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1e3))} KB`;
+
+// Sanity stores 2025-09-26; the page shows 26.09.2025
+const formatDate = (iso) => iso.split("-").reverse().join(".");
 
 const TYPE_LABEL = { pdf: "PDF", doc: "Word", docx: "Word", xls: "Excel", xlsx: "Excel" };
 
@@ -24,8 +27,6 @@ const countDocs = (category) =>
 
 // "Annual General Meeting - 2026" reads better as a chip
 const yearLabel = (title) => title.replace(/^Annual General Meeting\s*-\s*/i, "AGM ");
-
-const fileName = (href) => decodeURIComponent(href.split("/").pop());
 
 // Phones, upright or on their side, start with every section closed. Keep in step with the
 // `phone` variant in globals.css.
@@ -67,7 +68,7 @@ const DocRow = ({ doc, onView, compact = false }) => {
         <div className="min-w-0">
           <p className="text-[15px]! md:text-[16px]! leading-snug! text-black font-medium">{doc.title}</p>
           <p className="mt-1 text-[12px]! leading-none! text-[#777] tracking-wide uppercase">
-            {doc.date && <span>{doc.date} · </span>}
+            {doc.date && <span>{formatDate(doc.date)} · </span>}
             {TYPE_LABEL[doc.type] ?? doc.type} · {formatSize(doc.size)}
           </p>
         </div>
@@ -87,7 +88,7 @@ const DocRow = ({ doc, onView, compact = false }) => {
         )}
         <a
           href={doc.href}
-          download={fileName(doc.href)}
+          download={doc.fileName}
           aria-label={`Download ${doc.title}`}
           className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-[3px] bg-[black] hover:bg-[black] text-white text-xs font-semibold tracking-wide transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[black] phone:w-9 phone:px-0 phone:justify-center phone:bg-transparent phone:hover:bg-[black]/[0.04] phone:text-black"
         >
@@ -109,7 +110,7 @@ const Section = ({ section, defaultOpen, isFirst, onView }) => {
   const contentRef = useRef(null);
   const mounted = useRef(false);
 
-  const docs = section.docs ?? section.years[yearIndex].docs;
+  const docs = section.docs ?? section.years[yearIndex]?.docs ?? [];
   const total = section.docs ? section.docs.length : section.years.reduce((n, y) => n + y.docs.length, 0);
 
   useEffect(() => {
@@ -151,11 +152,11 @@ const Section = ({ section, defaultOpen, isFirst, onView }) => {
 
       <div ref={contentRef} className="overflow-hidden">
         <div className="pb-8">
-          {section.years && (
+          {section.years?.length > 0 && (
             <div role="tablist" aria-label={`${section.title} by year`} className="flex flex-wrap gap-2 mb-3">
               {section.years.map((year, i) => (
                 <button
-                  key={year.title}
+                  key={year._key}
                   type="button"
                   role="tab"
                   aria-selected={i === yearIndex}
@@ -183,7 +184,7 @@ const DocList = ({ docs, onView, compact }) =>
   docs.length ? (
     <ul className="flex flex-col">
       {docs.map((doc) => (
-        <DocRow key={doc.href} doc={doc} onView={onView} compact={compact} />
+        <DocRow key={doc._key} doc={doc} onView={onView} compact={compact} />
       ))}
     </ul>
   ) : (
@@ -192,7 +193,7 @@ const DocList = ({ docs, onView, compact }) =>
 
 /* ---------- Unclaimed Dividend: linked under the contact details, as on the original page ---------- */
 
-const UnclaimedDividend = ({ onView }) => {
+const UnclaimedDividend = ({ unclaimedDividend, onView }) => {
   const [isOpen, setIsOpen] = useState(false);
   const contentRef = useRef(null);
   const mounted = useRef(false);
@@ -228,14 +229,14 @@ const UnclaimedDividend = ({ onView }) => {
           {unclaimedDividend.intro && (
             <p className="text-[#555] text-[14px]! leading-relaxed!">
               {unclaimedDividend.intro}{" "}
-              {unclaimedDividend.introLink && (
+              {unclaimedDividend.link && (
                 <a
-                  href={unclaimedDividend.introLink}
+                  href={unclaimedDividend.link}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-black underline underline-offset-2 break-all hover:text-[black]"
                 >
-                  {unclaimedDividend.introLink.replace(/^https?:\/\//, "")}
+                  {unclaimedDividend.link.replace(/^https?:\/\//, "")}
                 </a>
               )}
             </p>
@@ -287,13 +288,13 @@ const PdfViewer = ({ doc, onClose }) => {
           <div className="min-w-0">
             <p className="text-[15px]! md:text-[16px]! leading-snug! font-medium text-black truncate">{doc.title}</p>
             <p className="text-[12px]! leading-none! mt-1 text-[#777] uppercase tracking-wide">
-              {doc.date && <span>{doc.date} · </span>}PDF · {formatSize(doc.size)}
+              {doc.date && <span>{formatDate(doc.date)} · </span>}PDF · {formatSize(doc.size)}
             </p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <a
               href={doc.href}
-              download={fileName(doc.href)}
+              download={doc.fileName}
               className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-[3px] bg-[black] hover:bg-[black] text-white text-xs font-semibold tracking-wide transition-colors"
             >
               <Download strokeWidth={1.75} className="w-4 h-4" />
@@ -319,14 +320,14 @@ const PdfViewer = ({ doc, onClose }) => {
 
 /* ---------- the section ---------- */
 
-const InvestorRelations = () => {
+const InvestorRelations = ({ categories = [], contact, unclaimedDividend }) => {
   const sectionRef = useRef(null);
-  const [activeId, setActiveId] = useState(investorCategories[0].id);
+  const [activeId, setActiveId] = useState(categories[0]?._id);
   const [viewing, setViewing] = useState(null);
   const isPhone = useIsPhone();
   useScrollReveal(sectionRef);
 
-  const active = investorCategories.find((c) => c.id === activeId);
+  const active = categories.find((c) => c._id === activeId);
 
   const onView = useCallback((doc) => {
     if (canEmbedPdf()) setViewing(doc);
@@ -347,21 +348,25 @@ const InvestorRelations = () => {
             </h5>
 
             <div data-reveal="rise" className="flex flex-col gap-3 ">
-              <p className="text-black font-medium">
-                Contact information for assisting and handling investor grievances:
-              </p>
-              <p className="text-black">
-                Ms. Pratiksha Panchal,<br />
-                Company Secretary and Compliance Officer<br />
-                Tel: Board line — 3364 9400;
-              </p>
-              <p className="text-black  leading-relaxed!">
-                Email: {" "}
-                <a href="mailto:investorrelations@muktaarts.com" className="font-medium text-black hover:underline">
-                  investorrelations@muktaarts.com
-                </a>
-              </p>
-              <UnclaimedDividend onView={onView} />
+              {contact?.name && (
+                <>
+                  <p className="text-black font-medium">
+                    Contact information for assisting and handling investor grievances:
+                  </p>
+                  <p className="text-black">
+                    {contact.name},<br />
+                    {contact.role}<br />
+                    Tel: {contact.phone};
+                  </p>
+                  <p className="text-black  leading-relaxed!">
+                    Email: {" "}
+                    <a href={`mailto:${contact.email}`} className="font-medium text-black hover:underline">
+                      {contact.email}
+                    </a>
+                  </p>
+                </>
+              )}
+              {unclaimedDividend && <UnclaimedDividend unclaimedDividend={unclaimedDividend} onView={onView} />}
             </div>
           </div>
         </div>
@@ -373,15 +378,15 @@ const InvestorRelations = () => {
             aria-label="Investor documents"
             className="flex gap-2 overflow-x-auto pb-2 mb-8 -mx-4 px-4 md:mx-0 md:px-0 md:flex-wrap [scrollbar-width:none]"
           >
-            {investorCategories.map((category) => {
-              const selected = category.id === activeId;
+            {categories.map((category) => {
+              const selected = category._id === activeId;
               return (
                 <button
-                  key={category.id}
+                  key={category._id}
                   type="button"
                   role="tab"
                   aria-selected={selected}
-                  onClick={() => setActiveId(category.id)}
+                  onClick={() => setActiveId(category._id)}
                   className={`shrink-0 inline-flex items-center gap-2 h-10 px-4  text-sm font-medium border transition-colors cursor-pointer ${
                     selected
                       ? "bg-[black] border-[black] text-white"
@@ -398,27 +403,29 @@ const InvestorRelations = () => {
           </div>
 
           {/* Keyed by category, so each tab starts with its first section open (all closed on phones) */}
-          <div key={active.id} role="tabpanel" aria-label={active.title}>
-            {active.intro && (
-              <p className="text-[#555] text-[15px]! md:text-[16px]! leading-relaxed! max-w-3xl mb-8">{active.intro}</p>
-            )}
-            {active.sections.map((section, index) =>
-              // A section without a title is listed straight under the heading, as on the original page
-              section.title ? (
-                <Section
-                  key={section.title}
-                  section={section}
-                  isFirst={index === 0}
-                  defaultOpen={index === 0 && !isPhone}
-                  onView={onView}
-                />
-              ) : (
-                <div key={index} className="border-t border-[#c2c2c2]">
-                  <DocList docs={section.docs} onView={onView} />
-                </div>
-              )
-            )}
-          </div>
+          {active && (
+            <div key={active._id} role="tabpanel" aria-label={active.title}>
+              {active.intro && (
+                <p className="text-[#555] text-[15px]! md:text-[16px]! leading-relaxed! max-w-3xl mb-8">{active.intro}</p>
+              )}
+              {active.sections.map((section, index) =>
+                // A section without a title is listed straight under the heading, as on the original page
+                section.title ? (
+                  <Section
+                    key={section._key}
+                    section={section}
+                    isFirst={index === 0}
+                    defaultOpen={index === 0 && !isPhone}
+                    onView={onView}
+                  />
+                ) : (
+                  <div key={section._key} className="border-t border-[#c2c2c2]">
+                    <DocList docs={section.docs ?? []} onView={onView} />
+                  </div>
+                )
+              )}
+            </div>
+          )}
         </div>
       </div>
 
