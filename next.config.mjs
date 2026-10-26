@@ -6,6 +6,8 @@ const nextConfig = {
   images: {
     // AVIF for browsers that take it (most do; it is usually well under WebP's size), WebP for the rest
     formats: ["image/avif", "image/webp"],
+    // Film posters uploaded in the Sanity studio
+    remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io" }],
   },
   async headers() {
     return [

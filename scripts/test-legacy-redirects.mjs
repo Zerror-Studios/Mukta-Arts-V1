@@ -41,7 +41,7 @@ const untouched = [
   "/", "/about", "/subhash-ghai", "/our-films", "/whistling-woods", "/mukta-a2-cinemas", "/sgm-studios",
   "/submit-script", "/contact", "/api/script-submission", "/img/logo/logo-4k.png", "/fonts/Switzer-Regular.woff2",
   "/model/x.glb", "/investor-relations/report.pdf", "/video/x.mp4", "/robots.txt", "/sitemap.xml", "/llms.txt",
-  "/manifest.webmanifest",
+  "/manifest.webmanifest", "/our-films/karz", "/our-films/joggers-park", "/admin", "/admin/structure/film",
 ];
 for (const url of untouched) {
   const dest = legacyDestination(url);
