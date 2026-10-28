@@ -188,19 +188,24 @@ export default function CardsShowcase() {
         <div ref={emblaRef} className="overflow-hidden">
           <div className="flex touch-pan-y">
             {arr.map((item, i) => (
-              <div key={i} className="shrink-0 grow-0 basis-[85vw] sm:basis-[60vw] pl-6 last:mr-6">
-                <div className="h-full flex flex-col short:flex-row text-white" style={{ backgroundColor: item.clr }}>
-                  <div className="relative aspect-[4/3] m-4 mb-0 short:w-[45%] short:shrink-0 short:mb-4 short:mr-0">
-                    <Image
-                      src={item.img}
-                      alt={item.title}
-                      fill
-                      sizes="(max-height: 500px) 30vw, (min-width: 640px) 60vw, 85vw"
-                      draggable={false}
-                      className="object-cover rounded-sm select-none pointer-events-none"
-                    />
+              <div key={i} className="shrink-0 grow-0 basis-[85vw] sm:basis-[60vw] min-w-0 pl-6 last:mr-6">
+                <div className="h-full min-w-0 overflow-hidden flex flex-col short:flex-row text-white" style={{ backgroundColor: item.clr }}>
+                  {/* The padded wrapper sets the width and the inner box takes it at w-full, so the photo's
+                      height comes from a definite width. Leaning on aspect-ratio plus flex stretch and
+                      margins alone let some mobile browsers size the photo wider than the card */}
+                  <div className="p-4 pb-0 short:w-[45%] short:shrink-0 short:pb-4 short:pr-0">
+                    <div className="relative w-full aspect-[4/3] overflow-hidden rounded-sm">
+                      <Image
+                        src={item.img}
+                        alt={item.title}
+                        fill
+                        sizes="(max-height: 500px) 40vw, (min-width: 640px) 60vw, 85vw"
+                        draggable={false}
+                        className="object-cover select-none pointer-events-none"
+                      />
+                    </div>
                   </div>
-                  <div className="flex flex-col items-start p-5 short:justify-center">
+                  <div className="min-w-0 flex flex-col items-start p-5 short:justify-center wrap-break-word">
                     {item.year && (
                       <span className="px-3 py-1 bg-white/20 rounded-full text-xs font-semibold tracking-wider">
                         {item.year}

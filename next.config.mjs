@@ -15,7 +15,7 @@ const nextConfig = {
         // Investor Relations documents uploaded in the studio, served from this site's own address so
         // viewing or downloading one never leaves it. Project ID and dataset as in src/sanity/env.js.
         source: "/investor-relations/files/:file",
-        destination: "https://cdn.sanity.io/files/bgkiz2pp/production/:file",
+        destination: "https://cdn.sanity.io/files/golvykos/production/:file",
       },
     ];
   },
