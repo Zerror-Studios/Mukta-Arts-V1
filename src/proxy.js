@@ -43,6 +43,7 @@ export function proxy(req) {
 }
 
 export const config = {
-  // Skip Next internals and static files that the new site serves itself.
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|apple-icon.png|opengraph-image|twitter-image|fonts/|img/|model/|investor-relations/).*)"],
+  // Skip Next internals and static files that the new site serves itself, and the API routes: when the proxy runs,
+  // Next caps the request body at 10 MB, which cut off script submissions (two files of up to 20 MB each).
+  matcher: ["/((?!api/|_next/static|_next/image|favicon.ico|apple-icon.png|opengraph-image|twitter-image|fonts/|img/|model/|investor-relations/).*)"],
 };
