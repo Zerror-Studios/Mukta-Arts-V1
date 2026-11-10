@@ -19,11 +19,15 @@ const formatDate = (iso) => iso.split("-").reverse().join(".");
 
 const TYPE_LABEL = { pdf: "PDF", doc: "Word", docx: "Word", xls: "Excel", xlsx: "Excel" };
 
-const countDocs = (category) =>
-  category.sections.reduce(
-    (n, s) => n + (s.docs ? s.docs.length : s.years.reduce((m, y) => m + y.docs.length, 0)),
-    0
-  );
+const countYears = (years) => years.reduce((n, y) => n + y.docs.length, 0);
+
+// A section's documents: listed straight under it, by year, or (Board Meetings) by list and year
+const countSection = (section) =>
+  section.lists
+    ? section.lists.reduce((n, list) => n + countYears(list.years), 0)
+    : section.docs?.length ?? countYears(section.years);
+
+const countDocs = (category) => category.sections.reduce((n, s) => n + countSection(s), 0);
 
 // "Annual General Meeting - 2026" reads better as a chip
 const yearLabel = (title) => title.replace(/^Annual General Meeting\s*-\s*/i, "AGM ");
@@ -102,6 +106,23 @@ const DocRow = ({ doc, onView, compact = false }) => {
 
 /* ---------- a section of documents (optionally split into years) ---------- */
 
+// A year, or a Board Meetings list, to pick inside a section
+const Chip = ({ selected, onClick, children }) => (
+  <button
+    type="button"
+    role="tab"
+    aria-selected={selected}
+    onClick={onClick}
+    className={`h-8 px-3 rounded-full text-xs font-semibold tabular-nums tracking-wide border transition-colors cursor-pointer ${
+      selected
+        ? "bg-[black] border-[black] text-white"
+        : "border-black/15 text-[#444] hover:border-[black] hover:text-[black]"
+    }`}
+  >
+    {children}
+  </button>
+);
+
 const Section = ({ section, defaultOpen, isFirst, onView }) => {
   // Follows defaultOpen until the visitor opens or closes it
   const [toggled, setToggled] = useState(null);
@@ -110,8 +131,8 @@ const Section = ({ section, defaultOpen, isFirst, onView }) => {
   const contentRef = useRef(null);
   const mounted = useRef(false);
 
-  const docs = section.docs ?? section.years[yearIndex]?.docs ?? [];
-  const total = section.docs ? section.docs.length : section.years.reduce((n, y) => n + y.docs.length, 0);
+  const docs = section.docs ?? section.years?.[yearIndex]?.docs ?? [];
+  const total = countSection(section);
 
   useEffect(() => {
     const el = contentRef.current;
@@ -152,34 +173,67 @@ const Section = ({ section, defaultOpen, isFirst, onView }) => {
 
       <div ref={contentRef} className="overflow-hidden">
         <div className="pb-8">
-          {section.years?.length > 0 && (
-            <div role="tablist" aria-label={`${section.title} by year`} className="flex flex-wrap gap-2 mb-3">
-              {section.years.map((year, i) => (
-                <button
-                  key={year._key}
-                  type="button"
-                  role="tab"
-                  aria-selected={i === yearIndex}
-                  onClick={() => setYearIndex(i)}
-                  className={`h-8 px-3 rounded-full text-xs font-semibold tabular-nums tracking-wide border transition-colors cursor-pointer ${
-                    i === yearIndex
-                      ? "bg-[black] border-[black] text-white"
-                      : "border-black/15 text-[#444] hover:border-[black] hover:text-[black]"
-                  }`}
-                >
-                  {yearLabel(year.title)}
-                </button>
-              ))}
-            </div>
+          {section.lists ? (
+            <BoardMeetings title={section.title} lists={section.lists} onView={onView} />
+          ) : (
+            <>
+              {section.years?.length > 0 && (
+                <div role="tablist" aria-label={`${section.title} by year`} className="flex flex-wrap gap-2 mb-3">
+                  {section.years.map((year, i) => (
+                    <Chip key={year._key} selected={i === yearIndex} onClick={() => setYearIndex(i)}>
+                      {yearLabel(year.title)}
+                    </Chip>
+                  ))}
+                </div>
+              )}
+              <DocList docs={docs} onView={onView} />
+            </>
           )}
-          <DocList docs={docs} onView={onView} />
         </div>
       </div>
     </div>
   );
 };
 
-// Board Meetings and Postal Ballot have nothing published yet, as on the original page
+/* ---------- Board Meetings: Notice, Outcome, Financial Results – Newspaper ---------- */
+
+// The original site's three Board Meetings lists, one at a time, opening on the first with anything in it.
+// Each shows its year folders newest first, every year under its own heading with its PDFs below.
+// A folder with nothing uploaded yet is left out.
+const BoardMeetings = ({ title, lists, onView }) => {
+  const [listIndex, setListIndex] = useState(() =>
+    Math.max(0, lists.findIndex((list) => countYears(list.years) > 0))
+  );
+  const years = lists[listIndex].years.filter((year) => year.docs.length);
+
+  return (
+    <>
+      <div role="tablist" aria-label={title} className="flex flex-wrap gap-2 mb-3">
+        {lists.map((list, i) => (
+          <Chip key={list._key} selected={i === listIndex} onClick={() => setListIndex(i)}>
+            {list.title}
+          </Chip>
+        ))}
+      </div>
+      {years.length ? (
+        <div className="flex flex-col gap-8 mt-6">
+          {years.map((year) => (
+            <div key={year._key}>
+              <h6 className="pb-3 border-b border-black/10 text-[13px] font-semibold uppercase tracking-[0.08em] tabular-nums text-black">
+                {year.title}
+              </h6>
+              <DocList docs={year.docs} onView={onView} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <DocList docs={[]} onView={onView} />
+      )}
+    </>
+  );
+};
+
+// For a section, year or list with nothing published yet
 const DocList = ({ docs, onView, compact }) =>
   docs.length ? (
     <ul className="flex flex-col">

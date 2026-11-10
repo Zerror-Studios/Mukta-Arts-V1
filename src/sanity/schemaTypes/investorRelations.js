@@ -1,7 +1,11 @@
 import { defineArrayMember, defineField, defineType } from 'sanity'
 
+import { boardMeetingLists } from '../boardMeetingLists'
+import { apiVersion } from '../env'
+
 // The Investor Relations section on the About page (src/components/about/InvestorRelations.jsx):
 // one Investor Relations Tab document per tab, and the Contact & Unclaimed Dividend document beside them.
+// Board Meetings PDFs are kept apart, in year folders (Board Meetings year documents).
 
 const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`
 
@@ -114,6 +118,77 @@ export const investorSection = defineType({
   },
 })
 
+// Where Board Meetings sits among a tab's sections. Its PDFs are not added here but in year folders, under
+// Investor Relations → Board Meetings in the studio sidebar.
+export const investorBoardMeetings = defineType({
+  name: 'investorBoardMeetings',
+  title: 'Board Meetings',
+  type: 'object',
+  fields: [
+    defineField({
+      name: 'title',
+      title: 'Title',
+      description: 'Its PDFs are added in the sidebar, under Investor Relations → Board Meetings.',
+      type: 'string',
+      initialValue: 'Board Meetings',
+      validation: (rule) => rule.required(),
+    }),
+  ],
+  preview: {
+    select: { title: 'title' },
+    prepare: ({ title }) => ({ title, subtitle: 'PDFs: Investor Relations → Board Meetings, in the sidebar' }),
+  },
+})
+
+// "2026-27" and "2026-2027" both give "2026". Year folders are sorted by their title, so it has to start with this.
+const startYear = (title) => title?.match(/^(\d{4})/)?.[1]
+
+// One year of Board Meetings PDFs in one of the lists (Notice, Outcome, Financial Results – Newspaper).
+// Only created from inside a list (see structure.js), which fills in `list`.
+export const boardMeetingYear = defineType({
+  name: 'boardMeetingYear',
+  title: 'Board Meetings year',
+  type: 'document',
+  icon: () => '📁',
+  fields: [
+    defineField({
+      name: 'list',
+      title: 'List',
+      description: 'Filled in from the list this folder was created in. Change it to move the folder.',
+      type: 'string',
+      options: { list: boardMeetingLists, layout: 'radio', direction: 'horizontal' },
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'title',
+      title: 'Year',
+      description: 'The financial year, e.g. 2026-27. The website shows the newest year first.',
+      type: 'string',
+      placeholder: '2026-27',
+      validation: (rule) =>
+        rule.required().custom(async (title, { document, getClient }) => {
+          if (!title) return true
+          const year = startYear(title)
+          if (!year) return 'Start with the year, e.g. 2026-27.'
+          // One folder per year in each list: a second one would show the same year heading twice
+          const id = document._id.replace(/^drafts\./, '')
+          const taken = await getClient({ apiVersion }).fetch(
+            `count(*[_type == "boardMeetingYear" && list == $list && string::startsWith(title, $year)
+              && !(_id in [$id, "drafts." + $id])])`,
+            { list: document.list ?? '', year, id }
+          )
+          return taken ? `This list already has a ${year} folder. Add the PDFs to that one.` : true
+        }),
+    }),
+    { ...documentsField, title: 'PDFs', description: "This year's PDFs, listed on the website in this order. Drag to reorder." },
+  ],
+  orderings: [{ title: 'Year, newest first', name: 'yearDesc', by: [{ field: 'title', direction: 'desc' }] }],
+  preview: {
+    select: { title: 'title', documents: 'documents' },
+    prepare: ({ title, documents }) => ({ title, subtitle: plural(documents?.length ?? 0, 'PDF') }),
+  },
+})
+
 // One tab of documents, e.g. "Reports"
 export const investorCategory = defineType({
   name: 'investorCategory',
@@ -145,7 +220,13 @@ export const investorCategory = defineType({
       title: 'Sections',
       description: 'Listed in this order. Drag to reorder.',
       type: 'array',
-      of: [defineArrayMember({ type: 'investorSection' })],
+      of: [defineArrayMember({ type: 'investorSection' }), defineArrayMember({ type: 'investorBoardMeetings' })],
+      validation: (rule) =>
+        rule.custom((sections) =>
+          (sections ?? []).filter((s) => s._type === 'investorBoardMeetings').length > 1
+            ? 'Board Meetings can only be added once.'
+            : true
+        ),
     }),
   ],
   orderings: [{ title: 'Position', name: 'orderAsc', by: [{ field: 'order', direction: 'asc' }] }],

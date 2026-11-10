@@ -1,3 +1,5 @@
+import { boardMeetingLists } from './boardMeetingLists'
+import { BOARD_MEETING_YEAR_TEMPLATE } from './schemaTypes'
 import { submissionStatuses } from './schemaTypes/scriptSubmission'
 
 const newestFirst = [{ field: 'submittedAt', direction: 'desc' }]
@@ -8,7 +10,8 @@ export const structure = (S) =>
     .title('Content')
     .items([
       ...S.documentTypeListItems().filter(
-        (item) => !['investorCategory', 'investorRelations', 'scriptSubmission'].includes(item.getId())
+        (item) =>
+          !['investorCategory', 'investorRelations', 'boardMeetingYear', 'scriptSubmission'].includes(item.getId())
       ),
       S.divider(),
       // Everything in the About page's Investor Relations section, in one place
@@ -27,6 +30,35 @@ export const structure = (S) =>
                   S.documentTypeList('investorCategory')
                     .title('Tabs')
                     .defaultOrdering([{ field: 'order', direction: 'asc' }])
+                ),
+              // Notice, Outcome, Financial Results – Newspaper, each a list of year folders, newest first.
+              // "Create" in a list makes a folder already set to that list.
+              S.listItem()
+                .title('Board Meetings')
+                .id('board-meetings')
+                .schemaType('boardMeetingYear')
+                .child(
+                  S.list()
+                    .title('Board Meetings')
+                    .items(
+                      boardMeetingLists.map(({ title, value }) =>
+                        S.listItem()
+                          .title(title)
+                          .id(value)
+                          .schemaType('boardMeetingYear')
+                          .child(
+                            S.documentList()
+                              .title(title)
+                              .schemaType('boardMeetingYear')
+                              .filter('_type == "boardMeetingYear" && list == $list')
+                              .params({ list: value })
+                              .defaultOrdering([{ field: 'title', direction: 'desc' }])
+                              .initialValueTemplates([
+                                S.initialValueTemplateItem(BOARD_MEETING_YEAR_TEMPLATE, { list: value }),
+                              ])
+                          )
+                      )
+                    )
                 ),
               S.listItem()
                 .title('Contact & Unclaimed Dividend')

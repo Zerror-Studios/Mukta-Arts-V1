@@ -1,3 +1,4 @@
+import { boardMeetingLists } from '../boardMeetingLists'
 import { client } from './client'
 
 // A film without a poster is skipped: urlFor() throws on it, which would take down the whole page
@@ -27,19 +28,30 @@ const IR_DOCS = `coalesce(documents[defined(file.asset)] {
   "type": file.asset->extension
 }, [])`
 
-// A section has either docs or years (each with its own docs), as the "Split by year" switch says
+// A section has either docs or years (each with its own docs), as the "Split by year" switch says.
+// The Board Meetings section has lists instead: Notice, Outcome and Financial Results – Newspaper, each with its
+// year folders newest first. A folder's title starts with its year (the studio checks), so sorting by it works.
 export const getInvestorRelations = () =>
-  fetchFresh(`{
+  fetchFresh(
+    `{
     "categories": *[_type == "investorCategory"] | order(order asc, title asc) {
       _id, title, intro,
       "sections": coalesce(sections[] {
         _key, title,
-        "docs": select(byYear != true => ${IR_DOCS}),
-        "years": select(byYear == true => coalesce(years[] { _key, title, "docs": ${IR_DOCS} }, []))
+        "docs": select(_type == "investorSection" && byYear != true => ${IR_DOCS}),
+        "years": select(byYear == true => coalesce(years[] { _key, title, "docs": ${IR_DOCS} }, [])),
+        "lists": select(_type == "investorBoardMeetings" => $boardMeetingLists[] {
+          "_key": value, title,
+          "years": *[_type == "boardMeetingYear" && list == ^.value] | order(title desc) {
+            "_key": _id, title, "docs": ${IR_DOCS}
+          }
+        })
       }, [])
     },
     "page": *[_id == "investorRelations"][0] {
       "contact": { "name": contactName, "role": contactRole, "phone": contactPhone, "email": contactEmail },
       "unclaimedDividend": unclaimedDividend { title, intro, link, "docs": ${IR_DOCS} }
     }
-  }`)
+  }`,
+    { boardMeetingLists }
+  )
