@@ -9,13 +9,17 @@ const nextConfig = {
     // Film posters uploaded in the Sanity studio
     remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io" }],
   },
-  async rewrites() {
+  async redirects() {
     return [
       {
-        // Investor Relations documents uploaded in the studio, served from this site's own address so
-        // viewing or downloading one never leaves it. Project ID and dataset as in src/sanity/env.js.
+        // Investor Relations documents uploaded in the studio. The page links to this site's own address, which
+        // hands the browser straight to the Sanity CDN. A redirect, not a rewrite: a rewrite passed every file
+        // through the site's server, and on Amplify anything over about 4.5 MB came back as 413 Payload Too Large.
+        // This way no file size is too big. Query strings carry over, so ?dl= (download) still works.
+        // Project ID and dataset as in src/sanity/env.js.
         source: "/investor-relations/files/:file",
         destination: "https://cdn.sanity.io/files/golvykos/production/:file",
+        permanent: false,
       },
     ];
   },

@@ -32,7 +32,8 @@ export const investorDocument = defineType({
     defineField({
       name: 'file',
       title: 'File',
-      description: 'PDF, Word or Excel. PDFs can also be viewed on the page; the others are download only.',
+      description:
+        'PDF, Word or Excel, with no size limit. PDFs can also be viewed on the page; the others are download only.',
       type: 'file',
       options: { accept: '.pdf,.doc,.docx,.xls,.xlsx' },
       validation: (rule) => rule.required(),

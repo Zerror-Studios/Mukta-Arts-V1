@@ -19,7 +19,7 @@ export const getFilm = (slug) =>
   fetchFresh(`*[${FILM_FILTER} && slug.current == $slug][0] { ${FILM_FIELDS} }`, { slug })
 
 // An entry still waiting for its file is skipped, so a half-filled document in the studio can't break the section.
-// href is this site's own address for the file, passed through to the Sanity CDN by the rewrite in next.config.mjs.
+// href is this site's own address for the file, which the redirect in next.config.mjs sends on to the Sanity CDN.
 const IR_DOCS = `coalesce(documents[defined(file.asset)] {
   _key, title, date,
   "href": "/investor-relations/files/" + file.asset->assetId + "." + file.asset->extension,

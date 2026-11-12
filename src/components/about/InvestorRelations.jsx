@@ -8,8 +8,13 @@ import useScrollReveal from "@/hooks/useScrollReveal";
 import Button from "@/components/common/Button";
 
 // Tabs, contact details and documents all come from the Investor Relations documents in Sanity
-// (see about/page.jsx). Each file is served from this site's own address (/investor-relations/files/,
-// see next.config.mjs), so viewing or downloading one never sends the visitor to another website.
+// (see about/page.jsx). Each file is linked at this site's own address (/investor-relations/files/), which
+// redirects to the Sanity CDN (see next.config.mjs), so a file of any size opens. Download links add ?dl=,
+// which makes the CDN send the file as a download under its original name. The `download` attribute alone
+// does nothing once the file comes from another address.
+
+// Same address, saved instead of opened
+const downloadHref = (doc) => `${doc.href}?dl=`;
 
 const formatSize = (bytes) =>
   bytes >= 1e6 ? `${(bytes / 1e6).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1e3))} KB`;
@@ -91,7 +96,7 @@ const DocRow = ({ doc, onView, compact = false }) => {
           </button>
         )}
         <a
-          href={doc.href}
+          href={downloadHref(doc)}
           download={doc.fileName}
           aria-label={`Download ${doc.title}`}
           className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-[3px] bg-[black] hover:bg-[black] text-white text-xs font-semibold tracking-wide transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[black] phone:w-9 phone:px-0 phone:justify-center phone:bg-transparent phone:hover:bg-[black]/[0.04] phone:text-black"
@@ -347,7 +352,7 @@ const PdfViewer = ({ doc, onClose }) => {
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <a
-              href={doc.href}
+              href={downloadHref(doc)}
               download={doc.fileName}
               className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-[3px] bg-[black] hover:bg-[black] text-white text-xs font-semibold tracking-wide transition-colors"
             >
@@ -385,7 +390,7 @@ const InvestorRelations = ({ categories = [], contact, unclaimedDividend }) => {
 
   const onView = useCallback((doc) => {
     if (canEmbedPdf()) setViewing(doc);
-    // Phones: the browser's own PDF viewer, still on this site
+    // Phones: the browser's own PDF viewer, in a new tab
     else window.open(doc.href, "_blank", "noopener");
   }, []);
   const closeViewer = useCallback(() => setViewing(null), []);
