@@ -8,10 +8,7 @@ import useScrollReveal from "@/hooks/useScrollReveal";
 import Button from "@/components/common/Button";
 
 // redirects to the Sanity CDN (see next.config.mjs), so a file of any size opens. Download links add ?dl=,
-// which makes the CDN send the file as a download under its original name. The `download` attribute alone
-// does nothing once the file comes from another address.
 
-// Same address, saved instead of opened
 const downloadHref = (doc) => `${doc.href}?dl=`;
 
 const formatSize = (bytes) =>
