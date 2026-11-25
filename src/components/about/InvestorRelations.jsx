@@ -7,8 +7,6 @@ import { gsap, MOTION_REDUCED } from "@/lib/motion";
 import useScrollReveal from "@/hooks/useScrollReveal";
 import Button from "@/components/common/Button";
 
-// Tabs, contact details and documents all come from the Investor Relations documents in Sanity
-// (see about/page.jsx). Each file is linked at this site's own address (/investor-relations/files/), which
 // redirects to the Sanity CDN (see next.config.mjs), so a file of any size opens. Download links add ?dl=,
 // which makes the CDN send the file as a download under its original name. The `download` attribute alone
 // does nothing once the file comes from another address.
